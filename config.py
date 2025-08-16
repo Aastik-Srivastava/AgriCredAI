@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API Keys
-WEATHER_API_KEY = os.getenv('WEATHER_API_KEY', '2b3f5d5c338d963f8eb5857979e2a969')
-MARKET_API_KEY = os.getenv('MARKET_API_KEY', '579b464db66ec23bdd000001d5d3d4ff6ac6484446e9a96155b35581')
+WEATHER_API_KEY = os.getenv('WEATHER_API_KEY', '')
+MARKET_API_KEY = os.getenv('MARKET_API_KEY', '')
 SOIL_HEALTH_API_KEY = os.getenv('SOIL_HEALTH_API_KEY', '')
 VOSK_MODEL_PATH = "vosk_model"  # optional for offline STT
 # Database Configuration
