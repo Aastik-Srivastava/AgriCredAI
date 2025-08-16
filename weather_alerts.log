@@ -1,0 +1,693 @@
+2025-08-16 19:19:39,883 | INFO | SMS to 9893003452: WEATHER ALERT for Anil Verma 1:
+1. DROUGHT RISK: Only 1.1 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical grow...
+2025-08-16 19:19:39,884 | INFO | Alerts saved & SMS queued for farmer_id=1, alerts=1
+2025-08-16 19:19:40,090 | INFO | SMS to 9826438178: WEATHER ALERT for Prakash Rao 2:
+1. DROUGHT RISK: Only 16.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:40,090 | INFO | Alerts saved & SMS queued for farmer_id=2, alerts=1
+2025-08-16 19:19:40,366 | INFO | SMS to 9897277190: WEATHER ALERT for Vijay Sharma 3:
+1. DROUGHT RISK: Only 11.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:40,367 | INFO | Alerts saved & SMS queued for farmer_id=3, alerts=1
+2025-08-16 19:19:40,559 | INFO | SMS to 9883925791: WEATHER ALERT for Ramesh Singh 4:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider preven...
+2025-08-16 19:19:40,559 | INFO | Alerts saved & SMS queued for farmer_id=4, alerts=1
+2025-08-16 19:19:40,730 | INFO | SMS to 9880491979: WEATHER ALERT for Suresh Patel 5:
+1. DROUGHT RISK: Only 3.3 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:40,731 | INFO | Alerts saved & SMS queued for farmer_id=5, alerts=1
+2025-08-16 19:19:40,894 | INFO | SMS to 9830160078: WEATHER ALERT for Prakash Rao 6:
+1. DROUGHT RISK: Only 8.8 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gro...
+2025-08-16 19:19:40,894 | INFO | Alerts saved & SMS queued for farmer_id=6, alerts=2
+2025-08-16 19:19:41,095 | INFO | SMS to 9813107102: WEATHER ALERT for Ravi Joshi 7:
+1. DROUGHT RISK: Only 10.6 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gro...
+2025-08-16 19:19:41,095 | INFO | Alerts saved & SMS queued for farmer_id=7, alerts=2
+2025-08-16 19:19:41,469 | INFO | SMS to 9824094116: WEATHER ALERT for Ravi Joshi 9:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive spra...
+2025-08-16 19:19:41,469 | INFO | Alerts saved & SMS queued for farmer_id=9, alerts=1
+2025-08-16 19:19:41,649 | INFO | SMS to 9881296147: WEATHER ALERT for Anil Verma 10:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Blight.
+Action: Scout fields; consider preventive spra...
+2025-08-16 19:19:41,649 | INFO | Alerts saved & SMS queued for farmer_id=10, alerts=1
+2025-08-16 19:19:42,024 | INFO | SMS to 9854229585: WEATHER ALERT for Suresh Patel 12:
+1. DROUGHT RISK: Only 14.1 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:42,024 | INFO | Alerts saved & SMS queued for farmer_id=12, alerts=2
+2025-08-16 19:19:42,187 | INFO | SMS to 9810325724: WEATHER ALERT for Santosh Yadav 13:
+1. DROUGHT RISK: Only 6.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:42,187 | INFO | Alerts saved & SMS queued for farmer_id=13, alerts=2
+2025-08-16 19:19:42,565 | INFO | SMS to 9880864206: WEATHER ALERT for Prakash Rao 15:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:19:42,565 | INFO | Alerts saved & SMS queued for farmer_id=15, alerts=1
+2025-08-16 19:19:42,733 | INFO | SMS to 9849369469: WEATHER ALERT for Vijay Sharma 16:
+1. DROUGHT RISK: Only 3.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:42,733 | INFO | Alerts saved & SMS queued for farmer_id=16, alerts=1
+2025-08-16 19:19:43,115 | INFO | SMS to 9849048410: WEATHER ALERT for Suresh Patel 18:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider preve...
+2025-08-16 19:19:43,115 | INFO | Alerts saved & SMS queued for farmer_id=18, alerts=1
+2025-08-16 19:19:43,286 | INFO | SMS to 9882625354: WEATHER ALERT for Santosh Yadav 19:
+1. DROUGHT RISK: Only 7.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:43,286 | INFO | Alerts saved & SMS queued for farmer_id=19, alerts=1
+2025-08-16 19:19:43,451 | INFO | SMS to 9816108485: WEATHER ALERT for Santosh Yadav 20:
+1. FROST ALERT: Temperature down to -3.2°C expected in next 3 days.
+Action: Cover seedlings, use mulchin...
+2025-08-16 19:19:43,451 | INFO | Alerts saved & SMS queued for farmer_id=20, alerts=3
+2025-08-16 19:19:43,648 | INFO | SMS to 9883107224: WEATHER ALERT for Mahesh Gupta 21:
+1. FLOOD RISK: Up to 58.3 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:43,648 | INFO | Alerts saved & SMS queued for farmer_id=21, alerts=2
+2025-08-16 19:19:43,834 | INFO | SMS to 9816081504: WEATHER ALERT for Vijay Sharma 22:
+1. DROUGHT RISK: Only 8.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:43,834 | INFO | Alerts saved & SMS queued for farmer_id=22, alerts=1
+2025-08-16 19:19:44,004 | INFO | SMS to 9810906276: WEATHER ALERT for Ramesh Singh 23:
+1. FLOOD RISK: Up to 51.9 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:44,004 | INFO | Alerts saved & SMS queued for farmer_id=23, alerts=2
+2025-08-16 19:19:44,176 | INFO | SMS to 9899273259: WEATHER ALERT for Dinesh Kumar 24:
+1. DROUGHT RISK: Only 2.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:44,176 | INFO | Alerts saved & SMS queued for farmer_id=24, alerts=1
+2025-08-16 19:19:44,361 | INFO | SMS to 9824950054: WEATHER ALERT for Raj Kumar 25:
+1. DROUGHT RISK: Only 15.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gro...
+2025-08-16 19:19:44,361 | INFO | Alerts saved & SMS queued for farmer_id=25, alerts=1
+2025-08-16 19:19:44,568 | INFO | SMS to 9810232413: WEATHER ALERT for Anil Verma 26:
+1. DROUGHT RISK: Only 4.8 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gro...
+2025-08-16 19:19:44,568 | INFO | Alerts saved & SMS queued for farmer_id=26, alerts=1
+2025-08-16 19:19:44,897 | INFO | SMS to 9848997267: WEATHER ALERT for Vijay Sharma 28:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:19:44,897 | INFO | Alerts saved & SMS queued for farmer_id=28, alerts=1
+2025-08-16 19:19:45,062 | INFO | SMS to 9879800384: WEATHER ALERT for Santosh Yadav 29:
+1. DROUGHT RISK: Only 0.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:45,062 | INFO | Alerts saved & SMS queued for farmer_id=29, alerts=1
+2025-08-16 19:19:45,222 | INFO | SMS to 9858062232: WEATHER ALERT for Anil Verma 30:
+1. FLOOD RISK: Up to 106.5 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field...
+2025-08-16 19:19:45,222 | INFO | Alerts saved & SMS queued for farmer_id=30, alerts=2
+2025-08-16 19:19:45,425 | INFO | SMS to 9878312479: WEATHER ALERT for Ravi Joshi 31:
+1. FLOOD RISK: Up to 32.0 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field ...
+2025-08-16 19:19:45,425 | INFO | Alerts saved & SMS queued for farmer_id=31, alerts=2
+2025-08-16 19:19:45,624 | INFO | SMS to 9819941767: WEATHER ALERT for Ravi Joshi 32:
+1. DROUGHT RISK: Only 4.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gro...
+2025-08-16 19:19:45,624 | INFO | Alerts saved & SMS queued for farmer_id=32, alerts=1
+2025-08-16 19:19:45,824 | INFO | SMS to 9846169883: WEATHER ALERT for Santosh Yadav 33:
+1. DROUGHT RISK: Only 4.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:45,824 | INFO | Alerts saved & SMS queued for farmer_id=33, alerts=2
+2025-08-16 19:19:45,981 | INFO | SMS to 9849947126: WEATHER ALERT for Ravi Joshi 34:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive spr...
+2025-08-16 19:19:45,981 | INFO | Alerts saved & SMS queued for farmer_id=34, alerts=1
+2025-08-16 19:19:46,357 | INFO | SMS to 9891240345: WEATHER ALERT for Mahesh Gupta 36:
+1. DROUGHT RISK: Only 5.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:46,358 | INFO | Alerts saved & SMS queued for farmer_id=36, alerts=2
+2025-08-16 19:19:46,571 | INFO | SMS to 9882062724: WEATHER ALERT for Mahesh Gupta 37:
+1. DROUGHT RISK: Only 6.1 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:46,571 | INFO | Alerts saved & SMS queued for farmer_id=37, alerts=2
+2025-08-16 19:19:46,750 | INFO | SMS to 9818299056: WEATHER ALERT for Vijay Sharma 38:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:19:46,750 | INFO | Alerts saved & SMS queued for farmer_id=38, alerts=1
+2025-08-16 19:19:47,081 | INFO | SMS to 9819445055: WEATHER ALERT for Ramesh Singh 40:
+1. FLOOD RISK: Up to 53.3 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:47,081 | INFO | Alerts saved & SMS queued for farmer_id=40, alerts=2
+2025-08-16 19:19:47,297 | INFO | SMS to 9887550480: WEATHER ALERT for Santosh Yadav 41:
+1. FLOOD RISK: Up to 44.7 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:19:47,297 | INFO | Alerts saved & SMS queued for farmer_id=41, alerts=2
+2025-08-16 19:19:47,468 | INFO | SMS to 9843758560: WEATHER ALERT for Suresh Patel 42:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider preve...
+2025-08-16 19:19:47,468 | INFO | Alerts saved & SMS queued for farmer_id=42, alerts=1
+2025-08-16 19:19:47,654 | INFO | SMS to 9887422431: WEATHER ALERT for Raj Kumar 43:
+1. FLOOD RISK: Up to 60.2 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field w...
+2025-08-16 19:19:47,656 | INFO | Alerts saved & SMS queued for farmer_id=43, alerts=2
+2025-08-16 19:19:47,831 | INFO | SMS to 9836649558: WEATHER ALERT for Suresh Patel 44:
+1. DISEASE RISK: Humid/rainy spell may trigger Borer, Rust.
+Action: Scout fields; consider preventive spr...
+2025-08-16 19:19:47,832 | INFO | Alerts saved & SMS queued for farmer_id=44, alerts=1
+2025-08-16 19:19:48,006 | INFO | SMS to 9850915763: WEATHER ALERT for Raj Kumar 45:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Blight.
+Action: Scout fields; consider preventive spray...
+2025-08-16 19:19:48,007 | INFO | Alerts saved & SMS queued for farmer_id=45, alerts=1
+2025-08-16 19:19:48,343 | INFO | SMS to 9879346532: WEATHER ALERT for Suresh Patel 47:
+1. FLOOD RISK: Up to 46.1 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:48,344 | INFO | Alerts saved & SMS queued for farmer_id=47, alerts=2
+2025-08-16 19:19:48,517 | INFO | SMS to 9829106786: WEATHER ALERT for Vijay Sharma 48:
+1. FLOOD RISK: Up to 75.0 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:48,517 | INFO | Alerts saved & SMS queued for farmer_id=48, alerts=2
+2025-08-16 19:19:48,722 | INFO | SMS to 9818071310: WEATHER ALERT for Prakash Rao 49:
+1. DROUGHT RISK: Only 2.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:48,722 | INFO | Alerts saved & SMS queued for farmer_id=49, alerts=2
+2025-08-16 19:19:48,888 | INFO | SMS to 9866377853: WEATHER ALERT for Dinesh Kumar 50:
+1. DROUGHT RISK: Only 15.6 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:48,888 | INFO | Alerts saved & SMS queued for farmer_id=50, alerts=2
+2025-08-16 19:19:49,050 | INFO | SMS to 9855502271: WEATHER ALERT for Ravi Joshi 51:
+1. DROUGHT RISK: Only 14.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:49,050 | INFO | Alerts saved & SMS queued for farmer_id=51, alerts=2
+2025-08-16 19:19:49,225 | INFO | SMS to 9890617092: WEATHER ALERT for Suresh Patel 52:
+1. DISEASE RISK: Humid/rainy spell may trigger Borer, Rust.
+Action: Scout fields; consider preventive spr...
+2025-08-16 19:19:49,225 | INFO | Alerts saved & SMS queued for farmer_id=52, alerts=1
+2025-08-16 19:19:49,450 | INFO | SMS to 9899000502: WEATHER ALERT for Dinesh Kumar 53:
+1. DROUGHT RISK: Only 1.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:49,450 | INFO | Alerts saved & SMS queued for farmer_id=53, alerts=1
+2025-08-16 19:19:49,645 | INFO | SMS to 9851715676: WEATHER ALERT for Santosh Yadav 54:
+1. DROUGHT RISK: Only 0.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:49,646 | INFO | Alerts saved & SMS queued for farmer_id=54, alerts=1
+2025-08-16 19:19:49,805 | INFO | SMS to 9822043742: WEATHER ALERT for Ramesh Singh 55:
+1. DROUGHT RISK: Only 0.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:49,805 | INFO | Alerts saved & SMS queued for farmer_id=55, alerts=1
+2025-08-16 19:19:49,968 | INFO | SMS to 9866438488: WEATHER ALERT for Vijay Sharma 56:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:19:49,968 | INFO | Alerts saved & SMS queued for farmer_id=56, alerts=1
+2025-08-16 19:19:50,177 | INFO | SMS to 9849343203: WEATHER ALERT for Vijay Sharma 57:
+1. DROUGHT RISK: Only 2.6 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:50,177 | INFO | Alerts saved & SMS queued for farmer_id=57, alerts=1
+2025-08-16 19:19:50,560 | INFO | SMS to 9874994364: WEATHER ALERT for Prakash Rao 59:
+1. DROUGHT RISK: Only 0.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:50,560 | INFO | Alerts saved & SMS queued for farmer_id=59, alerts=1
+2025-08-16 19:19:50,766 | INFO | SMS to 9831021599: WEATHER ALERT for Anil Verma 60:
+1. FLOOD RISK: Up to 39.6 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field ...
+2025-08-16 19:19:50,767 | INFO | Alerts saved & SMS queued for farmer_id=60, alerts=1
+2025-08-16 19:19:50,929 | INFO | SMS to 9844129042: WEATHER ALERT for Dinesh Kumar 61:
+1. DROUGHT RISK: Only 9.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:50,930 | INFO | Alerts saved & SMS queued for farmer_id=61, alerts=1
+2025-08-16 19:19:51,122 | INFO | SMS to 9885368519: WEATHER ALERT for Raj Kumar 62:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Pod Borer.
+Action: Scout fields; consider preventive sp...
+2025-08-16 19:19:51,122 | INFO | Alerts saved & SMS queued for farmer_id=62, alerts=1
+2025-08-16 19:19:51,313 | INFO | SMS to 9837267961: WEATHER ALERT for Ravi Joshi 63:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider prevent...
+2025-08-16 19:19:51,313 | INFO | Alerts saved & SMS queued for farmer_id=63, alerts=1
+2025-08-16 19:19:51,500 | INFO | SMS to 9879753170: WEATHER ALERT for Santosh Yadav 64:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:19:51,500 | INFO | Alerts saved & SMS queued for farmer_id=64, alerts=1
+2025-08-16 19:19:51,668 | INFO | SMS to 9863392079: WEATHER ALERT for Ravi Joshi 65:
+1. FLOOD RISK: Up to 57.6 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field ...
+2025-08-16 19:19:51,668 | INFO | Alerts saved & SMS queued for farmer_id=65, alerts=2
+2025-08-16 19:19:51,871 | INFO | SMS to 9863015621: WEATHER ALERT for Prakash Rao 66:
+1. DROUGHT RISK: Only 9.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:51,871 | INFO | Alerts saved & SMS queued for farmer_id=66, alerts=2
+2025-08-16 19:19:52,029 | INFO | SMS to 9821594881: WEATHER ALERT for Ramesh Singh 67:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:19:52,029 | INFO | Alerts saved & SMS queued for farmer_id=67, alerts=1
+2025-08-16 19:19:52,392 | INFO | SMS to 9871186247: WEATHER ALERT for Raj Kumar 69:
+1. FROST ALERT: Temperature down to -0.8°C expected in next 3 days.
+Action: Cover seedlings, use mulching/sp...
+2025-08-16 19:19:52,392 | INFO | Alerts saved & SMS queued for farmer_id=69, alerts=2
+2025-08-16 19:19:52,589 | INFO | SMS to 9848863461: WEATHER ALERT for Santosh Yadav 70:
+1. DROUGHT RISK: Only 5.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:52,589 | INFO | Alerts saved & SMS queued for farmer_id=70, alerts=2
+2025-08-16 19:19:52,759 | INFO | SMS to 9841332896: WEATHER ALERT for Santosh Yadav 71:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive...
+2025-08-16 19:19:52,759 | INFO | Alerts saved & SMS queued for farmer_id=71, alerts=1
+2025-08-16 19:19:52,921 | INFO | SMS to 9855978362: WEATHER ALERT for Raj Kumar 72:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Pod Borer.
+Action: Scout fields; consider preventive sp...
+2025-08-16 19:19:52,921 | INFO | Alerts saved & SMS queued for farmer_id=72, alerts=1
+2025-08-16 19:19:53,108 | INFO | SMS to 9869969809: WEATHER ALERT for Prakash Rao 73:
+1. FLOOD RISK: Up to 56.1 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field...
+2025-08-16 19:19:53,109 | INFO | Alerts saved & SMS queued for farmer_id=73, alerts=2
+2025-08-16 19:19:53,277 | INFO | SMS to 9894853118: WEATHER ALERT for Ramesh Singh 74:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:19:53,277 | INFO | Alerts saved & SMS queued for farmer_id=74, alerts=1
+2025-08-16 19:19:53,464 | INFO | SMS to 9826114049: WEATHER ALERT for Mahesh Gupta 75:
+1. FLOOD RISK: Up to 43.6 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:53,464 | INFO | Alerts saved & SMS queued for farmer_id=75, alerts=2
+2025-08-16 19:19:53,658 | INFO | SMS to 9847171825: WEATHER ALERT for Suresh Patel 76:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:19:53,658 | INFO | Alerts saved & SMS queued for farmer_id=76, alerts=1
+2025-08-16 19:19:53,837 | INFO | SMS to 9885642852: WEATHER ALERT for Mahesh Gupta 77:
+1. FLOOD RISK: Up to 30.8 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:53,837 | INFO | Alerts saved & SMS queued for farmer_id=77, alerts=2
+2025-08-16 19:19:54,010 | INFO | SMS to 9831589814: WEATHER ALERT for Anil Verma 78:
+1. FLOOD RISK: Up to 32.9 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field ...
+2025-08-16 19:19:54,010 | INFO | Alerts saved & SMS queued for farmer_id=78, alerts=1
+2025-08-16 19:19:54,209 | INFO | SMS to 9838541704: WEATHER ALERT for Santosh Yadav 79:
+1. DROUGHT RISK: Only 12.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:19:54,209 | INFO | Alerts saved & SMS queued for farmer_id=79, alerts=2
+2025-08-16 19:19:54,403 | INFO | SMS to 9810068630: WEATHER ALERT for Ravi Joshi 80:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive sp...
+2025-08-16 19:19:54,404 | INFO | Alerts saved & SMS queued for farmer_id=80, alerts=1
+2025-08-16 19:19:54,572 | INFO | SMS to 9856532488: WEATHER ALERT for Mahesh Gupta 81:
+1. DROUGHT RISK: Only 1.8 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:54,572 | INFO | Alerts saved & SMS queued for farmer_id=81, alerts=1
+2025-08-16 19:19:54,744 | INFO | SMS to 9862809810: WEATHER ALERT for Santosh Yadav 82:
+1. DROUGHT RISK: Only 14.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:19:54,744 | INFO | Alerts saved & SMS queued for farmer_id=82, alerts=2
+2025-08-16 19:19:54,935 | INFO | SMS to 9893960833: WEATHER ALERT for Anil Verma 83:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive spr...
+2025-08-16 19:19:54,935 | INFO | Alerts saved & SMS queued for farmer_id=83, alerts=1
+2025-08-16 19:19:55,123 | INFO | SMS to 9891994292: WEATHER ALERT for Santosh Yadav 84:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider prev...
+2025-08-16 19:19:55,123 | INFO | Alerts saved & SMS queued for farmer_id=84, alerts=1
+2025-08-16 19:19:55,484 | INFO | SMS to 9826126776: WEATHER ALERT for Vijay Sharma 86:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:19:55,484 | INFO | Alerts saved & SMS queued for farmer_id=86, alerts=1
+2025-08-16 19:19:55,680 | INFO | SMS to 9890910997: WEATHER ALERT for Ravi Joshi 87:
+1. DISEASE RISK: Humid/rainy spell may trigger Borer, Rust.
+Action: Scout fields; consider preventive spray...
+2025-08-16 19:19:55,680 | INFO | Alerts saved & SMS queued for farmer_id=87, alerts=1
+2025-08-16 19:19:55,879 | INFO | SMS to 9858327454: WEATHER ALERT for Mahesh Gupta 88:
+1. FLOOD RISK: Up to 83.0 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:55,880 | INFO | Alerts saved & SMS queued for farmer_id=88, alerts=1
+2025-08-16 19:19:56,068 | INFO | SMS to 9846505780: WEATHER ALERT for Prakash Rao 89:
+1. DROUGHT RISK: Only 14.1 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:56,069 | INFO | Alerts saved & SMS queued for farmer_id=89, alerts=1
+2025-08-16 19:19:56,270 | INFO | SMS to 9810087643: WEATHER ALERT for Santosh Yadav 90:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Blight.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:19:56,270 | INFO | Alerts saved & SMS queued for farmer_id=90, alerts=1
+2025-08-16 19:19:57,325 | INFO | SMS to 9869017740: WEATHER ALERT for Santosh Yadav 92:
+1. DROUGHT RISK: Only 6.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:57,325 | INFO | Alerts saved & SMS queued for farmer_id=92, alerts=1
+2025-08-16 19:19:57,551 | INFO | SMS to 9825829288: WEATHER ALERT for Anil Verma 93:
+1. FLOOD RISK: Up to 50.5 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field ...
+2025-08-16 19:19:57,551 | INFO | Alerts saved & SMS queued for farmer_id=93, alerts=2
+2025-08-16 19:19:57,721 | INFO | SMS to 9867072688: WEATHER ALERT for Raj Kumar 94:
+1. FLOOD RISK: Up to 48.3 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field w...
+2025-08-16 19:19:57,721 | INFO | Alerts saved & SMS queued for farmer_id=94, alerts=2
+2025-08-16 19:19:57,915 | INFO | SMS to 9834225280: WEATHER ALERT for Vijay Sharma 95:
+1. FLOOD RISK: Up to 42.5 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:19:57,916 | INFO | Alerts saved & SMS queued for farmer_id=95, alerts=2
+2025-08-16 19:19:58,095 | INFO | SMS to 9891180676: WEATHER ALERT for Prakash Rao 96:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:19:58,096 | INFO | Alerts saved & SMS queued for farmer_id=96, alerts=1
+2025-08-16 19:19:58,297 | INFO | SMS to 9890330208: WEATHER ALERT for Anil Verma 97:
+1. DROUGHT RISK: Only 10.3 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:58,298 | INFO | Alerts saved & SMS queued for farmer_id=97, alerts=2
+2025-08-16 19:19:58,487 | INFO | SMS to 9874482624: WEATHER ALERT for Prakash Rao 98:
+1. DROUGHT RISK: Only 16.8 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:58,487 | INFO | Alerts saved & SMS queued for farmer_id=98, alerts=1
+2025-08-16 19:19:58,665 | INFO | SMS to 9823484663: WEATHER ALERT for Raj Kumar 99:
+1. FLOOD RISK: Up to 31.5 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field w...
+2025-08-16 19:19:58,665 | INFO | Alerts saved & SMS queued for farmer_id=99, alerts=2
+2025-08-16 19:19:59,031 | INFO | SMS to 9816888475: WEATHER ALERT for Suresh Patel 101:
+1. DROUGHT RISK: Only 0.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:19:59,032 | INFO | Alerts saved & SMS queued for farmer_id=101, alerts=1
+2025-08-16 19:19:59,195 | INFO | SMS to 9824552980: WEATHER ALERT for Ravi Joshi 102:
+1. DROUGHT RISK: Only 3.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:19:59,195 | INFO | Alerts saved & SMS queued for farmer_id=102, alerts=1
+2025-08-16 19:19:59,383 | INFO | SMS to 9823319396: WEATHER ALERT for Anil Verma 103:
+1. DROUGHT RISK: Only 16.3 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:19:59,383 | INFO | Alerts saved & SMS queued for farmer_id=103, alerts=1
+2025-08-16 19:19:59,573 | INFO | SMS to 9832226820: WEATHER ALERT for Mahesh Gupta 104:
+1. FLOOD RISK: Up to 33.4 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:19:59,574 | INFO | Alerts saved & SMS queued for farmer_id=104, alerts=2
+2025-08-16 19:19:59,748 | INFO | SMS to 9870310481: WEATHER ALERT for Anil Verma 105:
+1. FLOOD RISK: Up to 32.1 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field...
+2025-08-16 19:19:59,749 | INFO | Alerts saved & SMS queued for farmer_id=105, alerts=2
+2025-08-16 19:19:59,918 | INFO | SMS to 9822156397: WEATHER ALERT for Raj Kumar 106:
+1. FROST ALERT: Temperature down to -1.9°C expected in next 3 days.
+Action: Cover seedlings, use mulching/s...
+2025-08-16 19:19:59,918 | INFO | Alerts saved & SMS queued for farmer_id=106, alerts=2
+2025-08-16 19:20:00,126 | INFO | SMS to 9871812613: WEATHER ALERT for Anil Verma 107:
+1. FLOOD RISK: Up to 51.0 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field...
+2025-08-16 19:20:00,126 | INFO | Alerts saved & SMS queued for farmer_id=107, alerts=2
+2025-08-16 19:20:00,325 | INFO | SMS to 9822357801: WEATHER ALERT for Raj Kumar 108:
+1. DISEASE RISK: Humid/rainy spell may trigger Borer, Rust.
+Action: Scout fields; consider preventive spray...
+2025-08-16 19:20:00,326 | INFO | Alerts saved & SMS queued for farmer_id=108, alerts=1
+2025-08-16 19:20:00,488 | INFO | SMS to 9855718116: WEATHER ALERT for Ravi Joshi 109:
+1. FLOOD RISK: Up to 52.6 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field...
+2025-08-16 19:20:00,488 | INFO | Alerts saved & SMS queued for farmer_id=109, alerts=2
+2025-08-16 19:20:00,686 | INFO | SMS to 9852631621: WEATHER ALERT for Vijay Sharma 110:
+1. FLOOD RISK: Up to 36.2 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:00,686 | INFO | Alerts saved & SMS queued for farmer_id=110, alerts=2
+2025-08-16 19:20:00,875 | INFO | SMS to 9841788123: WEATHER ALERT for Vijay Sharma 111:
+1. DROUGHT RISK: Only 16.1 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:20:00,875 | INFO | Alerts saved & SMS queued for farmer_id=111, alerts=2
+2025-08-16 19:20:01,057 | INFO | SMS to 9835051038: WEATHER ALERT for Mahesh Gupta 112:
+1. DROUGHT RISK: Only 8.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:01,057 | INFO | Alerts saved & SMS queued for farmer_id=112, alerts=2
+2025-08-16 19:20:01,310 | INFO | SMS to 9878596130: WEATHER ALERT for Dinesh Kumar 113:
+1. DROUGHT RISK: Only 5.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:01,311 | INFO | Alerts saved & SMS queued for farmer_id=113, alerts=2
+2025-08-16 19:20:01,812 | INFO | SMS to 9879274613: WEATHER ALERT for Ramesh Singh 114:
+1. DROUGHT RISK: Only 12.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:20:01,812 | INFO | Alerts saved & SMS queued for farmer_id=114, alerts=1
+2025-08-16 19:20:03,011 | INFO | SMS to 9857033368: WEATHER ALERT for Vijay Sharma 115:
+1. DISEASE RISK: Humid/rainy spell may trigger Borer, Rust.
+Action: Scout fields; consider preventive sp...
+2025-08-16 19:20:03,011 | INFO | Alerts saved & SMS queued for farmer_id=115, alerts=1
+2025-08-16 19:20:03,193 | INFO | SMS to 9894506174: WEATHER ALERT for Ravi Joshi 116:
+1. DROUGHT RISK: Only 0.6 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:03,193 | INFO | Alerts saved & SMS queued for farmer_id=116, alerts=1
+2025-08-16 19:20:03,358 | INFO | SMS to 9849155880: WEATHER ALERT for Dinesh Kumar 117:
+1. DROUGHT RISK: Only 5.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:03,358 | INFO | Alerts saved & SMS queued for farmer_id=117, alerts=2
+2025-08-16 19:20:03,523 | INFO | SMS to 9868243477: WEATHER ALERT for Suresh Patel 118:
+1. DROUGHT RISK: Only 7.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:03,523 | INFO | Alerts saved & SMS queued for farmer_id=118, alerts=2
+2025-08-16 19:20:03,724 | INFO | SMS to 9839287154: WEATHER ALERT for Dinesh Kumar 119:
+1. FLOOD RISK: Up to 46.4 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:03,725 | INFO | Alerts saved & SMS queued for farmer_id=119, alerts=2
+2025-08-16 19:20:03,923 | INFO | SMS to 9884211490: WEATHER ALERT for Suresh Patel 120:
+1. DROUGHT RISK: Only 3.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:03,923 | INFO | Alerts saved & SMS queued for farmer_id=120, alerts=1
+2025-08-16 19:20:04,082 | INFO | SMS to 9867623202: WEATHER ALERT for Ramesh Singh 121:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive...
+2025-08-16 19:20:04,082 | INFO | Alerts saved & SMS queued for farmer_id=121, alerts=1
+2025-08-16 19:20:04,243 | INFO | SMS to 9825747956: WEATHER ALERT for Mahesh Gupta 122:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider prev...
+2025-08-16 19:20:04,243 | INFO | Alerts saved & SMS queued for farmer_id=122, alerts=1
+2025-08-16 19:20:04,456 | INFO | SMS to 9861457825: WEATHER ALERT for Vijay Sharma 123:
+1. FLOOD RISK: Up to 30.1 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:04,457 | INFO | Alerts saved & SMS queued for farmer_id=123, alerts=2
+2025-08-16 19:20:04,673 | INFO | SMS to 9844053931: WEATHER ALERT for Anil Verma 124:
+1. DROUGHT RISK: Only 14.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:20:04,673 | INFO | Alerts saved & SMS queued for farmer_id=124, alerts=1
+2025-08-16 19:20:04,847 | INFO | SMS to 9864646975: WEATHER ALERT for Suresh Patel 125:
+1. FLOOD RISK: Up to 96.4 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:04,847 | INFO | Alerts saved & SMS queued for farmer_id=125, alerts=2
+2025-08-16 19:20:05,018 | INFO | SMS to 9845422018: WEATHER ALERT for Vijay Sharma 126:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:20:05,018 | INFO | Alerts saved & SMS queued for farmer_id=126, alerts=1
+2025-08-16 19:20:05,219 | INFO | SMS to 9889800308: WEATHER ALERT for Vijay Sharma 127:
+1. FLOOD RISK: Up to 52.9 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:05,219 | INFO | Alerts saved & SMS queued for farmer_id=127, alerts=2
+2025-08-16 19:20:05,381 | INFO | SMS to 9861779601: WEATHER ALERT for Mahesh Gupta 128:
+1. DROUGHT RISK: Only 8.8 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:05,381 | INFO | Alerts saved & SMS queued for farmer_id=128, alerts=1
+2025-08-16 19:20:05,579 | INFO | SMS to 9860628998: WEATHER ALERT for Mahesh Gupta 129:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive...
+2025-08-16 19:20:05,579 | INFO | Alerts saved & SMS queued for farmer_id=129, alerts=1
+2025-08-16 19:20:05,766 | INFO | SMS to 9817131696: WEATHER ALERT for Suresh Patel 130:
+1. DROUGHT RISK: Only 16.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:20:05,766 | INFO | Alerts saved & SMS queued for farmer_id=130, alerts=2
+2025-08-16 19:20:06,101 | INFO | SMS to 9876086704: WEATHER ALERT for Santosh Yadav 132:
+1. DROUGHT RISK: Only 1.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:20:06,101 | INFO | Alerts saved & SMS queued for farmer_id=132, alerts=2
+2025-08-16 19:20:06,665 | INFO | SMS to 9883196579: WEATHER ALERT for Vijay Sharma 133:
+1. DROUGHT RISK: Only 14.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:20:06,666 | INFO | Alerts saved & SMS queued for farmer_id=133, alerts=1
+2025-08-16 19:20:07,140 | INFO | SMS to 9882641478: WEATHER ALERT for Raj Kumar 134:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive sp...
+2025-08-16 19:20:07,140 | INFO | Alerts saved & SMS queued for farmer_id=134, alerts=1
+2025-08-16 19:20:07,298 | INFO | SMS to 9877347447: WEATHER ALERT for Vijay Sharma 135:
+1. DROUGHT RISK: Only 3.8 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:07,298 | INFO | Alerts saved & SMS queued for farmer_id=135, alerts=2
+2025-08-16 19:20:07,470 | INFO | SMS to 9835726042: WEATHER ALERT for Vijay Sharma 136:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive...
+2025-08-16 19:20:07,470 | INFO | Alerts saved & SMS queued for farmer_id=136, alerts=1
+2025-08-16 19:20:07,847 | INFO | SMS to 9897129402: WEATHER ALERT for Prakash Rao 138:
+1. FLOOD RISK: Up to 47.1 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fiel...
+2025-08-16 19:20:07,847 | INFO | Alerts saved & SMS queued for farmer_id=138, alerts=1
+2025-08-16 19:20:08,023 | INFO | SMS to 9819166239: WEATHER ALERT for Prakash Rao 139:
+1. DROUGHT RISK: Only 12.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:08,024 | INFO | Alerts saved & SMS queued for farmer_id=139, alerts=2
+2025-08-16 19:20:08,182 | INFO | SMS to 9876008857: WEATHER ALERT for Mahesh Gupta 140:
+1. FLOOD RISK: Up to 49.9 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:08,182 | INFO | Alerts saved & SMS queued for farmer_id=140, alerts=2
+2025-08-16 19:20:08,377 | INFO | SMS to 9829477086: WEATHER ALERT for Mahesh Gupta 141:
+1. DISEASE RISK: Humid/rainy spell may trigger Red Rot, Smut.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:20:08,377 | INFO | Alerts saved & SMS queued for farmer_id=141, alerts=1
+2025-08-16 19:20:08,568 | INFO | SMS to 9883769726: WEATHER ALERT for Prakash Rao 142:
+1. DROUGHT RISK: Only 16.3 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:08,569 | INFO | Alerts saved & SMS queued for farmer_id=142, alerts=2
+2025-08-16 19:20:08,942 | INFO | SMS to 9829858600: WEATHER ALERT for Mahesh Gupta 144:
+1. DROUGHT RISK: Only 0.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:08,943 | INFO | Alerts saved & SMS queued for farmer_id=144, alerts=2
+2025-08-16 19:20:09,140 | INFO | SMS to 9825588576: WEATHER ALERT for Santosh Yadav 145:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider pre...
+2025-08-16 19:20:09,140 | INFO | Alerts saved & SMS queued for farmer_id=145, alerts=1
+2025-08-16 19:20:09,507 | INFO | SMS to 9898734219: WEATHER ALERT for Ravi Joshi 147:
+1. DROUGHT RISK: Only 4.6 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:09,508 | INFO | Alerts saved & SMS queued for farmer_id=147, alerts=1
+2025-08-16 19:20:09,700 | INFO | SMS to 9834375545: WEATHER ALERT for Anil Verma 148:
+1. DROUGHT RISK: Only 6.6 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:09,700 | INFO | Alerts saved & SMS queued for farmer_id=148, alerts=2
+2025-08-16 19:20:09,891 | INFO | SMS to 9856370911: WEATHER ALERT for Raj Kumar 149:
+1. DROUGHT RISK: Only 12.4 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:09,891 | INFO | Alerts saved & SMS queued for farmer_id=149, alerts=2
+2025-08-16 19:20:10,060 | INFO | SMS to 9869275047: WEATHER ALERT for Ravi Joshi 150:
+1. DROUGHT RISK: Only 3.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:10,061 | INFO | Alerts saved & SMS queued for farmer_id=150, alerts=1
+2025-08-16 19:20:10,248 | INFO | SMS to 9831552434: WEATHER ALERT for Mahesh Gupta 151:
+1. DROUGHT RISK: Only 0.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:10,249 | INFO | Alerts saved & SMS queued for farmer_id=151, alerts=1
+2025-08-16 19:20:10,445 | INFO | SMS to 9837580680: WEATHER ALERT for Mahesh Gupta 152:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Pod Borer.
+Action: Scout fields; consider preventiv...
+2025-08-16 19:20:10,445 | INFO | Alerts saved & SMS queued for farmer_id=152, alerts=1
+2025-08-16 19:20:10,602 | INFO | SMS to 9841979194: WEATHER ALERT for Suresh Patel 153:
+1. DROUGHT RISK: Only 0.1 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:10,603 | INFO | Alerts saved & SMS queued for farmer_id=153, alerts=1
+2025-08-16 19:20:10,772 | INFO | SMS to 9870099015: WEATHER ALERT for Raj Kumar 154:
+1. DROUGHT RISK: Only 10.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:10,772 | INFO | Alerts saved & SMS queued for farmer_id=154, alerts=1
+2025-08-16 19:20:10,974 | INFO | SMS to 9875044351: WEATHER ALERT for Mahesh Gupta 155:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Blight.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:20:10,974 | INFO | Alerts saved & SMS queued for farmer_id=155, alerts=1
+2025-08-16 19:20:11,157 | INFO | SMS to 9851136254: WEATHER ALERT for Raj Kumar 156:
+1. DROUGHT RISK: Only 0.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gro...
+2025-08-16 19:20:11,157 | INFO | Alerts saved & SMS queued for farmer_id=156, alerts=1
+2025-08-16 19:20:11,319 | INFO | SMS to 9877507666: WEATHER ALERT for Dinesh Kumar 157:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider prev...
+2025-08-16 19:20:11,319 | INFO | Alerts saved & SMS queued for farmer_id=157, alerts=1
+2025-08-16 19:20:11,681 | INFO | SMS to 9842042993: WEATHER ALERT for Anil Verma 159:
+1. DROUGHT RISK: Only 11.8 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:20:11,681 | INFO | Alerts saved & SMS queued for farmer_id=159, alerts=1
+2025-08-16 19:20:11,843 | INFO | SMS to 9888996887: WEATHER ALERT for Santosh Yadav 160:
+1. FLOOD RISK: Up to 54.6 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fi...
+2025-08-16 19:20:11,843 | INFO | Alerts saved & SMS queued for farmer_id=160, alerts=2
+2025-08-16 19:20:12,026 | INFO | SMS to 9814389226: WEATHER ALERT for Santosh Yadav 161:
+1. FLOOD RISK: Up to 62.9 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fi...
+2025-08-16 19:20:12,026 | INFO | Alerts saved & SMS queued for farmer_id=161, alerts=2
+2025-08-16 19:20:12,375 | INFO | SMS to 9821934786: WEATHER ALERT for Mahesh Gupta 163:
+1. FLOOD RISK: Up to 45.8 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:12,376 | INFO | Alerts saved & SMS queued for farmer_id=163, alerts=2
+2025-08-16 19:20:12,546 | INFO | SMS to 9895998496: WEATHER ALERT for Santosh Yadav 164:
+1. DROUGHT RISK: Only 1.3 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:20:12,546 | INFO | Alerts saved & SMS queued for farmer_id=164, alerts=1
+2025-08-16 19:20:12,749 | INFO | SMS to 9894259629: WEATHER ALERT for Santosh Yadav 165:
+1. DROUGHT RISK: Only 14.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critica...
+2025-08-16 19:20:12,749 | INFO | Alerts saved & SMS queued for farmer_id=165, alerts=2
+2025-08-16 19:20:13,118 | INFO | SMS to 9818209068: WEATHER ALERT for Mahesh Gupta 167:
+1. DISEASE RISK: Humid/rainy spell may trigger Borer, Rust.
+Action: Scout fields; consider preventive sp...
+2025-08-16 19:20:13,119 | INFO | Alerts saved & SMS queued for farmer_id=167, alerts=1
+2025-08-16 19:20:13,291 | INFO | SMS to 9851243451: WEATHER ALERT for Ravi Joshi 168:
+1. FLOOD RISK: Up to 81.8 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field...
+2025-08-16 19:20:13,291 | INFO | Alerts saved & SMS queued for farmer_id=168, alerts=2
+2025-08-16 19:20:13,474 | INFO | SMS to 9810767828: WEATHER ALERT for Suresh Patel 169:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Blight.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:20:13,474 | INFO | Alerts saved & SMS queued for farmer_id=169, alerts=1
+2025-08-16 19:20:13,836 | INFO | SMS to 9846659504: WEATHER ALERT for Santosh Yadav 171:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Blight.
+Action: Scout fields; consider preventive ...
+2025-08-16 19:20:13,837 | INFO | Alerts saved & SMS queued for farmer_id=171, alerts=1
+2025-08-16 19:20:13,992 | INFO | SMS to 9813665668: WEATHER ALERT for Ravi Joshi 172:
+1. DROUGHT RISK: Only 0.0 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:13,992 | INFO | Alerts saved & SMS queued for farmer_id=172, alerts=1
+2025-08-16 19:20:14,190 | INFO | SMS to 9848162344: WEATHER ALERT for Anil Verma 173:
+1. DROUGHT RISK: Only 15.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:20:14,190 | INFO | Alerts saved & SMS queued for farmer_id=173, alerts=2
+2025-08-16 19:20:14,551 | INFO | SMS to 9830748613: WEATHER ALERT for Suresh Patel 175:
+1. DROUGHT RISK: Only 3.7 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:14,551 | INFO | Alerts saved & SMS queued for farmer_id=175, alerts=1
+2025-08-16 19:20:14,922 | INFO | SMS to 9838353889: WEATHER ALERT for Suresh Patel 177:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Pod Borer.
+Action: Scout fields; consider preventiv...
+2025-08-16 19:20:14,922 | INFO | Alerts saved & SMS queued for farmer_id=177, alerts=1
+2025-08-16 19:20:15,316 | INFO | SMS to 9833685944: WEATHER ALERT for Mahesh Gupta 179:
+1. FLOOD RISK: Up to 33.1 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:15,316 | INFO | Alerts saved & SMS queued for farmer_id=179, alerts=2
+2025-08-16 19:20:15,510 | INFO | SMS to 9862419200: WEATHER ALERT for Raj Kumar 180:
+1. FLOOD RISK: Up to 47.8 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid field ...
+2025-08-16 19:20:15,510 | INFO | Alerts saved & SMS queued for farmer_id=180, alerts=2
+2025-08-16 19:20:15,676 | INFO | SMS to 9810505219: WEATHER ALERT for Prakash Rao 181:
+1. DROUGHT RISK: Only 8.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:20:15,676 | INFO | Alerts saved & SMS queued for farmer_id=181, alerts=1
+2025-08-16 19:20:15,875 | INFO | SMS to 9882767718: WEATHER ALERT for Mahesh Gupta 182:
+1. DROUGHT RISK: Only 9.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:15,876 | INFO | Alerts saved & SMS queued for farmer_id=182, alerts=1
+2025-08-16 19:20:16,061 | INFO | SMS to 9894335385: WEATHER ALERT for Ravi Joshi 183:
+1. DROUGHT RISK: Only 1.5 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:16,061 | INFO | Alerts saved & SMS queued for farmer_id=183, alerts=1
+2025-08-16 19:20:16,231 | INFO | SMS to 9838033014: WEATHER ALERT for Santosh Yadav 184:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Pod Borer.
+Action: Scout fields; consider preventi...
+2025-08-16 19:20:16,231 | INFO | Alerts saved & SMS queued for farmer_id=184, alerts=1
+2025-08-16 19:20:16,429 | INFO | SMS to 9870855514: WEATHER ALERT for Suresh Patel 185:
+1. DROUGHT RISK: Only 10.2 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical...
+2025-08-16 19:20:16,429 | INFO | Alerts saved & SMS queued for farmer_id=185, alerts=2
+2025-08-16 19:20:16,627 | INFO | SMS to 9851082475: WEATHER ALERT for Vijay Sharma 186:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive...
+2025-08-16 19:20:16,627 | INFO | Alerts saved & SMS queued for farmer_id=186, alerts=1
+2025-08-16 19:20:16,815 | INFO | SMS to 9851296524: WEATHER ALERT for Ramesh Singh 187:
+1. FLOOD RISK: Up to 38.5 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:16,815 | INFO | Alerts saved & SMS queued for farmer_id=187, alerts=2
+2025-08-16 19:20:17,028 | INFO | SMS to 9820390290: WEATHER ALERT for Suresh Patel 188:
+1. FROST ALERT: Temperature down to -2.4°C expected in next 3 days.
+Action: Cover seedlings, use mulchin...
+2025-08-16 19:20:17,029 | INFO | Alerts saved & SMS queued for farmer_id=188, alerts=3
+2025-08-16 19:20:17,213 | INFO | SMS to 9831244733: WEATHER ALERT for Prakash Rao 189:
+1. FROST ALERT: Temperature down to -3.2°C expected in next 3 days.
+Action: Cover seedlings, use mulching...
+2025-08-16 19:20:17,213 | INFO | Alerts saved & SMS queued for farmer_id=189, alerts=3
+2025-08-16 19:20:17,414 | INFO | SMS to 9874935304: WEATHER ALERT for Mahesh Gupta 190:
+1. FLOOD RISK: Up to 48.7 mm/day expected.
+Action: Clear drains, move inputs to higher ground, avoid fie...
+2025-08-16 19:20:17,414 | INFO | Alerts saved & SMS queued for farmer_id=190, alerts=2
+2025-08-16 19:20:17,786 | INFO | SMS to 9888351072: WEATHER ALERT for Ravi Joshi 191:
+1. DROUGHT RISK: Only 15.1 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical g...
+2025-08-16 19:20:17,786 | INFO | Alerts saved & SMS queued for farmer_id=191, alerts=2
+2025-08-16 19:20:18,019 | INFO | SMS to 9821022099: WEATHER ALERT for Suresh Patel 192:
+1. DISEASE RISK: Humid/rainy spell may trigger Blast, Sheath Blight.
+Action: Scout fields; consider prev...
+2025-08-16 19:20:18,019 | INFO | Alerts saved & SMS queued for farmer_id=192, alerts=1
+2025-08-16 19:20:18,340 | INFO | SMS to 9827352003: WEATHER ALERT for Anil Verma 194:
+1. DROUGHT RISK: Only 2.3 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical gr...
+2025-08-16 19:20:18,340 | INFO | Alerts saved & SMS queued for farmer_id=194, alerts=1
+2025-08-16 19:20:18,534 | INFO | SMS to 9846790709: WEATHER ALERT for Ravi Joshi 195:
+1. DISEASE RISK: Humid/rainy spell may trigger Bollworm, Wilt.
+Action: Scout fields; consider preventive s...
+2025-08-16 19:20:18,534 | INFO | Alerts saved & SMS queued for farmer_id=195, alerts=1
+2025-08-16 19:20:18,692 | INFO | SMS to 9873496841: WEATHER ALERT for Suresh Patel 196:
+1. DROUGHT RISK: Only 1.9 mm forecast in next 7 days.
+Action: Irrigate efficiently, prioritize critical ...
+2025-08-16 19:20:18,692 | INFO | Alerts saved & SMS queued for farmer_id=196, alerts=1
+2025-08-16 19:20:18,861 | INFO | SMS to 9813635616: WEATHER ALERT for Ramesh Singh 197:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Pod Borer.
+Action: Scout fields; consider preventiv...
+2025-08-16 19:20:18,861 | INFO | Alerts saved & SMS queued for farmer_id=197, alerts=1
+2025-08-16 19:20:19,034 | INFO | SMS to 9869423981: WEATHER ALERT for Anil Verma 198:
+1. DISEASE RISK: Humid/rainy spell may trigger Rust, Blight.
+Action: Scout fields; consider preventive spr...
+2025-08-16 19:20:19,035 | INFO | Alerts saved & SMS queued for farmer_id=198, alerts=1
+2025-08-16 19:20:19,384 | INFO | run_once completed. Farmers alerted: 173

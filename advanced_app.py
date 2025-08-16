@@ -14,25 +14,15 @@ import numpy as np
 import joblib  # For loading machine learning models
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import sqlite3
 from datetime import datetime, timedelta
 import requests
 import json
-import folium
-from streamlit_folium import st_folium
 import re
-import asyncio  # For asynchronous operations, if needed
-import smtplib  # For sending email alerts
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import threading
-import time
+
 import random
-from streamlit_extras.metric_cards import style_metric_cards
 import io, wave, os
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
 
 
 
@@ -42,7 +32,7 @@ from advanced_ml_model import AdvancedCreditModel
 from weather_alert_system import WeatherAlertSystem, setup_alerts_table
 from config import (
     MODEL_PATH, SCALER_PATH,  # Paths for ML model and scaler
-    WEATHER_API_KEY, DATABASE_PATH, WEATHER_API_BASE_URL, WEATHER_UNITS, ALERT_CHECK_INTERVAL # Weather API and database config
+    WEATHER_API_KEY, MARKET_API_KEY, DATABASE_PATH, WEATHER_API_BASE_URL, WEATHER_UNITS, ALERT_CHECK_INTERVAL # Weather API and database config
 )
 # Optional speech libs
 try:
@@ -94,37 +84,6 @@ except NameError:
     TREE_EQUIV_TON = 0.021  # ~21 kg CO2 per tree/year (demo)
 
 from credit_db_maker import store_credit_transaction, DB_PATH, CREDIT_PRICE_USD, USD_TO_INR, CAR_EQUIV_TON, TREE_EQUIV_TON
-
-# Purpose
-# This file implements the main Streamlit web application for the AgriCred AI platform. It provides an interactive dashboard for agricultural credit intelligence, integrating machine learning, weather monitoring, risk analysis, and visualization tools.
-
-# Key Components
-# Imports:
-# The file imports essential libraries for data handling (pandas, numpy), visualization (plotly, folium), machine learning (joblib), database access (sqlite3), date/time utilities, HTTP requests, and Streamlit UI components. It also imports custom modules:
-
-# AdvancedDataPipeline (data processing)
-# AdvancedCreditModel (ML model)
-# WeatherAlertSystem (weather risk monitoring)
-# Page Configuration:
-# Uses st.set_page_config to set the app’s title, icon, layout, and sidebar state.
-
-# Main Function (main):
-
-# Sets the app title and description.
-# Initializes the data pipeline and loads the trained ML model and scaler.
-# If the model is missing, it shows an error and exits.
-# Provides a sidebar navigation menu for users to select different sections:
-# Smart Credit Scoring: Credit scoring using ML.
-# Weather Risk Monitor: Live weather risk analysis.
-# Portfolio Dashboard: Portfolio-level analytics.
-# Policy Advisor: Policy recommendations.
-# Geographic Risk Map: Map-based risk visualization.
-# Voice Assistant: Voice-based queries (if implemented).
-# About: Information about the platform.
-# Depending on the selected section, it calls the corresponding function (e.g., smart_credit_scoring, weather_risk_monitor, etc.).
-
-
-
 
 
 
@@ -179,17 +138,8 @@ def get_alert_system():
     setup_alerts_table()
     return WeatherAlertSystem()
 
-MARKET_API_KEY="579b464db66ec23bdd000001d5d3d4ff6ac6484446e9a96155b35581"
-API_URL = f"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key={MARKET_API_KEY}&format=json&limit=100"
 
-# def get_mandi_prices(limit=20):
-#     url = f"https://api.data.gov.in/resource/{RESOURCE_ID}?api-key={MARKET_API_KEY}&format=json&limit={limit}"
-#     r = requests.get(url)
-#     if r.status_code == 200:
-#         return pd.DataFrame(r.json().get("records", []))
-#     else:
-#         st.error(f"API error: {r.status_code}")
-#         return pd.DataFrame()
+API_URL = f"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key={MARKET_API_KEY}&format=json&limit=100"
 
 # List of cities and coordinates
 CITIES = [
@@ -324,42 +274,6 @@ def display_alerts(alerts_feed):
         </div>
         """, unsafe_allow_html=True)
 
-# possible_alerts = [
-#     {
-#         "type": "Heatstroke Risk",
-#         "description": "High temperatures and low humidity detected. Stay hydrated and avoid direct sunlight during peak hours.",
-#         "severity": "High"
-#     },
-#     {
-#         "type": "Heavy Rainstorm",
-#         "description": "Excessive rainfall forecasted for the next 48 hours. Ensure proper drainage and avoid flood-prone areas.",
-#         "severity": "Severe"
-#     },
-#     {
-#         "type": "Flood Warning",
-#         "description": "Water levels in nearby rivers have crossed the danger mark. Evacuate low-lying areas immediately.",
-#         "severity": "Critical"
-#     },
-#     {
-#         "type": "Pest Infestation Risk",
-#         "description": "Weather conditions are favorable for locust activity. Monitor crops and apply preventive measures.",
-#         "severity": "Medium"
-#     },
-#     {
-#         "type": "Drought Alert",
-#         "description": "Low rainfall recorded over the past month. Minimize water use and prioritize essential irrigation.",
-#         "severity": "High"
-#     }
-# ]
-
-# # Function to randomly generate today's alerts
-# def generate_mock_alerts():
-#     today = datetime.date.today()
-#     num_alerts = random.randint(1, 3)  # Random number of alerts for demo
-#     selected_alerts = random.sample(possible_alerts, num_alerts)
-#     return [{"date": today, **alert} for alert in selected_alerts]
-
-
 
 def main():
     st.title("🌾 AgriCred AI: Advanced Agricultural Credit Intelligence Platform")
@@ -372,13 +286,21 @@ def main():
     if model is None:
         st.error("⚠️ Models not found. Please run advanced_ml_model.py first to train the models.")
         return
+        
+    # Initialize database with farmers on first run
+    farmer_count = pipeline.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
+    if farmer_count == 0:
+        st.info("Initializing database with farmer data...")
+        pipeline.seed_farmers(200)
+        pipeline.seed_loans_for_farmers()
+        pipeline.calculate_and_store_portfolio_metrics()
     
     # Sidebar navigation
     st.sidebar.title("🚀 Navigation")
     page = st.sidebar.selectbox(
         "Choose a section",
         ["🎯 Smart Credit Scoring", "🌤️ Weather Risk Monitor", "📊 Portfolio Dashboard", 
-         "🏛️ Policy Advisor", "🗺️ Geographic Risk Map", "📱 Voice Assistant","⚠️ Weather Alerts","🛒 Live Mandi Prices", "ℹ️ About"]
+         "🏛️ Policy Advisor","📱 Voice Assistant","⚠️ Weather Alerts","🛒 Live Mandi Prices", "ℹ️ About"]
     )
     
     if page == "🎯 Smart Credit Scoring":
@@ -389,36 +311,12 @@ def main():
         portfolio_dashboard(pipeline)
     elif page == "🏛️ Policy Advisor":
         policy_advisor(pipeline)
-    elif page == "🗺️ Geographic Risk Map":
-        geographic_risk_map()
     elif page == "📱 Voice Assistant":
         voice_assistant()
 
     elif page == "⚠️ Weather Alerts":
         system = get_alert_system()
         st.title("🌦️ Weather Risk Alerts")
-        # alerts_today = generate_mock_alerts()
-
-        # if alerts_today:
-        #     for alert in alerts_today:
-        #         severity_color = {
-        #             "Critical": "🔴",
-        #             "Severe": "🟠",
-        #             "High": "🟡",
-        #             "Medium": "🟢",
-        #             "Low": "🔵"
-        #         }.get(alert["severity"], "⚪")
-
-        #         st.markdown(
-        #             f"### {severity_color} {alert['type']}  \n"
-        #             f"**Date:** {alert['date']}  \n"
-        #             f"**Severity:** {alert['severity']}  \n"
-        #             f"**Details:** {alert['description']}"
-        #         )
-        #         st.markdown("---")
-        # else:
-        #     st.info("No alerts for today. All conditions are stable.")
-
         # --- Controls ---
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -1052,55 +950,96 @@ def weather_risk_monitor(pipeline):
 
 
 def portfolio_dashboard(pipeline):
-    st.header("📊 Loan Portfolio Analytics Dashboard")
+    st.header("📊 Real-Time Portfolio Analytics Dashboard")
     
-    # Generate sample portfolio data
-    portfolio_data = pd.DataFrame({
-        'month': pd.date_range('2024-01-01', periods=12, freq='M'),
-        'loans_approved': np.random.poisson(50, 12),
-        'default_rate': np.random.beta(2, 8, 12),
-        'average_amount': np.random.normal(200000, 50000, 12)
-    })
+    # Seed if empty, for demo only (remove in production!)
+    count = pipeline.conn.execute("SELECT COUNT(*) FROM portfolio_metrics").fetchone()[0]
+    if count < 30:
+        pipeline.seed_portfolio_history(60)  # Seed 2 months of demo data
+
+
+    # Initialize data if empty
+    if st.button("🔄 Refresh/Initialize Database"):
+        pipeline.seed_farmers(200)  # Create 200 farmers
+        pipeline.seed_loans_for_farmers()  # Create loans
+        pipeline.calculate_and_store_portfolio_metrics()  # Calculate metrics
+        st.success("Database initialized with real farmer data!")
     
-    # Key metrics
+      # Get current metrics with error handling
+    try:
+        current_metrics = pipeline.calculate_and_store_portfolio_metrics()
+    except Exception as e:
+        st.error(f"Error calculating metrics: {e}")
+        # Initialize empty database first
+        pipeline.seed_farmers(50)
+        pipeline.seed_loans_for_farmers()
+        current_metrics = pipeline.calculate_and_store_portfolio_metrics()
+        st.success("Initialized database with sample data!")
+
+    # Display key metrics
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("💰 Total Portfolio", "₹12.4 Cr", "↑ 18%")
+        st.metric("💰 Total Portfolio", f"₹{current_metrics['total_portfolio']:,.0f}")
     with col2:
-        st.metric("📈 Loans Approved", "1,247", "↑ 23")
+        st.metric("👥 Total Farmers", f"{current_metrics['total_farmers']:,}")
     with col3:
-        st.metric("⚠️ Default Rate", "3.2%", "↓ 0.8%")
+        st.metric("📈 Total Loans", f"{current_metrics['total_loans']:,}")
     with col4:
-        st.metric("🎯 Avg Credit Score", "742", "↑ 12")
+        st.metric("⚠️ Default Rate", f"{current_metrics['default_rate']:.2f}%")
     
-    # Charts
-    col1, col2 = st.columns(2)
+    col5, col6 = st.columns(2)
+    with col5:
+        st.metric("🎯 Avg Credit Score", f"{current_metrics['avg_credit_score']:.0f}")
+    with col6:
+        st.metric("🔄 Active Loans", f"{current_metrics['active_loans']:,}")
     
-    with col1:
-        fig1 = px.line(portfolio_data, x='month', y='default_rate', 
-                      title='Monthly Default Rate Trend')
-        fig1.update_traces(line_color='red')
+    # Get trends data
+    trends_df = pipeline.get_portfolio_trends(30)
+    
+    if not trends_df.empty:
+        # Portfolio value trend
+        fig1 = px.line(trends_df, x='date', y='total_portfolio_value', 
+                      title='Portfolio Value Trend (30 Days)')
         st.plotly_chart(fig1, use_container_width=True)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            # Default rate trend
+            fig2 = px.line(trends_df, x='date', y='default_rate', 
+                          title='Default Rate Trend')
+            st.plotly_chart(fig2, use_container_width=True)
+        
+        with col2:
+            # Credit score trend
+            fig3 = px.line(trends_df, x='date', y='avg_credit_score', 
+                          title='Average Credit Score Trend')
+            st.plotly_chart(fig3, use_container_width=True)
     
-    with col2:
-        fig2 = px.bar(portfolio_data, x='month', y='loans_approved', 
-                     title='Monthly Loan Approvals')
-        fig2.update_traces(marker_color='green')
-        st.plotly_chart(fig2, use_container_width=True)
+    # Real farmer data table
+    with st.expander("📋 View Farmer Database"):
+        farmers_df = pd.read_sql_query("""
+            SELECT f.farmer_id, f.name, f.crop_type, f.land_size,
+                   COUNT(l.loan_id) as total_loans,
+                   COALESCE(SUM(l.amount), 0) as total_borrowed,
+                   COALESCE(AVG(l.credit_score), 0) as avg_credit_score
+            FROM farmers f
+            LEFT JOIN loans l ON f.farmer_id = l.farmer_id
+            GROUP BY f.farmer_id
+            ORDER BY total_borrowed DESC
+            LIMIT 50
+        """, pipeline.conn)
+        st.dataframe(farmers_df, use_container_width=True)
     
-    # Risk distribution
-    risk_distribution = pd.DataFrame({
-        'risk_category': ['Low Risk', 'Medium Risk', 'High Risk'],
-        'count': [856, 312, 79],
-        'percentage': [68.7, 25.0, 6.3]
-    })
+    # Loan status distribution
+    loan_status_df = pd.read_sql_query("""
+        SELECT status, COUNT(*) as count, SUM(amount) as total_amount
+        FROM loans GROUP BY status
+    """, pipeline.conn)
     
-    fig3 = px.pie(risk_distribution, values='count', names='risk_category',
-                 title='Portfolio Risk Distribution',
-                 color_discrete_map={'Low Risk': 'green', 'Medium Risk': 'orange', 'High Risk': 'red'})
-    st.plotly_chart(fig3, use_container_width=True)
-
-
+    if not loan_status_df.empty:
+        fig4 = px.pie(loan_status_df, values='count', names='status',
+                     title='Loan Status Distribution')
+        st.plotly_chart(fig4, use_container_width=True)
 
     @st.cache_resource
     def get_carbon_credit_model():
@@ -1358,194 +1297,6 @@ def policy_advisor(pipeline):
                         st.caption(f"Eligibility Match: {policy['score'] * 100:.0f}%")
 
 
-
-def geographic_risk_map():
-    st.header("🗺️ Geographic Risk Intelligence Map")
-    
-    st.markdown("""
-    **Hyperlocal risk assessment combining weather, soil, market access, and 
-    infrastructure data to provide GPS-tagged risk scores for individual farm plots.**
-    """)
-    
-    # Sample farm locations with risk data
-    farm_data = pd.DataFrame({
-        'farmer_id': range(1, 51),
-        'farmer_name': [f"Farmer {i}" for i in range(1, 51)],
-        'latitude': np.random.uniform(20, 30, 50),
-        'longitude': np.random.uniform(75, 85, 50),
-        'risk_score': np.random.beta(3, 7, 50),
-        'crop_type': np.random.choice(['Rice', 'Wheat', 'Cotton', 'Sugarcane'], 50),
-        'land_size': np.random.gamma(2, 1.5, 50),
-        'credit_score': np.random.normal(700, 100, 50)
-    })
-    
-    # Risk color mapping
-    farm_data['risk_color'] = farm_data['risk_score'].apply(
-        lambda x: 'red' if x > 0.7 else 'orange' if x > 0.4 else 'green'
-    )
-    
-    # Interactive map
-    fig_map = px.scatter_mapbox(
-        farm_data, 
-        lat="latitude", 
-        lon="longitude", 
-        color="risk_score",
-        size="land_size",
-        hover_name="farmer_name",
-        hover_data={
-            "crop_type": True, 
-            "credit_score": True,
-            "risk_score": ":.2f"
-        },
-        color_continuous_scale="RdYlGn_r",
-        size_max=20,
-        zoom=5,
-        center={"lat": 25, "lon": 80}
-    )
-    
-    fig_map.update_layout(
-        mapbox_style="open-street-map",
-        height=600,
-        margin={"r":0,"t":0,"l":0,"b":0}
-    )
-    
-    st.plotly_chart(fig_map, use_container_width=True)
-    
-    # Risk analysis
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("📊 Risk Distribution by Region")
-        region_risk = pd.DataFrame({
-            'region': ['North', 'South', 'East', 'West', 'Central'],
-            'avg_risk': [0.45, 0.32, 0.58, 0.41, 0.36],
-            'farmer_count': [245, 189, 167, 234, 212]
-        })
-        
-        fig_region = px.bar(region_risk, x='region', y='avg_risk',
-                           title='Average Risk Score by Region')
-        st.plotly_chart(fig_region, use_container_width=True)
-    
-    with col2:
-        st.subheader("🌾 Risk by Crop Type")
-        crop_risk = farm_data.groupby('crop_type').agg({
-            'risk_score': 'mean',
-            'farmer_id': 'count'
-        }).reset_index()
-        
-        fig_crop = px.scatter(crop_risk, x='farmer_id', y='risk_score', 
-                             size='farmer_id', color='crop_type',
-                             title='Risk vs Farm Count by Crop')
-        st.plotly_chart(fig_crop, use_container_width=True)
-
-# def voice_assistant():
-#     st.header("📱 Multilingual Voice-Powered Agricultural Assistant")
-    
-#     st.markdown("""
-#     **AI-powered voice assistant supporting local languages with code-switching capabilities.
-#     Farmers can ask questions about credit, weather, policies, and market prices in their native language.**
-#     """)
-    
-#     # Language selection
-#     col1, col2 = st.columns(2)
-#     with col1:
-#         selected_language = st.selectbox(
-#             "🌐 Select Language / भाषा चुनें",
-#             ["English", "हिंदी (Hindi)", "मराठी (Marathi)", "ਪੰਜਾਬੀ (Punjabi)", 
-#              "தமிழ் (Tamil)", "বাংলা (Bengali)"]
-#         )
-    
-#     with col2:
-#         voice_input_mode = st.selectbox(
-#             "🎤 Input Mode",
-#             ["Text", "Voice (Simulated)", "USSD/SMS"]
-#         )
-    
-#     # Sample queries
-#     st.subheader("💬 Sample Voice Interactions")
-    
-#     sample_queries = {
-#         "English": [
-#             "What's the weather forecast for my cotton farm?",
-#             "Am I eligible for crop insurance?", 
-#             "What's the current market price of wheat?",
-#             "Should I sell my crops now or wait?"
-#         ],
-#         "हिंदी (Hindi)": [
-#             "मेरी फसल के लिए मौसम की जानकारी क्या है?",
-#             "क्या मैं फसल बीमा के लिए पात्र हूँ?",
-#             "गेहूं का वर्तमान बाजार भाव क्या है?",
-#             "क्या मुझे अब फसल बेचनी चाहिए या इंतजार करना चाहिए?"
-#         ]
-#     }
-    
-#     # Query interface
-#     st.subheader("❓ Ask Your Question")
-    
-#     if voice_input_mode == "Text":
-#         user_query = st.text_input(
-#             "Type your question:",
-#             placeholder=f"e.g., {sample_queries.get(selected_language, sample_queries['English'])[0]}"
-#         )
-#     else:
-#         st.info("🎤 Voice input simulation - Click the button below")
-#         user_query = st.selectbox(
-#             "Select a sample query:",
-#             sample_queries.get(selected_language, sample_queries['English'])
-#         )
-    
-#     if st.button("🎯 Get AI Response", use_container_width=True):
-#         if user_query:
-#             with st.spinner("🤖 AI Processing..."):
-#                 # Simulate AI response
-#                 responses = {
-#                     "weather": {
-#                         "English": "🌤️ Weather forecast shows light rain expected in next 3 days with temperature around 28°C. Good conditions for cotton growth. No immediate weather risks detected.",
-#                         "हिंदी (Hindi)": "🌤️ मौसम पूर्वानुमान के अनुसार अगले 3 दिनों में हल्की बारिश संभावित है, तापमान लगभग 28°C रहेगा। कपास की वृद्धि के लिए अच्छी स्थिति है। कोई तत्काल मौसम जोखिम नहीं मिला।"
-#                     },
-#                     "insurance": {
-#                         "English": "🛡️ Yes, you are eligible for Pradhan Mantri Fasal Bima Yojana. Premium: ₹2,500 for 5-acre cotton farm. Coverage: Up to ₹75,000. Apply at nearest bank or online.",
-#                         "हिंदी (Hindi)": "🛡️ हाँ, आप प्रधानमंत्री फसल बीमा योजना के लिए पात्र हैं। प्रीमियम: 5 एकड़ कपास फार्म के लिए ₹2,500। कवरेज: ₹75,000 तक। निकटतम बैंक या ऑनलाइन आवेदन करें।"
-#                     },
-#                     "price": {
-#                         "English": "💰 Current wheat MSP: ₹2,125/quintal. Market price in your area: ₹2,180/quintal (+2.5% premium). Good time to sell. Prices expected to remain stable.",
-#                         "हिंदी (Hindi)": "💰 वर्तमान गेहूं MSP: ₹2,125/क्विंटल। आपके क्षेत्र में बाजार मूल्य: ₹2,180/क्विंटल (+2.5% प्रीमियम)। बेचने का अच्छा समय। कीमतें स्थिर रहने की उम्मीद।"
-#                     },
-#                     "selling": {
-#                         "English": "📈 Market Analysis: Prices trending upward (+3% this month). Storage costs vs price gain analysis suggests waiting 2-3 weeks could yield ₹50-80 more per quintal.",
-#                         "हिंदी (Hindi)": "📈 बाजार विश्लेषण: कीमतें ऊपर की ओर (+3% इस महीने)। भंडारण लागत बनाम मूल्य लाभ विश्लेषण सुझाता है कि 2-3 सप्ताह प्रतीक्षा करने से ₹50-80 प्रति क्विंटल अधिक मिल सकता है।"
-#                     }
-#                 }
-                
-#                 # Determine response type based on query
-#                 query_lower = user_query.lower()
-#                 if "weather" in query_lower or "मौसम" in query_lower:
-#                     response_key = "weather"
-#                 elif "insurance" in query_lower or "बीमा" in query_lower:
-#                     response_key = "insurance"
-#                 elif "price" in query_lower or "भाव" in query_lower or "मूल्य" in query_lower:
-#                     response_key = "price"
-#                 elif "sell" in query_lower or "बेच" in query_lower:
-#                     response_key = "selling"
-#                 else:
-#                     response_key = "weather"  # Default
-                
-#                 # Get response in selected language
-#                 lang_key = selected_language if selected_language in ["English", "हिंदी (Hindi)"] else "English"
-#                 response = responses[response_key].get(lang_key, responses[response_key]["English"])
-                
-#                 # Display response
-#                 st.success("🤖 AI Assistant Response:")
-#                 st.markdown(f"**{response}**")
-                
-#                 # Additional actions
-#                 col1, col2, col3 = st.columns(3)
-#                 with col1:
-#                     st.button("🔊 Play Audio", help="Text-to-speech in selected language")
-#                 with col2:
-#                     st.button("📱 Send SMS", help="Send response as SMS")
-#                 with col3:
-#                     st.button("💾 Save Response", help="Save for offline access")
 
 # --------- Caching ----------
 @st.cache_data(show_spinner=False, ttl=600)

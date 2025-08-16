@@ -16,8 +16,8 @@ import numpy as np
 import requests
 import sqlite3
 from datetime import datetime
-from geopy.distance import geodesic
 from config import WEATHER_API_KEY, MARKET_API_KEY, DATABASE_PATH, WEATHER_API_BASE_URL, WEATHER_UNITS
+from datetime import datetime
 
 class AdvancedDataPipeline:
     def __init__(self):
@@ -26,16 +26,73 @@ class AdvancedDataPipeline:
         self.weather_base_url = WEATHER_API_BASE_URL
         self.weather_units = WEATHER_UNITS
 
+    # def setup_database(self):
+    #     self.conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
+    #     # Basic schema
+    #     self.conn.execute("""
+    #     CREATE TABLE IF NOT EXISTS farmers (
+    #         farmer_id INTEGER PRIMARY KEY,
+    #         name TEXT, latitude REAL, longitude REAL,
+    #         land_size REAL, crop_type TEXT, soil_type TEXT,
+    #         phone_number TEXT, registration_date DATE
+    #     )""")
+    #     self.conn.execute("""
+    #     CREATE TABLE IF NOT EXISTS weather_alerts (
+    #         id INTEGER PRIMARY KEY,
+    #         farmer_id INTEGER,
+    #         alert_type TEXT, severity TEXT, message TEXT, recommended_action TEXT,
+    #         created_at DATETIME
+    #     )""")
+    #     self.conn.commit()
     def setup_database(self):
         self.conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
-        # Basic schema
+        
+        # Enhanced farmers table
         self.conn.execute("""
         CREATE TABLE IF NOT EXISTS farmers (
             farmer_id INTEGER PRIMARY KEY,
             name TEXT, latitude REAL, longitude REAL,
             land_size REAL, crop_type TEXT, soil_type TEXT,
-            phone_number TEXT, registration_date DATE
+            phone_number TEXT, registration_date DATE,
+            education_level INTEGER, family_size INTEGER,
+            irrigation_access INTEGER, cooperative_membership INTEGER,
+            insurance_coverage INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )""")
+        
+        # Loans table
+        self.conn.execute("""
+        CREATE TABLE IF NOT EXISTS loans (
+            loan_id INTEGER PRIMARY KEY,
+            farmer_id INTEGER,
+            amount REAL, interest_rate REAL, duration_months INTEGER,
+            disbursed_date DATE, due_date DATE, 
+            status TEXT, -- 'active', 'repaid', 'defaulted'
+            repaid_amount REAL DEFAULT 0,
+            credit_score INTEGER,
+            risk_level TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (farmer_id) REFERENCES farmers (farmer_id)
+        )""")
+        
+        # Portfolio metrics time series table
+        self.conn.execute("""
+        CREATE TABLE IF NOT EXISTS portfolio_metrics (
+            id INTEGER PRIMARY KEY,
+            date DATE UNIQUE,
+            total_farmers INTEGER,
+            total_loans INTEGER,
+            total_portfolio_value REAL,
+            active_loans INTEGER,
+            repaid_loans INTEGER,
+            defaulted_loans INTEGER,
+            default_rate REAL,
+            avg_credit_score REAL,
+            total_land_size REAL,
+            avg_loan_amount REAL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )""")
+        
+        # Weather alerts (your existing table)
         self.conn.execute("""
         CREATE TABLE IF NOT EXISTS weather_alerts (
             id INTEGER PRIMARY KEY,
@@ -43,7 +100,74 @@ class AdvancedDataPipeline:
             alert_type TEXT, severity TEXT, message TEXT, recommended_action TEXT,
             created_at DATETIME
         )""")
+        
         self.conn.commit()
+
+    def seed_portfolio_history(self, days=60):
+        """Seeds portfolio_metrics with very smooth, believable time series."""
+        import numpy as np
+        from datetime import date, timedelta
+
+        today = date.today()
+
+        # Starting values close to reality
+        start_portfolio = 2_000_000
+        daily_growth = 34000  # Lower daily growth for smoother effect
+
+        start_defaults = 11.7
+        final_defaults = 5.2
+
+        start_score = 565
+        final_score = 710
+
+        np.random.seed(42)  # For reproducible demo trends
+
+        portfolio_value = start_portfolio
+        default_rate = start_defaults
+        avg_credit_score = start_score
+
+        for i in range(days):
+            cur_date = today - timedelta(days=days - i)
+
+            # Smoothly trend portfolio value & add tiny noise
+            portfolio_value += daily_growth + np.random.normal(scale=3100)
+            portfolio_value = max(portfolio_value, 0)
+
+            # Smoothly decrease default rate
+            default_rate = start_defaults - ((start_defaults - final_defaults) / days) * i
+            default_rate += np.random.normal(scale=0.07)  # very light jitter
+            default_rate = max(3.5, min(default_rate, 20))
+
+            # Smooth rise in avg credit score
+            avg_credit_score = start_score + ((final_score - start_score) / days) * i
+            avg_credit_score += np.random.normal(scale=2.7)
+            avg_credit_score = max(500, min(avg_credit_score, 850))
+
+            total_loans = 415 + i * 3 + int(np.random.normal(scale=1.5))
+            total_loans = int(max(300, total_loans))
+
+            total_farmers = 305 + int(i * 2.4 + np.random.normal(scale=1.8))
+            active_loans = int(total_loans * 0.735 + np.random.normal(scale=2))
+            repaid_loans = int(total_loans * 0.24 + np.random.normal(scale=1))
+            defaulted_loans = int(total_loans * default_rate / 100)
+            avg_loan_amount = portfolio_value / (total_loans if total_loans > 0 else 1)
+            total_land_size = 2400 + (i * 2.95) + np.random.normal(scale=1)
+
+            # Insert metrics
+            self.conn.execute("""
+                INSERT OR REPLACE INTO portfolio_metrics (
+                    date, total_farmers, total_loans, total_portfolio_value, active_loans, 
+                    repaid_loans, defaulted_loans, default_rate, avg_credit_score, 
+                    total_land_size, avg_loan_amount
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                str(cur_date), int(total_farmers), int(total_loans), float(portfolio_value),
+                int(active_loans), int(repaid_loans), int(defaulted_loans),
+                float(default_rate), float(avg_credit_score), float(total_land_size), float(avg_loan_amount)
+            ))
+
+        self.conn.commit()
+        print(f"Seeded {days} days with SMOOTH demo portfolio trends.")
 
     def get_live_weather(self, lat, lon):
         try:
@@ -101,52 +225,86 @@ class AdvancedDataPipeline:
             print(f"Market API error: {e}")
         return {'price_per_quintal': None, 'volatility': None}
 
-    # def get_soil_health(self, district):
-    #     try:
-    #         url = f"https://soilhealth.dac.gov.in/API/api/soilhealthcard?district={district}"
-    #         r = requests.get(url, timeout=10)
-    #         if r.status_code == 200:
-    #             data = r.json()
-    #             if data:
-    #                 s = data[0]
-    #                 return {
-    #                     'ph_level': float(s.get('ph', 7)),
-    #                     'Nitrogen': float(s.get('N', 0)),
-    #                     'Phosphorus': float(s.get('P', 0)),
-    #                     'Potassium': float(s.get('K', 0)),
-    #                     'organic_carbon': float(s.get('OC', 0))
-    #                 }
-    #     except Exception as e:
-    #         print(f"Soil API error: {e}")
-    #     return None
+    def get_soil_health(self, district):
+        #Demo fallback: always returns fixed demo values for now
+        return {
+            'ph_level': 7.1,
+            'nitrogen': 48,
+            'phosphorus': 6.2,
+            'potassium': 75,
+            'organic_carbon': 0.91
+        }
+       #get real data from some source
 
-    # def get_soil_health(self, district):
-    #     #Demo fallback: always returns fixed demo values for now
-    #     return {
-    #         'ph_level': 7.1,
-    #         'nitrogen': 48,
-    #         'phosphorus': 6.2,
-    #         'potassium': 75,
-    #         'organic_carbon': 0.91
-    #     }
-        # ---- (uncomment below to fetch real data) ----
-        # try:
-        #     url = f"https://soilhealth.dac.gov.in/API/api/soilhealthcard?district={district}"
-        #     r = requests.get(url, timeout=10)
-        #     if r.status_code == 200:
-        #         data = r.json()
-        #         if data:
-        #             s = data
-        #             return {
-        #                 'ph_level': float(s.get('ph', 7)),
-        #                 'nitrogen': float(s.get('N', 0)),
-        #                 'phosphorus': float(s.get('P', 0)),
-        #                 'potassium': float(s.get('K', 0)),
-        #                 'organic_carbon': float(s.get('OC', 0))
-        #             }
-        # except Exception as e:
-        #     print(f"Soil API error: {e}")
-        # return None
+
+    def calculate_and_store_portfolio_metrics(self):
+        """Calculate current portfolio metrics and store in time series table"""
+        from datetime import date
+        
+        today = date.today()
+        
+        # Calculate metrics
+        total_farmers = self.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
+        
+        loan_stats = self.conn.execute("""
+            SELECT 
+                COUNT(*) as total_loans,
+                SUM(amount) as total_portfolio,
+                SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_loans,
+                SUM(CASE WHEN status = 'repaid' THEN 1 ELSE 0 END) as repaid_loans,
+                SUM(CASE WHEN status = 'defaulted' THEN 1 ELSE 0 END) as defaulted_loans,
+                AVG(credit_score) as avg_credit_score,
+                AVG(amount) as avg_loan_amount
+            FROM loans
+        """).fetchone()
+        
+        total_land = self.conn.execute("SELECT SUM(land_size) FROM farmers").fetchone()[0]
+        
+        total_loans, total_portfolio, active_loans, repaid_loans, defaulted_loans, avg_credit_score, avg_loan_amount = loan_stats
+        
+        default_rate = (defaulted_loans / max(total_loans, 1)) * 100
+        
+        # Store or update today's metrics
+        self.conn.execute("""
+            INSERT OR REPLACE INTO portfolio_metrics 
+            (date, total_farmers, total_loans, total_portfolio_value, active_loans, 
+            repaid_loans, defaulted_loans, default_rate, avg_credit_score, 
+            total_land_size, avg_loan_amount)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (today, total_farmers, total_loans, total_portfolio or 0, active_loans,
+            repaid_loans, defaulted_loans, default_rate, avg_credit_score or 0,
+            total_land or 0, avg_loan_amount or 0))
+        
+        self.conn.commit()
+        return {
+            'total_farmers': total_farmers,
+            'total_loans': total_loans,
+            'total_portfolio': total_portfolio or 0,
+            'active_loans': active_loans,
+            'default_rate': default_rate,
+            'avg_credit_score': avg_credit_score or 0
+        }
+
+    def get_portfolio_trends(self, days=30):
+        """Get portfolio metrics trends over time"""
+        from datetime import date, timedelta
+        
+        start_date = date.today() - timedelta(days=days)
+        
+        trends = self.conn.execute("""
+            SELECT date, total_farmers, total_loans, total_portfolio_value, 
+                default_rate, avg_credit_score
+            FROM portfolio_metrics 
+            WHERE date >= ?
+            ORDER BY date
+        """, (start_date,)).fetchall()
+        
+        return pd.DataFrame(trends, columns=[
+            'date', 'total_farmers', 'total_loans', 'total_portfolio_value',
+            'default_rate', 'avg_credit_score'
+        ])
+
+
 
     def calculate_advanced_features(self, farmer_id):
         farmer = self.conn.execute("SELECT * FROM farmers WHERE farmer_id=?", (farmer_id,)).fetchone()
@@ -192,5 +350,199 @@ class AdvancedDataPipeline:
     def calculate_excess_rain_risk(self, forecast):
         daily = [f.get('rainfall', 0) for f in forecast]
         return 0.7 if max(daily) > 50 else 0.3 if max(daily) > 30 else 0
+
+
+    def seed_farmers(self, num_farmers=100):
+        """Create realistic farmer data and store in database"""
+        import random
+        from datetime import datetime, timedelta
+        
+        # Check if farmers already exist
+        existing = self.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
+        if existing >= num_farmers:
+            print(f"Database already has {existing} farmers")
+            return
+        
+        # Sample data for realistic farmers
+        names = ["Raj Kumar", "Suresh Patel", "Ramesh Singh", "Vijay Sharma", "Anil Verma", 
+                 "Prakash Rao", "Dinesh Kumar", "Mahesh Gupta", "Santosh Yadav", "Ravi Joshi"]
+        crops = ["Rice", "Wheat", "Cotton", "Sugarcane", "Soybean", "Maize"]
+        soil_types = ["Loamy", "Clay", "Sandy", "Black", "Red", "Alluvial"]
+        
+        # Indian coordinates (rough)
+        lat_range = (8.4, 37.6)  # India's latitude range
+        lon_range = (68.7, 97.4)  # India's longitude range
+        
+        farmers_data = []
+        for i in range(num_farmers - existing):
+            farmer_data = (
+                f"{random.choice(names)} {i+existing+1}",
+                round(random.uniform(lat_range[0], lat_range[1]), 4),   # FIXED: lat_range, lat_range[1]
+                round(random.uniform(lon_range[0], lon_range[1]), 4),   # FIXED: lon_range, lon_range[1]
+                round(np.random.gamma(2, 1.5), 2),  # land_size
+                random.choice(crops),
+                random.choice(soil_types),
+                f"98{random.randint(10000000, 99999999)}",  # phone
+                (datetime.now() - timedelta(days=random.randint(1, 365))).date(),  # registration
+                random.randint(1, 5),  # education_level
+                random.randint(2, 8),  # family_size
+                random.choice([0, 1]),  # irrigation_access
+                random.choice([0, 1]),  # cooperative_membership  
+                random.choice([0, 1])   # insurance_coverage
+            )
+            farmers_data.append(farmer_data)
+        
+        # Insert all farmers
+        self.conn.executemany("""
+            INSERT INTO farmers (name, latitude, longitude, land_size, crop_type, soil_type, 
+                               phone_number, registration_date, education_level, family_size, 
+                               irrigation_access, cooperative_membership, insurance_coverage)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, farmers_data)
+        self.conn.commit()
+        print(f"Seeded {len(farmers_data)} new farmers. Total: {existing + len(farmers_data)}")
+
+    def seed_loans_for_farmers(self):
+        """Create loan records for existing farmers"""
+        from datetime import datetime, timedelta
+        import random
+        
+        # Get all farmers
+        farmers = self.conn.execute("SELECT farmer_id FROM farmers").fetchall()
+        
+        loans_data = []
+        for farmer_id, in farmers:
+            # 70% chance a farmer has taken a loan
+            if random.random() < 0.7:
+                amount = round(random.uniform(50000, 500000), 2)
+                interest_rate = round(random.uniform(8.5, 14.5), 2)
+                duration = random.choice([12, 24, 36, 48, 60])
+                disbursed_date = datetime.now() - timedelta(days=random.randint(30, 730))
+                due_date = disbursed_date + timedelta(days=duration * 30)
+                status = random.choices(['active', 'repaid', 'defaulted'], weights=[60, 35, 5])[0]
+                
+                repaid_amount = 0
+                if status == 'repaid':
+                    repaid_amount = amount * (1 + interest_rate/100 * duration/12)
+                elif status == 'defaulted':
+                    repaid_amount = amount * random.uniform(0.2, 0.8)
+                
+                credit_score = random.randint(300, 850)
+                risk_level = 'Low' if credit_score > 700 else 'Medium' if credit_score > 500 else 'High'
+                
+                loans_data.append((
+                    farmer_id, amount, interest_rate, duration,
+                    disbursed_date.date(), due_date.date(), status,
+                    repaid_amount, credit_score, risk_level
+                ))
+        
+        self.conn.executemany("""
+            INSERT INTO loans (farmer_id, amount, interest_rate, duration_months,
+                             disbursed_date, due_date, status, repaid_amount, credit_score, risk_level)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, loans_data)
+        self.conn.commit()
+        print(f"Seeded {len(loans_data)} loans")
+
+    def calculate_and_store_portfolio_metrics(self):
+        """Calculate current portfolio metrics and store in time series table"""
+        from datetime import date
+        
+        today = date.today()
+        
+        # Calculate metrics with safe defaults
+        total_farmers = self.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0] or 0
+        total_land = self.conn.execute("SELECT COALESCE(SUM(land_size), 0) FROM farmers").fetchone()[0] or 0
+        
+        # Check if loans table has any data
+        loan_count = self.conn.execute("SELECT COUNT(*) FROM loans").fetchone()[0] or 0
+        
+        if loan_count == 0:
+            # No loans yet - set all loan metrics to 0
+            total_loans = 0
+            total_portfolio = 0
+            active_loans = 0
+            repaid_loans = 0
+            defaulted_loans = 0
+            avg_credit_score = 0
+            avg_loan_amount = 0
+            default_rate = 0
+        else:
+            # Get loan statistics
+            loan_stats = self.conn.execute("""
+                SELECT 
+                    COUNT(*) as total_loans,
+                    COALESCE(SUM(amount), 0) as total_portfolio,
+                    COALESCE(SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END), 0) as active_loans,
+                    COALESCE(SUM(CASE WHEN status = 'repaid' THEN 1 ELSE 0 END), 0) as repaid_loans,
+                    COALESCE(SUM(CASE WHEN status = 'defaulted' THEN 1 ELSE 0 END), 0) as defaulted_loans,
+                    COALESCE(AVG(credit_score), 0) as avg_credit_score,
+                    COALESCE(AVG(amount), 0) as avg_loan_amount
+                FROM loans
+            """).fetchone()
+            
+            total_loans = loan_stats[0] or 0
+            total_portfolio = loan_stats[1] or 0
+            active_loans = loan_stats[2] or 0
+            repaid_loans = loan_stats[3] or 0
+            defaulted_loans = loan_stats[4] or 0
+            avg_credit_score = loan_stats[5] or 0
+            avg_loan_amount = loan_stats[6] or 0
+            
+            # Calculate default rate safely
+            default_rate = (defaulted_loans / total_loans * 100) if total_loans > 0 else 0
+        
+            self.conn.execute("""
+            INSERT OR REPLACE INTO portfolio_metrics 
+            (date, total_farmers, total_loans, total_portfolio_value, active_loans, 
+            repaid_loans, defaulted_loans, default_rate, avg_credit_score, 
+            total_land_size, avg_loan_amount)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            str(today),
+            int(total_farmers),
+            int(total_loans),
+            float(total_portfolio),
+            int(active_loans),
+            int(repaid_loans),
+            int(defaulted_loans),
+            float(default_rate),
+            float(avg_credit_score),
+            float(total_land),
+            float(avg_loan_amount)
+        ))
+
+        
+        self.conn.commit()
+        
+        return {
+            'total_farmers': total_farmers,
+            'total_loans': total_loans,
+            'total_portfolio': total_portfolio,
+            'active_loans': active_loans,
+            'default_rate': default_rate,
+            'avg_credit_score': avg_credit_score
+        }
+
+    def get_portfolio_trends(self, days=30):
+        """Get portfolio metrics trends over time"""
+        from datetime import date, timedelta
+        
+        start_date = date.today() - timedelta(days=days)
+        
+        trends = self.conn.execute("""
+            SELECT date, total_farmers, total_loans, total_portfolio_value, 
+                   default_rate, avg_credit_score
+            FROM portfolio_metrics 
+            WHERE date >= ?
+            ORDER BY date
+        """, (start_date,)).fetchall()
+        
+        return pd.DataFrame(trends, columns=[
+            'date', 'total_farmers', 'total_loans', 'total_portfolio_value',
+            'default_rate', 'avg_credit_score'
+        ])
+
+
 
 pipeline = AdvancedDataPipeline()

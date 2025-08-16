@@ -10,28 +10,47 @@ from config import WEATHER_API_KEY, DATABASE_PATH, WEATHER_API_BASE_URL, WEATHER
 # ---------- logging ----------
 logger = logging.getLogger("weather_alerts")
 logger.setLevel(logging.INFO)
-_handler = logging.StreamHandler()
-_handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
-if not logger.handlers:
-    logger.addHandler(_handler)
+
+# Remove any existing handlers (to avoid duplicate logs)
+if logger.hasHandlers():
+    logger.handlers.clear()
+
+# StreamHandler (console)
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
+logger.addHandler(stream_handler)
+
+# FileHandler (line-by-line log file)
+file_handler = logging.FileHandler("weather_alerts.log", mode='a', encoding='utf-8')
+file_handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
+logger.addHandler(file_handler)
 
 # ---------- DB bootstrap ----------
 def setup_alerts_table():
     conn = sqlite3.connect(DATABASE_PATH)
     conn.execute('''
-        CREATE TABLE IF NOT EXISTS weather_alerts (
-            id INTEGER PRIMARY KEY,
-            farmer_id INTEGER,
-            alert_type TEXT,
-            severity TEXT,
-            message TEXT,
-            recommended_action TEXT,
-            created_at DATETIME,
-            acknowledged BOOLEAN DEFAULT 0
-        )
+    CREATE TABLE IF NOT EXISTS weather_alerts (
+        id INTEGER PRIMARY KEY,
+        farmer_id INTEGER,
+        alert_type TEXT,
+        severity TEXT,
+        message TEXT,
+        recommended_action TEXT,
+        created_at DATETIME,
+        acknowledged BOOLEAN DEFAULT 0
+    )
     ''')
+
+    # Add "acknowledged" column if missing (try-except to avoid error if exists)
+    try:
+        conn.execute("ALTER TABLE weather_alerts ADD COLUMN acknowledged BOOLEAN DEFAULT 0")
+    except sqlite3.OperationalError as e:
+        if "duplicate column name" not in str(e):
+            raise e
+
     conn.commit()
     conn.close()
+
 
 class WeatherAlertSystem:
     """
@@ -163,7 +182,7 @@ class WeatherAlertSystem:
         alerts = []
 
         frost = self.check_frost_risk(forecast, crop_type)
-        if frost['risk_level'] > 0.1:#0.7
+        if frost['risk_level'] > 0.5:  # Lower threshold from 0.7 to 0.5
             alerts.append({
                 'type': 'frost_warning',
                 'severity': 'high',
@@ -172,7 +191,7 @@ class WeatherAlertSystem:
             })
 
         drought = self.check_drought_risk(forecast)
-        if drought['risk_level'] > 0.1:#0.6
+        if drought['risk_level'] > 0.2:  # Lower threshold from 0.6 to 0.2
             alerts.append({
                 'type': 'drought_warning',
                 'severity': 'medium',
@@ -181,7 +200,7 @@ class WeatherAlertSystem:
             })
 
         flood = self.check_flood_risk(forecast)
-        if flood['risk_level'] > 0.1:#0.5
+        if flood['risk_level'] > 0.1:  # Lower threshold from 0.5 to 0.3
             alerts.append({
                 'type': 'flood_warning',
                 'severity': 'high',
@@ -190,14 +209,16 @@ class WeatherAlertSystem:
             })
 
         disease = self.check_disease_risk(forecast, crop_type)
-        if disease['risk_level'] > 0.6:
+        if disease['risk_level'] > 0.1:  # Lower threshold from 0.6 to 0.4
             alerts.append({
                 'type': 'disease_warning',
                 'severity': 'medium',
                 'message': disease['message'],
                 'recommended_action': disease['action']
             })
+
         return alerts
+
 
     def check_frost_risk(self, forecast, crop_type):
         frost_sensitive = {'Rice', 'Cotton', 'Sugarcane', 'Soybean', 'Maize'}
@@ -235,7 +256,7 @@ class WeatherAlertSystem:
         elif total_rain < expected_rainfall * 0.7: score = 0.3
         if avg_humidity < 40: score = min(score + 0.2, 1.0)
 
-        if score > 0.1:#0.6
+        if score > 0.3:#0.6
             return {
                 'risk_level': score,
                 'message': f"DROUGHT RISK: Only {total_rain:.1f} mm forecast in next 7 days.",
@@ -268,7 +289,7 @@ class WeatherAlertSystem:
         elif max_daily > 30: risk = 0.3
         if total_weekly > 200: risk = min(risk + 0.3, 1.0)
 
-        if risk > 0.5:
+        if risk > 0.2:#0.5
             return {
                 'risk_level': risk,
                 'message': f"FLOOD RISK: Up to {max_daily:.1f} mm/day expected.",
@@ -299,7 +320,7 @@ class WeatherAlertSystem:
             'Soybean': ['Rust', 'Pod Borer'],
             'Maize': ['Borer', 'Rust']
         }
-        if risk > 0.1:#0.6
+        if risk > 0.2:#0.6
             diseases = crop_diseases.get(crop_type, ['General diseases'])
             return {
                 'risk_level': risk,
@@ -328,8 +349,9 @@ class WeatherAlertSystem:
         logger.info(f"SMS to {phone_number}: {message[:140]}...")
 
     def get_all_farmers(self):
-        return self.conn.execute("SELECT * FROM farmers").fetchall()
+        return self.conn.execute("SELECT farmer_id, name, latitude, longitude, land_size, crop_type, soil_type, phone_number, registration_date FROM farmers").fetchall()
 
+    
     def save_alert_to_db(self, farmer_id: int, alert: Dict[str,str]):
         self.conn.execute('''
             INSERT INTO weather_alerts 
