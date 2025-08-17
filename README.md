@@ -113,11 +113,6 @@ The **AgenticOrchestrator** manages three autonomous AI agents concurrently, eac
 2. **Carbon Credit Agent**: Calculates CO₂ sequestration by farmers and issues tokenized carbon credits on a blockchain-like ledger  
 3. **Market Advisory Agent**: Provides intelligent pricing forecasts and sale recommendations for crop marketing
 
-### Machine Learning Risk Model  
-- Uses 50+ hyper-realistic, correlated features covering demographics, climate stress, market volatility, and physical infrastructure  
-- Ensemble of Random Forest, XGBoost & LightGBM models achieving 90.60% AUC  
-- Uses SHAP for transparent feature importance explanations
-
 ### Dashboard & User Interface  
 A comprehensive Streamlit UI with nine sections delivers rich, interactive insights:  
 - Executive Summary  
@@ -208,7 +203,7 @@ text
 ### Installation
 
 1. Clone the repo  
-git clone https://github.com/yourusername/agricred-ai.git
+git clone https://github.com/Aastik-Srivastava/AgriCredAI.git
 cd agricred-ai
 
 text
@@ -252,10 +247,9 @@ We welcome contributions! Please refer to our [Contributing Guidelines](CONTRIBU
 
 ## 📞 Contact & Support
 
-- 🌐 Live Demo: https://agricred-ai.streamlit.app  
-- 📖 Documentation: https://docs.agricred-ai.com  
-- 🐛 Issues: https://github.com/yourusername/agricred-ai/issues  
-- 💬 Discussions: https://github.com/yourusername/agricred-ai/discussions
+- 🌐 Live Demo: https://agricred-ai.streamlit.app
+- 🐛 Issues: https://github.com/Aastik-Srivastava/AgriCredAI/issues  
+
 
 ---
 
