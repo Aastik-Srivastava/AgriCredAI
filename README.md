@@ -207,7 +207,7 @@ text
 
 1. Clone the repo  
 git clone https://github.com/Aastik-Srivastava/AgriCredAI.git__
-cd agricred-ai
+cd AgriCredAI
 
 text
 
@@ -243,7 +243,7 @@ text
 
 ## 📁 Project Structure
 ```
-agricred-ai/
+AgriCredAI/
 ├── 📄 advanced_app.py                    # Main Streamlit application
 ├── 🤖 agentic_core.py                   # Agentic AI framework
 ├── 💰 dynamic_financing_agent.py        # Financing intelligence agent
@@ -289,7 +289,7 @@ We welcome contributions! Please refer to our [Contributing Guidelines](CONTRIBU
 
 ## 📞 Contact & Support
 
-- 🌐 Live Demo: https://agricred-ai.streamlit.app
+- 🌐 Live Demo: https://AgriCredAI.streamlit.app
 - 🐛 Issues: https://github.com/Aastik-Srivastava/AgriCredAI/issues  
 
 
