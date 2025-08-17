@@ -1350,9 +1350,9 @@ def credit_risk_scoring_dashboard():
             # Main metrics
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric(translate_text("🎯 Credit Score", lang), credit_score, help=translate_text("FICO-style score (250-1000)", lang))
+                st.metric(translate_text("🎯 Credit Score", lang), credit_score, help=translate_text("credit_score = int((1 - risk_score) * 750 + 250)", lang))
             with col2:
-                st.metric(translate_text("⚠️ Default Risk", lang), f"{pred_prob:.1%}", help=translate_text("Probability of default", lang))
+                st.metric(translate_text("⚠️ Default Risk", lang), f"{pred_prob:.1%}", help=translate_text("risk_score = (payment_risk + debt_stress + income_instability + drought_risk + temp_stress + frost_risk + price_risk + input_cost_risk + market_access_risk + irrigation_risk + insurance_risk + connectivity_risk + soil_risk + practice_risk + nutrient_risk + compound_stress - coop_protection - diversification_protection - tech_protection - education_protection + np.random.normal(0, 0.035, n_samples)", lang))
             with col3:
                 if pred_prob < 0.4:
                     st.success(f"✅ {translate_text('APPROVE', lang)}")
@@ -1365,7 +1365,7 @@ def credit_risk_scoring_dashboard():
                     recommendation = "REJECT"
             with col4:
                 loan_capacity = int(monthly_income * 12 * 3 * (1 - pred_prob))
-                st.metric(translate_text("💰 Max Loan Capacity", lang), f"₹{loan_capacity:,}", help=translate_text("Recommended maximum loan amount", lang))
+                st.metric(translate_text("💰 Max Loan Capacity", lang), f"₹{loan_capacity:,}", help=translate_text("loan_capacity = int(monthly_income * 12 * 3 * (1 - risk_Score))", lang))
             
             # Confidence Score Display
             st.markdown("---")

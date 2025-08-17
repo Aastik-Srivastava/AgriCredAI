@@ -29,3 +29,65 @@ Traceback (most recent call last):
 sqlite3.OperationalError: no such table: weather_forecast_cache
 2025-08-17 21:22:28,848 | INFO | Weather alerts generated for Anil Verma 5: 1 alerts
 2025-08-17 21:22:28,848 | INFO | Weather check complete: 5 farmers checked, 5 alerts generated
+2025-08-18 02:23:27,114 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:23:27,116 | INFO | Weather alerts generated for Ravi Joshi 1: 1 alerts
+2025-08-18 02:23:27,116 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:23:27,117 | INFO | Weather alerts generated for Ramesh Singh 2: 1 alerts
+2025-08-18 02:23:27,117 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:23:27,117 | INFO | Weather alerts generated for Santosh Yadav 3: 1 alerts
+2025-08-18 02:23:27,117 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:23:27,117 | INFO | Weather alerts generated for Dinesh Kumar 4: 1 alerts
+2025-08-18 02:23:27,117 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:23:27,117 | INFO | Weather alerts generated for Anil Verma 5: 1 alerts
+2025-08-18 02:23:27,117 | INFO | Weather check complete: 5 farmers checked, 5 alerts generated
+2025-08-18 02:51:30,171 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:51:30,173 | INFO | Weather alerts generated for Ravi Joshi 1: 1 alerts
+2025-08-18 02:51:30,173 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:51:30,173 | INFO | Weather alerts generated for Ramesh Singh 2: 1 alerts
+2025-08-18 02:51:30,173 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:51:30,173 | INFO | Weather alerts generated for Santosh Yadav 3: 1 alerts
+2025-08-18 02:51:30,173 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:51:30,173 | INFO | Weather alerts generated for Dinesh Kumar 4: 1 alerts
+2025-08-18 02:51:30,173 | ERROR | Error retrieving cached forecast: no such table: weather_forecast_cache
+Traceback (most recent call last):
+  File "/Users/aastik/agrinew/weather_alert_system.py", line 389, in _get_cached_forecast
+    cur = self.conn.execute(
+sqlite3.OperationalError: no such table: weather_forecast_cache
+2025-08-18 02:51:30,174 | INFO | Weather alerts generated for Anil Verma 5: 1 alerts
+2025-08-18 02:51:30,174 | INFO | Weather check complete: 5 farmers checked, 5 alerts generated
