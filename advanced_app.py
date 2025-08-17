@@ -4,7 +4,7 @@ import streamlit as st
 # from multilingual_multimodal import translate_text
 
 
-#helper to remove langauge issues
+#helper to remove langauge
 def translate_text(text: str, target_lang: str = 'en') -> str:
     return text
 

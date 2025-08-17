@@ -16,7 +16,7 @@ SOIL_HEALTH_API_KEY = os.getenv('SOIL_HEALTH_API_KEY', '')
 VOSK_MODEL_PATH = "vosk_model"  # optional for offline STT
 # Database Configuration
 DATABASE_PATH = os.getenv('DATABASE_PATH', 'agricred_data.db')
-MODEL_PATH = os.getenv('MODEL_PATH', 'advanced_credit_model.pkl')
+MODEL_PATH = os.getenv('MODEL_PATH', 'advanced_credit_model.json')
 SCALER_PATH = os.getenv('SCALER_PATH', 'feature_scaler.pkl')
 
 # Weather API Configuration
