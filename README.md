@@ -3,8 +3,6 @@
 _Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence_
 
 <div align="center">
-  <img src="logo.png" alt="AgriCredAI Logo" width="120"/>
-
   <h3>Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence</h3>
 
   <p>
