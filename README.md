@@ -134,7 +134,7 @@ graph TB
 ## 🔧 Technical Stack
 
 ### Core Technologies
-- **🐍 Python 3.9+** - Backend development
+- **🐍 Python 3.11** - Backend development
 - **🎨 Streamlit** - Interactive web application  
 - **🧠 Scikit-learn & XGBoost** - Machine learning models
 - **📊 Plotly & Pandas** - Data visualization
@@ -190,7 +190,7 @@ Risk Calibration:
 
 ### Prerequisites
 ```bash
-Python 3.9+
+Python 3.11+
 pip or conda package manager
 Git (for cloning repository)
 ```
