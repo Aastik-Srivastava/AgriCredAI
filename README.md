@@ -22,6 +22,10 @@ _Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligen
 
 ## 🚀 Project Overview
 **AgriCredAI** is an innovative agricultural lending platform that harnesses **Agentic AI**, **Machine Learning**, and **Real-time Data Intelligence** to revolutionize credit risk assessment for financial institutions and enhance financial inclusion for farmers. Additionally, the platform integrates **carbon credit tracking and tokenization**, enabling farmers to participate in **green finance initiatives** by monetizing sustainable practices. These carbon credits are securely recorded and managed on a blockchain-like ledger, ensuring transparency and immutability while linking environmental impact directly to agricultural financing.
+
+- 🌐 Live Demo: https://AgriCredAI.streamlit.app
+
+  
 ### 🎯 Problem Statement
 Agricultural lending traditionally faces challenges such as:
 - High default rates (8-15% industry average)
@@ -289,8 +293,7 @@ We welcome contributions! Please refer to our [Contributing Guidelines](CONTRIBU
 
 ## 📞 Contact & Support
 
-- 🌐 Live Demo: https://AgriCredAI.streamlit.app
-- 🐛 Issues: https://github.com/Aastik-Srivastava/AgriCredAI/issues  
+- Gmail: srivastavaaastik@gmail.com  
 
 
 ---
