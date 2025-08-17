@@ -25,6 +25,7 @@ file_handler = logging.FileHandler("weather_alerts.log", mode='a', encoding='utf
 file_handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
 logger.addHandler(file_handler)
 
+
 # ---------- DB bootstrap ----------
 def setup_alerts_table():
     conn = sqlite3.connect(DATABASE_PATH)
@@ -177,157 +178,245 @@ class WeatherAlertSystem:
         except Exception as e:
             logger.exception(f"Forecast API error: {e}")
             return []
-
-    def build_alerts(self, forecast: List[Dict[str, Any]], crop_type: str) -> List[Dict[str, str]]:
+        
+    def build_alerts(self, forecast, crop_type):
         alerts = []
 
         frost = self.check_frost_risk(forecast, crop_type)
-        if frost['risk_level'] > 0.5:  # Lower threshold from 0.7 to 0.5
-            alerts.append({
-                'type': 'frost_warning',
-                'severity': 'high',
-                'message': frost['message'],
-                'recommended_action': frost['action']
-            })
+        logger.info(f"Frost risk: {frost['risk_level']:.2f}")
+        if frost['risk_level'] >= 0.3:
+            alerts.append({**frost, 'type':'frost_warning'})
 
         drought = self.check_drought_risk(forecast)
-        if drought['risk_level'] > 0.2:  # Lower threshold from 0.6 to 0.2
-            alerts.append({
-                'type': 'drought_warning',
-                'severity': 'medium',
-                'message': drought['message'],
-                'recommended_action': drought['action']
-            })
+        logger.info(f"Drought risk: {drought['risk_level']:.2f}")
+        if drought['risk_level'] >= 0.3:
+            alerts.append({**drought, 'type':'drought_warning'})
 
         flood = self.check_flood_risk(forecast)
-        if flood['risk_level'] > 0.1:  # Lower threshold from 0.5 to 0.3
-            alerts.append({
-                'type': 'flood_warning',
-                'severity': 'high',
-                'message': flood['message'],
-                'recommended_action': flood['action']
-            })
+        logger.info(f"Flood risk: {flood['risk_level']:.2f}")
+        if flood['risk_level'] >= 0.3:
+            alerts.append({**flood, 'type':'flood_warning'})
 
         disease = self.check_disease_risk(forecast, crop_type)
-        if disease['risk_level'] > 0.1:  # Lower threshold from 0.6 to 0.4
-            alerts.append({
-                'type': 'disease_warning',
-                'severity': 'medium',
-                'message': disease['message'],
-                'recommended_action': disease['action']
-            })
+        logger.info(f"Disease risk: {disease['risk_level']:.2f}")
+        if disease['risk_level'] >= 0.3:
+            alerts.append({**disease, 'type':'disease_warning'})
 
         return alerts
 
 
     def check_frost_risk(self, forecast, crop_type):
-        frost_sensitive = {'Rice', 'Cotton', 'Sugarcane', 'Soybean', 'Maize'}
-        frost_threshold = 2.0
+        frost_sensitive = {'Rice','Cotton','Sugarcane','Soybean','Maize'}
         if crop_type not in frost_sensitive:
-            return {'risk_level': 0, 'message': '', 'action': ''}
-
-        near_term = [f for f in forecast[:24] if f.get('temperature') is not None]
-        if not near_term:
-            return {'risk_level': 0, 'message': '', 'action': ''}
-
-        frost_periods = [f['datetime'] for f in near_term if f['temperature'] < frost_threshold]
-        if frost_periods:
-            min_temp = min(f['temperature'] for f in near_term)
-            risk = min(len(frost_periods) / 10.0, 1.0)
-            return {
-                'risk_level': risk,
-                'message': f"FROST ALERT: Temperature down to {min_temp:.1f}°C expected in next 3 days.",
-                'action': "Cover seedlings, use mulching/sprinklers, postpone irrigation before cold night."
-            }
-        return {'risk_level': 0, 'message': '', 'action': ''}
+            return {'risk_level':0,'severity':'low','message':'','recommended_action':''}
+        # Count 3-hr periods next 24h with temp <2°C
+        periods = [f for f in forecast[:8] if f.get('temperature') is not None and f['temperature']<2]
+        count = len(periods)
+        # 2 periods (6h) => medium, 3+ => high
+        risk = min(count/4,1.0)
+        sev = 'high' if count>=3 else 'medium' if count>=2 else 'low'
+        msg = f"Frost risk: {count*3}h below 2°C expected today."
+        action = "Use frost protection (mulch, heaters, sprinklers)."
+        return {'risk_level':risk,'severity':sev,'message':msg,'recommended_action':action}
 
     def check_drought_risk(self, forecast):
-        week = [f for f in forecast[:28] if 'rainfall' in f and 'humidity' in f]
-        if not week:
-            return {'risk_level': 0, 'message': '', 'action': ''}
-
-        total_rain = sum(f['rainfall'] or 0 for f in week)
-        avg_humidity = sum((f['humidity'] or 0) for f in week) / len(week)
-
-        expected_rainfall = 25.0  # mm/week baseline
-        score = 0.0
-        if total_rain < expected_rainfall * 0.2: score = 0.9
-        elif total_rain < expected_rainfall * 0.5: score = 0.6
-        elif total_rain < expected_rainfall * 0.7: score = 0.3
-        if avg_humidity < 40: score = min(score + 0.2, 1.0)
-
-        if score > 0.3:#0.6
-            return {
-                'risk_level': score,
-                'message': f"DROUGHT RISK: Only {total_rain:.1f} mm forecast in next 7 days.",
-                'action': "Irrigate efficiently, prioritize critical growth stages, reduce evap loss with mulching."
-            }
-        return {'risk_level': score, 'message': '', 'action': ''}
+        week = forecast[:56]  # ~7 days
+        total_rain = sum(f.get('rainfall',0) for f in week)
+        if total_rain < 25:
+            risk, sev = 1.0, 'high'
+        elif total_rain < 50:
+            risk, sev = 0.6, 'medium'
+        else:
+            risk, sev = 0.2, 'low'
+        msg = f"Weekly rainfall: {total_rain:.1f} mm"
+        action = "Irrigate; prioritize water‐efficient methods."
+        return {'risk_level':risk,'severity':sev,'message':msg,'recommended_action':action}
 
     def check_flood_risk(self, forecast):
-        week = forecast[:28]
-        if not week:
-            return {'risk_level': 0, 'message': '', 'action': ''}
-
-        # group by day
+        # Group by calendar day
         daily = {}
-        for f in week:
+        for f in forecast[:56]:
             d = f['datetime'].date()
-            daily.setdefault(d, 0.0)
-            daily[d] += (f.get('rainfall') or 0.0)
-
-        if not daily:
-            return {'risk_level': 0, 'message': '', 'action': ''}
-
-        daily_vals = list(daily.values())
-        max_daily = max(daily_vals)
-        total_weekly = sum(daily_vals)
-
-        risk = 0.0
-        if max_daily > 75: risk = 0.9
-        elif max_daily > 50: risk = 0.6
-        elif max_daily > 30: risk = 0.3
-        if total_weekly > 200: risk = min(risk + 0.3, 1.0)
-
-        if risk > 0.2:#0.5
-            return {
-                'risk_level': risk,
-                'message': f"FLOOD RISK: Up to {max_daily:.1f} mm/day expected.",
-                'action': "Clear drains, move inputs to higher ground, avoid field work during heavy rain."
-            }
-        return {'risk_level': risk, 'message': '', 'action': ''}
+            daily.setdefault(d,0)
+            daily[d] += f.get('rainfall',0)
+        max_daily = max(daily.values()) if daily else 0
+        total = sum(daily.values())
+        # heavy rain thresholds
+        if max_daily > 100 or total>200:
+            risk, sev = 1.0, 'high'
+        elif max_daily > 50:
+            risk, sev = 0.6, 'medium'
+        else:
+            risk, sev = 0.2, 'low'
+        msg = f"Max daily rain: {max_daily:.1f} mm; weekly total: {total:.1f} mm"
+        action = "Ensure field drainage; avoid planting in flood zones."
+        return {'risk_level':risk,'severity':sev,'message':msg,'recommended_action':action}
 
     def check_disease_risk(self, forecast, crop_type):
-        week = forecast[:28]
-        if not week:
-            return {'risk_level': 0, 'message': '', 'action': ''}
+        # Count periods with RH>85% & 20–30°C
+        count=0
+        for f in forecast[:56]:
+            if f.get('humidity',0)>85 and 20<=f.get('temperature',0)<=30:
+                count+=1
+        # Scale risk by count/8 per day
+        days = min(count/8,7)
+        risk = min(days/7,1.0)
+        sev = 'high' if risk>0.6 else 'medium' if risk>0.3 else 'low'
+        msg = f"{count*3}h high humidity & moderate temp (disease‐favorable)."
+        action = "Scout for fungal disease; apply preventive treatments."
+        return {'risk_level':risk,'severity':sev,'message':msg,'recommended_action':action}
 
-        high_humid = sum(1 for f in week if (f.get('humidity') or 0) > 80)
-        temps = [f.get('temperature') for f in week if f.get('temperature') is not None]
-        rainy = sum(1 for f in week if (f.get('rainfall') or 0) > 2)
 
-        risk = 0.0
-        if high_humid > 10: risk += 0.4
-        if temps and (max(temps) - min(temps) > 15): risk += 0.2
-        if rainy > 15: risk += 0.3
-        risk = min(risk, 1.0)
+    # def build_alerts(self, forecast: List[Dict[str, Any]], crop_type: str) -> List[Dict[str, str]]:
+    #     alerts = []
 
-        crop_diseases = {
-            'Rice': ['Blast', 'Sheath Blight'],
-            'Wheat': ['Rust', 'Blight'],
-            'Cotton': ['Bollworm', 'Wilt'],
-            'Sugarcane': ['Red Rot', 'Smut'],
-            'Soybean': ['Rust', 'Pod Borer'],
-            'Maize': ['Borer', 'Rust']
-        }
-        if risk > 0.2:#0.6
-            diseases = crop_diseases.get(crop_type, ['General diseases'])
-            return {
-                'risk_level': risk,
-                'message': f"DISEASE RISK: Humid/rainy spell may trigger {', '.join(diseases[:2])}.",
-                'action': "Scout fields; consider preventive spray per local advisories; improve field drainage."
-            }
-        return {'risk_level': risk, 'message': '', 'action': ''}
+    #     frost = self.check_frost_risk(forecast, crop_type)
+    #     if frost['risk_level'] > 0.7:  # Lower threshold from 0.7 to 0.5
+    #         alerts.append({
+    #             'type': 'frost_warning',
+    #             'severity': 'high',
+    #             'message': frost['message'],
+    #             'recommended_action': frost['action']
+    #         })
+
+    #     drought = self.check_drought_risk(forecast)
+    #     if drought['risk_level'] > 0.6:  # Lower threshold from 0.6 to 0.2
+    #         alerts.append({
+    #             'type': 'drought_warning',
+    #             'severity': 'medium',
+    #             'message': drought['message'],
+    #             'recommended_action': drought['action']
+    #         })
+
+    #     flood = self.check_flood_risk(forecast)
+    #     if flood['risk_level'] > 0.5:  # Lower threshold from 0.5 to 0.3
+    #         alerts.append({
+    #             'type': 'flood_warning',
+    #             'severity': 'high',
+    #             'message': flood['message'],
+    #             'recommended_action': flood['action']
+    #         })
+
+    #     disease = self.check_disease_risk(forecast, crop_type)
+    #     if disease['risk_level'] > 0.6:  # Lower threshold from 0.6 to 0.4
+    #         alerts.append({
+    #             'type': 'disease_warning',
+    #             'severity': 'medium',
+    #             'message': disease['message'],
+    #             'recommended_action': disease['action']
+    #         })
+
+    #     return alerts
+
+
+    # def check_frost_risk(self, forecast, crop_type):
+    #     frost_sensitive = {'Rice', 'Cotton', 'Sugarcane', 'Soybean', 'Maize'}
+    #     frost_threshold = 2.0
+    #     if crop_type not in frost_sensitive:
+    #         return {'risk_level': 0, 'message': '', 'action': ''}
+
+    #     near_term = [f for f in forecast[:24] if f.get('temperature') is not None]
+    #     if not near_term:
+    #         return {'risk_level': 0, 'message': '', 'action': ''}
+
+    #     frost_periods = [f['datetime'] for f in near_term if f['temperature'] < frost_threshold]
+    #     if frost_periods:
+    #         min_temp = min(f['temperature'] for f in near_term)
+    #         risk = min(len(frost_periods) / 10.0, 1.0)
+    #         return {
+    #             'risk_level': risk,
+    #             'message': f"FROST ALERT: Temperature down to {min_temp:.1f}°C expected in next 3 days.",
+    #             'action': "Cover seedlings, use mulching/sprinklers, postpone irrigation before cold night."
+    #         }
+    #     return {'risk_level': 0, 'message': '', 'action': ''}
+
+    # def check_drought_risk(self, forecast):
+    #     week = [f for f in forecast[:28] if 'rainfall' in f and 'humidity' in f]
+    #     if not week:
+    #         return {'risk_level': 0, 'message': '', 'action': ''}
+
+    #     total_rain = sum(f['rainfall'] or 0 for f in week)
+    #     avg_humidity = sum((f['humidity'] or 0) for f in week) / len(week)
+
+    #     expected_rainfall = 25.0  # mm/week baseline
+    #     score = 0.0
+    #     if total_rain < expected_rainfall * 0.2: score = 0.9
+    #     elif total_rain < expected_rainfall * 0.5: score = 0.6
+    #     elif total_rain < expected_rainfall * 0.7: score = 0.3
+    #     if avg_humidity < 40: score = min(score + 0.2, 1.0)
+
+    #     if score > 0.6:#0.6
+    #         return {
+    #             'risk_level': score,
+    #             'message': f"DROUGHT RISK: Only {total_rain:.1f} mm forecast in next 7 days.",
+    #             'action': "Irrigate efficiently, prioritize critical growth stages, reduce evap loss with mulching."
+    #         }
+    #     return {'risk_level': score, 'message': '', 'action': ''}
+
+    # def check_flood_risk(self, forecast):
+    #     week = forecast[:28]
+    #     if not week:
+    #         return {'risk_level': 0, 'message': '', 'action': ''}
+
+    #     # group by day
+    #     daily = {}
+    #     for f in week:
+    #         d = f['datetime'].date()
+    #         daily.setdefault(d, 0.0)
+    #         daily[d] += (f.get('rainfall') or 0.0)
+
+    #     if not daily:
+    #         return {'risk_level': 0, 'message': '', 'action': ''}
+
+    #     daily_vals = list(daily.values())
+    #     max_daily = max(daily_vals)
+    #     total_weekly = sum(daily_vals)
+
+    #     risk = 0.0
+    #     if max_daily > 75: risk = 0.9
+    #     elif max_daily > 50: risk = 0.6
+    #     elif max_daily > 30: risk = 0.3
+    #     if total_weekly > 200: risk = min(risk + 0.3, 1.0)
+
+    #     if risk > 0.5:#0.5
+    #         return {
+    #             'risk_level': risk,
+    #             'message': f"FLOOD RISK: Up to {max_daily:.1f} mm/day expected.",
+    #             'action': "Clear drains, move inputs to higher ground, avoid field work during heavy rain."
+    #         }
+    #     return {'risk_level': risk, 'message': '', 'action': ''}
+
+    # def check_disease_risk(self, forecast, crop_type):
+    #     week = forecast[:28]
+    #     if not week:
+    #         return {'risk_level': 0, 'message': '', 'action': ''}
+
+    #     high_humid = sum(1 for f in week if (f.get('humidity') or 0) > 80)
+    #     temps = [f.get('temperature') for f in week if f.get('temperature') is not None]
+    #     rainy = sum(1 for f in week if (f.get('rainfall') or 0) > 2)
+
+    #     risk = 0.0
+    #     if high_humid > 10: risk += 0.4
+    #     if temps and (max(temps) - min(temps) > 15): risk += 0.2
+    #     if rainy > 15: risk += 0.3
+    #     risk = min(risk, 1.0)
+
+    #     crop_diseases = {
+    #         'Rice': ['Blast', 'Sheath Blight'],
+    #         'Wheat': ['Rust', 'Blight'],
+    #         'Cotton': ['Bollworm', 'Wilt'],
+    #         'Sugarcane': ['Red Rot', 'Smut'],
+    #         'Soybean': ['Rust', 'Pod Borer'],
+    #         'Maize': ['Borer', 'Rust']
+    #     }
+    #     if risk > 0.6:#0.6
+    #         diseases = crop_diseases.get(crop_type, ['General diseases'])
+    #         return {
+    #             'risk_level': risk,
+    #             'message': f"DISEASE RISK: Humid/rainy spell may trigger {', '.join(diseases[:2])}.",
+    #             'action': "Scout fields; consider preventive spray per local advisories; improve field drainage."
+    #         }
+    #     return {'risk_level': risk, 'message': '', 'action': ''}
 
     # ---------- Notifications & DB ----------
     def send_farmer_alerts(self, farmer_id: int, name: str, phone: Optional[str], alerts: List[Dict[str,str]]):

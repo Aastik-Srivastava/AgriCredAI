@@ -26,24 +26,6 @@ class AdvancedDataPipeline:
         self.weather_base_url = WEATHER_API_BASE_URL
         self.weather_units = WEATHER_UNITS
 
-    # def setup_database(self):
-    #     self.conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
-    #     # Basic schema
-    #     self.conn.execute("""
-    #     CREATE TABLE IF NOT EXISTS farmers (
-    #         farmer_id INTEGER PRIMARY KEY,
-    #         name TEXT, latitude REAL, longitude REAL,
-    #         land_size REAL, crop_type TEXT, soil_type TEXT,
-    #         phone_number TEXT, registration_date DATE
-    #     )""")
-    #     self.conn.execute("""
-    #     CREATE TABLE IF NOT EXISTS weather_alerts (
-    #         id INTEGER PRIMARY KEY,
-    #         farmer_id INTEGER,
-    #         alert_type TEXT, severity TEXT, message TEXT, recommended_action TEXT,
-    #         created_at DATETIME
-    #     )""")
-    #     self.conn.commit()
     def setup_database(self):
         self.conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
         

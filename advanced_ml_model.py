@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, roc_auc_score, roc_curve
+from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import StandardScaler
 import xgboost as xgb
 import lightgbm as lgb
@@ -339,6 +339,9 @@ class AdvancedCreditModel:
     def train_ensemble_model(self, df):
         """Train multiple models and create ensemble with cross-validation"""
         feature_columns = [col for col in df.columns if col not in ['farmer_id', 'default_flag']]
+
+        # Save feature_columns for later use
+        self.feature_columns = feature_columns
         X = df[feature_columns]
         y = df['default_flag']
 
@@ -411,7 +414,8 @@ class AdvancedCreditModel:
         # Save models
         joblib.dump(self.best_model, 'advanced_credit_model.pkl')
         joblib.dump(self.scaler, 'feature_scaler.pkl')
-
+        joblib.dump(feature_columns, 'feature_columns.pkl')  # Save feature columns list
+        joblib.dump(best_model_name, 'best_model_name.pkl')
         return X_test, y_test, feature_columns
 
     def predict_with_explanation(self, farmer_features):

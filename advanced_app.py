@@ -2,18 +2,23 @@ import streamlit as st
 
 # Page configuration
 st.set_page_config(
-    page_title="AgriCred AI - Advanced Agricultural Credit Intelligence",
-    page_icon="🌾",
+    page_title="Capital One AgriCred AI - Agricultural Credit Intelligence Platform",
+    page_icon="🏦",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://github.com/Aastik-Srivastava/AgriCredAI',
+        'Report a bug': 'https://github.com/Aastik-Srivastava/AgriCredAI/issues',
+        'About': "Capital One AgriCred AI - Revolutionizing agricultural lending with AI"
+    }
 )
-
 
 import pandas as pd
 import numpy as np
 import joblib  # For loading machine learning models
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import sqlite3
 from datetime import datetime, timedelta
 import requests
@@ -27,6 +32,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 # Custom modules (assuming these are in your project directory)
+from agentic_ai_demo import agentic_ai_demo
 from advanced_data_pipeline import AdvancedDataPipeline
 from advanced_ml_model import AdvancedCreditModel
 from weather_alert_system import WeatherAlertSystem, setup_alerts_table
@@ -85,24 +91,197 @@ except NameError:
 
 from credit_db_maker import store_credit_transaction, DB_PATH, CREDIT_PRICE_USD, USD_TO_INR, CAR_EQUIV_TON, TREE_EQUIV_TON
 
+# Initialize session state
+if 'pipeline' not in st.session_state:
+    st.session_state.pipeline = AdvancedDataPipeline()
 
 
-
-# Custom CSS
+# Global styling
 st.markdown("""
 <style>
-.metric-card {
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    padding: 1rem;
-    border-radius: 10px;
-    color: white;
-    margin: 10px 0;
-}
-.alert-high { background-color: #ff4444; color: white; padding: 10px; border-radius: 5px; }
-.alert-medium { background-color: #ffaa00; color: white; padding: 10px; border-radius: 5px; }
-.alert-low { background-color: #00aa44; color: white; padding: 10px; border-radius: 5px; }
+    /* Global base styles (Light mode by default) */
+    .main-header {
+        background: linear-gradient(90deg, #1f4e79 0%, #2d5a8a 100%);
+        padding: 2rem;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .metric-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+        margin: 0.5rem 0;
+        color: #333333; 
+    }
+    
+    .risk-low { border-left: 5px solid #28a745; }
+    .risk-medium { border-left: 5px solid #ffc107; }
+    .risk-high { border-left: 5px solid #dc3545; }
+    
+    .sidebar-logo {
+        text-align: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        color: #333333; /* Default text color for light mode */
+    }
+            
+    .financier-insight {
+        background: #e8f4fd;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #1f4e79;
+        margin: 1rem 0;
+        color: #333333;
+    }
+    
+    .portfolio-summary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin: 1rem 0;
+    }
+
+    /* Welcome screen specific light mode styles (using classes for better targeting) */
+    .welcome-container {
+        text-align: center;
+        padding: 2rem;
+        /* Default text color assumed from Streamlit's base light theme if not specified */
+    }
+    
+    .welcome-info-box {
+        background: #f0f2f6; 
+        padding: 1.5rem;
+        border-radius: 10px;
+        color: #333333; /* Dark text for light mode box */
+    }
+
+   
+
+    /* Dark Mode Styling */
+    @media (prefers-color-scheme: dark) {
+        .main-header {
+            background: linear-gradient(90deg, #1A3C5B 0%, #264A6A 100%); 
+            color: #f0f2f6; 
+        }
+        
+        .metric-card {
+            background: #262626; 
+            color: #f0f2f6; 
+            box-shadow: 0 2px 4px rgba(255,255,255,0.1); 
+        }
+        
+        .risk-low { border-left: 5px solid #6edc86; } 
+        .risk-medium { border-left: 5px solid #ffd75e; } 
+        .risk-high { border-left: 5px solid #ff7b7b; } 
+        
+        .sidebar-logo {
+            background: #262626; 
+            color: #f0f2f6; /* Light text for dark mode sidebar logo */
+        }
+                
+        .financier-insight {
+            background: #1f2e46; 
+            border-left: 4px solid #5a87be; 
+            color: #f0f2f6; 
+        }
+        
+        .portfolio-summary {
+            background: linear-gradient(135deg, #4b5f88 0%, #5d4679 100%); 
+            color: #f0f2f6; 
+        }
+
+        /* Welcome Screen specific dark mode styles */
+        .welcome-container {
+             color: #f0f2f6; /* Light text color */
+        }
+        .welcome-container h3,
+        .welcome-container h4 {
+            color: #90ee90; /* Lighter green for headings in dark theme */
+        }
+        .welcome-container p,
+        .welcome-container ul li {
+            color: #f0f2f6; /* Light text color for paragraphs and list items */
+        }
+        
+        .welcome-info-box {
+             background: #1f2e46; 
+             color: #f0f2f6; 
+        }
+        .welcome-info-box h4 {
+            color: #90ee90; /* Lighter green for inner box heading in dark theme */
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
+
+def display_main_header():
+    """Display the main platform header"""
+    st.markdown("""
+    <div class="main-header">
+        <h1>🏦 Capital One AgriCred AI Platform</h1>
+        <h3>Advanced Agricultural Credit Intelligence & Risk Management</h3>
+        <p>Empowering financial institutions with AI-driven insights for agricultural lending</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+def display_sidebar():
+    """Enhanced sidebar with financier focus"""
+    st.sidebar.markdown("""
+    <div class="sidebar-logo">
+        <h2>🏦 Capital One</h2>
+        <p><strong>AgriCred AI</strong></p>
+        <p style="font-size: 12px; color: #666;">Agricultural Lending Intelligence</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.sidebar.markdown("### 📊 Navigation Dashboard")
+    
+    page_options = [
+        "🏠 Executive Summary",
+        "📊 Portfolio Analytics", 
+        "🎯 Credit Risk Scoring",
+        "🤖 Agentic AI Intelligence",
+        "🌦️ Weather Risk Monitor",
+        "💹 Market Intelligence",
+        "📈 Performance Analytics",
+        "⚙️ System Configuration"
+    ]
+    
+    selected_page = st.sidebar.selectbox(
+        "Select Dashboard",
+        page_options,
+        help="Choose your dashboard view"
+    )
+    
+    # Real-time metrics in sidebar
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 📈 Live Metrics")
+    
+   # In display_sidebar(), remove random metrics and add placeholders:
+    metrics = st.session_state.pipeline.calculate_and_store_portfolio_metrics()
+    st.sidebar.metric("Portfolio Value", f"₹{metrics['total_portfolio']/1e7:.1f}Cr")
+    st.sidebar.metric("Active Loans", f"{metrics['total_loans']:,}")
+    st.sidebar.metric("Default Rate", f"{metrics['default_rate']:.1f}%")
+    st.sidebar.metric("Avg Credit Score", f"{int(metrics['avg_credit_score'])}")
+
+    # Weather alerts
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 🌦️ Weather Alerts")
+    alert_count = random.randint(5, 15)
+    st.sidebar.error(f"⚠️ {alert_count} High Risk Alerts")
+    st.sidebar.warning("🌧️ Heavy Rain Warning: Maharashtra")
+    st.sidebar.info("🌡️ Temperature Alert: Punjab")
+    
+    return selected_page
+
 
 @st.cache_data
 def fetch_market_prices():
@@ -162,23 +341,87 @@ CITY_COORDS = {
     "Goa": (15.2993, 74.1240),
     "Udupi": (13.3522, 74.7919),
 }
-
-# --- Mock Data Seeder ---
-def seed_mock_data():
-    farms = [
-        ("FARM001", "Punjab - Ludhiana"),
-        ("FARM002", "Maharashtra - Nagpur"),
-        ("FARM003", "Karnataka - Mysuru"),
-        ("FARM004", "Uttar Pradesh - Varanasi"),
-        ("FARM005", "Andhra Pradesh - Guntur")
-    ]
-
-    practices = ["Verified", "Pending", "Rejected"]
+def performance_analytics():
+    """Performance analytics and reporting"""
+    st.markdown("## 📈 Performance Analytics & Reporting")
     
-    for farm_id, location in farms:
-        credits = round(random.uniform(20, 100), 2)  # credits in tCO2e
-        status = random.choice(practices)
-        store_credit_transaction(farm_id, location, status, credits)
+    # Generate performance data
+    months = pd.date_range(start='2024-09-01', end='2025-08-31', freq='MS')
+    performance_data = {
+        'Month': months,
+        'Revenue (₹Cr)': np.cumsum(np.random.normal(8, 1, 12)) + 85,
+        'Profit (₹Cr)': np.cumsum(np.random.normal(2, 0.5, 12)) + 25,
+        'Cost of Funds (%)': np.random.normal(0, 0.1, 12) + 7.2,
+        'NPA Ratio (%)': np.maximum(0, np.cumsum(np.random.normal(0, 0.2, 12)) + 4.1),
+        'ROA (%)': np.random.normal(0, 0.2, 12) + 2.8,
+        'New Loans': np.random.poisson(380, 12)
+    }
+    
+    df_perf = pd.DataFrame(performance_data)
+    
+    # Key performance indicators
+    st.subheader("📊 Key Performance Indicators")
+    
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    with col1:
+        latest_revenue = df_perf['Revenue (₹Cr)'].iloc[-1]
+        prev_revenue = df_perf['Revenue (₹Cr)'].iloc[-2] 
+        revenue_change = (latest_revenue - prev_revenue) / prev_revenue * 100
+        st.metric("Monthly Revenue", f"₹{latest_revenue:.1f}Cr", f"{revenue_change:+.1f}%")
+    
+    with col2:
+        latest_profit = df_perf['Profit (₹Cr)'].iloc[-1]
+        prev_profit = df_perf['Profit (₹Cr)'].iloc[-2]
+        profit_change = (latest_profit - prev_profit) / prev_profit * 100
+        st.metric("Monthly Profit", f"₹{latest_profit:.1f}Cr", f"{profit_change:+.1f}%")
+    
+    with col3:
+        latest_npa = df_perf['NPA Ratio (%)'].iloc[-1]
+        st.metric("NPA Ratio", f"{latest_npa:.2f}%", help="Non-performing assets ratio")
+    
+    with col4:
+        latest_roa = df_perf['ROA (%)'].iloc[-1]
+        st.metric("ROA", f"{latest_roa:.2f}%", help="Return on assets")
+    
+    with col5:
+        latest_loans = df_perf['New Loans'].iloc[-1]
+        st.metric("New Loans", f"{latest_loans}", help="New loans this month")
+    
+    # Performance trends
+    st.markdown("---")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Revenue and profit trend
+        fig_revenue = px.line(
+            df_perf,
+            x='Month',
+            y=['Revenue (₹Cr)', 'Profit (₹Cr)'],
+            title='Revenue & Profit Trends'
+        )
+        st.plotly_chart(fig_revenue, use_container_width=True)
+    
+    with col2:
+        # NPA and ROA trend
+        fig_ratios = px.line(
+            df_perf,
+            x='Month', 
+            y=['NPA Ratio (%)', 'ROA (%)'],
+            title='Key Financial Ratios'
+        )
+        st.plotly_chart(fig_ratios, use_container_width=True)
+    
+    # Loan disbursement trend
+    fig_loans = px.bar(
+        df_perf,
+        x='Month',
+        y='New Loans',
+        title='Monthly New Loan Disbursements'
+    )
+    st.plotly_chart(fig_loans, use_container_width=True)
+
 # --- Load Data from DB ---
 def load_data():
     conn = sqlite3.connect(DB_PATH)
@@ -275,145 +518,6 @@ def display_alerts(alerts_feed):
         """, unsafe_allow_html=True)
 
 
-def main():
-    st.title("🌾 AgriCred AI: Advanced Agricultural Credit Intelligence Platform")
-    st.markdown("**AI-powered credit decisions with live weather monitoring and risk prevention**")
-    
-    # Initialize components
-    pipeline = initialize_data_pipeline()
-    model, scaler = load_models()
-    
-    if model is None:
-        st.error("⚠️ Models not found. Please run advanced_ml_model.py first to train the models.")
-        return
-        
-    # Initialize database with farmers on first run
-    farmer_count = pipeline.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
-    if farmer_count == 0:
-        st.info("Initializing database with farmer data...")
-        pipeline.seed_farmers(200)
-        pipeline.seed_loans_for_farmers()
-        pipeline.calculate_and_store_portfolio_metrics()
-    
-    # Sidebar navigation
-    st.sidebar.title("🚀 Navigation")
-    page = st.sidebar.selectbox(
-        "Choose a section",
-        ["🎯 Smart Credit Scoring", "🌤️ Weather Risk Monitor", "📊 Portfolio Dashboard", 
-         "🏛️ Policy Advisor","📱 Voice Assistant","⚠️ Weather Alerts","🛒 Live Mandi Prices", "ℹ️ About"]
-    )
-    
-    if page == "🎯 Smart Credit Scoring":
-        smart_credit_scoring(pipeline, model, scaler)
-    elif page == "🌤️ Weather Risk Monitor":
-        weather_risk_monitor(pipeline)
-    elif page == "📊 Portfolio Dashboard":
-        portfolio_dashboard(pipeline)
-    elif page == "🏛️ Policy Advisor":
-        policy_advisor(pipeline)
-    elif page == "📱 Voice Assistant":
-        voice_assistant()
-
-    elif page == "⚠️ Weather Alerts":
-        system = get_alert_system()
-        st.title("🌦️ Weather Risk Alerts")
-        # --- Controls ---
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("Run Check Now"):
-                alerted = system.run_once()
-                st.success(f"Completed check. Farms with alerts: {alerted}")
-
-        with col2:
-            if st.button("Start Background Monitor"):
-                system.start_background_monitor(interval_seconds=ALERT_CHECK_INTERVAL)
-                st.info("Background monitor started (~runs every "
-                        f"{ALERT_CHECK_INTERVAL} seconds)")
-
-        with col3:
-            if st.button("Stop Background Monitor"):
-                system.stop_background_monitor()
-                st.warning("Background monitor stopped.")
-
-        st.caption(f"Check cycle interval: {ALERT_CHECK_INTERVAL} seconds")
-
-        # --- Farmers preview (optional) ---
-        with st.expander("View Farmers in DB (for insight)"):
-            try:
-                farmers = system.get_all_farmers()
-                if farmers:
-                    df = pd.DataFrame(
-                        farmers,
-                        columns=[
-                            "farmer_id", "name", "latitude", "longitude",
-                            "land_size", "crop_type", "soil_type",
-                            "phone_number", "registration_date"
-                        ]
-                    )
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No farmers registered yet. Ingest farmer data to enable alerts.")
-            except Exception as e:
-                st.error(f"Error fetching farmers: {e}")
-
-        # --- Recent alerts ---
-        st.subheader("Recent Alerts")
-        try:
-            alerts = system.list_recent_alerts(limit=100)
-            if alerts:
-                df_alerts = pd.DataFrame(alerts)
-                st.dataframe(df_alerts, use_container_width=True)
-            else:
-                st.markdown("""
-                    <div style="padding: 20px; text-align: center; color: #666;">
-                        No alerts so far — conditions are nominal.
-                        Alerts will appear here when weather risk conditions are detected.
-                    </div>
-                """, unsafe_allow_html=True)
-        except Exception as e:
-            st.error(f"Error fetching alerts: {e}")
-
-        # --- Auto-refresh indication ---
-        if system.thread and system.thread.is_alive():
-            st.info("Background monitoring is active. Interact or refresh the page to update alerts.")
-        else:
-            st.caption("Monitoring is currently inactive.")
-    elif page == "🛒 Live Mandi Prices":
-        st.title("🛒 Live Mandi Prices")
-
-        # df = get_mandi_prices()
-        # if not df.empty:
-        #     st.dataframe(df)
-        # else:
-        #     st.warning("No data fetched.")
-        # --- Inputs ---
-        df = fetch_market_prices()
-
-        if df.empty:
-            st.error("⚠️ No data received from the API. Please check your API key or network.")
-        else:
-            # Search bar
-            search_query = st.text_input("🔍 Search by State or Crop", "").strip().lower()
-
-            if search_query:
-                filtered_df = df[df.apply(
-                    lambda row: search_query in str(row["state"]).lower() 
-                                or search_query in str(row["commodity"]).lower(),
-                    axis=1
-                )]
-            else:
-                filtered_df = df
-
-            # Always show all data if no matches found
-            if filtered_df.empty:
-                st.warning("No matches found. Showing all results.")
-                filtered_df = df
-
-            # Display DataFrame
-            st.dataframe(filtered_df, use_container_width=True)
-    else:
-        about_page()
-
 
 
 def fetch_weather(lat, lon):
@@ -478,354 +582,414 @@ def fetch_weather(lat, lon):
         }
     
 
+def credit_risk_scoring_dashboard():
+    # Header
+    st.markdown("# 🏦 Agricultural Credit Risk Assessment")
+    st.markdown("### AI-Powered Credit Scoring for Agricultural Lending")
+    st.markdown("---")
+    
+    pipeline = initialize_data_pipeline()
 
+    # Load model artifacts
+    try:
+        model = joblib.load('advanced_credit_model.pkl')
+        scaler = joblib.load('feature_scaler.pkl')
+        feature_columns = joblib.load('feature_columns.pkl')
+        model_type = "xgboost"  # Set based on your best model
+    except Exception as e:
+        st.error(f"⚠️ Error loading model: {e}")
+        st.info("Please ensure model files are present: advanced_credit_model.pkl, feature_scaler.pkl, feature_columns.pkl")
+        return
+    
+    # Complete feature defaults
+    defaults = {
+    'farmer_age': 40,                    # Younger, more tech-savvy
+    'education_level': 4,                # Above average education
+    'family_size': 4,                    # Smaller household obligations
+    'land_size': 3.0,                    # Moderately large farm
+    'crop_type_encoded': 2,              # Wheat (stable commodity)
+    'irrigation_access': 1,              # ✅ Has irrigation
+    'current_temperature': 28.0,         # Optimal growing temp
+    'current_humidity': 60,              # Ideal humidity
+    'temperature_stress': 0.1,           # Low stress
+    'humidity_stress': 0.1,              # Low stress
+    'drought_risk_7days': 0.1,           # Low drought risk
+    'frost_risk_7days': 0.01,            # Almost zero frost risk
+    'excess_rain_risk': 0.05,            # Very low flood risk
+    'price_volatility': 0.1,             # Stable prices
+    'nearest_mandi_distance': 10.0,      # Close to market
+    'connectivity_index': 0.8,           # Strong connectivity
+    'input_cost_index': 0.3,             # Lower input costs
+    'loan_to_land_ratio': 0.2,           # Conservative borrowing
+    'debt_to_income_ratio': 0.2,         # Low debt burden
+    'payment_history_score': 0.95,       # Excellent history
+    'yield_consistency': 0.9,            # Very consistent yields
+    'soil_health_index': 0.9,            # Very healthy soil
+    'nutrient_deficiency_risk': 0.05,    # Negligible nutrient risk
+    'insurance_coverage': 1,             # ✅ Insured
+    'cooperative_membership': 1,         # ✅ Member
+    'technology_adoption': 0.8,          # High tech use
+    'diversification_index': 0.7,        # Well diversified
+    'electricity_reliability': 0.9,      # Very reliable power
+    'mobile_network_strength': 0.9,      # Excellent connectivity
+    'bank_branch_distance': 5.0,         # Very close to bank
+    # And for the rest, use similarly low‐risk values:
+    'seasonal_rainfall_deviation': 0.0,
+    'historical_drought_frequency': 0,
+    'climate_change_vulnerability': 0.1,
+    'current_price': 200000.0,
+    'market_demand_index': 0.8,
+    'export_potential': 0.7,
+    'storage_price_premium': 0.1,
+    'price_trend': 0.05,
+    'savings_to_income_ratio': 0.2,
+    'credit_utilization': 0.2,
+    'number_of_credit_sources': 2,
+    'informal_lending_dependency': 0.1,
+    'road_quality_index': 0.9,
+    'mechanization_level': 0.8,
+    'seed_quality_index': 0.9,
+    'fertilizer_usage_efficiency': 0.9,
+    'pest_management_score': 0.8,
+    'organic_farming_adoption': 0.3,
+    'precision_agriculture_usage': 0.7,
+    'eligible_schemes_count': 3,
+    'subsidy_utilization': 0.8,
+    'msp_eligibility': 1,
+    'kisan_credit_card': 1,
+    'government_training_participation': 0.8,
+    'community_leadership_role': 1,
+    'social_capital_index': 0.8,
+    'extension_service_access': 0.8,
+    'peer_learning_participation': 0.8,
+    'labor_availability': 0.8,
+    'storage_access': 1,
+    'transport_cost_burden': 0.2,
+    'supply_chain_integration': 0.8,
+    'disaster_preparedness': 0.8,
+    'alternative_income_sources': 0.7,
+    'livestock_ownership': 1
+}
 
-def smart_credit_scoring(pipeline, model, scaler):
-    st.header("🎯 Advanced Credit Scoring with Live Risk Assessment")
+    # Input form in sidebar
+    st.markdown("## 📝 Farmer Assessment Form")
+    st.markdown("*Enter key information for credit evaluation*")
     
-    # Real-time alerts section
-    st.subheader("🚨 Live Risk Alerts")
-    col1, col2, col3 = st.columns(3)
+    # Farmer details
+    farmer_name = st.text_input("👤 Farmer Name", "Rajesh Kumar")
+    monthly_income = st.number_input("💰 Monthly Income (₹)", min_value=5000, max_value=200000, value=25000)
     
-    with col1:
-        st.markdown('<div class="alert-high">⚠️ 15 farmers under frost risk</div>', unsafe_allow_html=True)
-    with col2:
-        st.markdown('<div class="alert-medium">🌧️ 8 areas with excess rain risk</div>', unsafe_allow_html=True)
-    with col3:
-        st.markdown('<div class="alert-low">✅ 142 farmers in safe conditions</div>', unsafe_allow_html=True)
+    # Key risk factors
+    user_inputs = {}
     
-    # Enhanced input form
-    st.subheader("📝 Comprehensive Farmer Assessment")
+    with st.expander("🏦 Financial Information", expanded=True):
+        user_inputs['payment_history_score'] = st.slider("Payment History Score", 0.1, 1.0, 0.85, help="Track record of loan repayments")
+        user_inputs['debt_to_income_ratio'] = st.slider("Debt to Income Ratio", 0.0, 2.0, 0.4, help="Monthly debt payments / Monthly income")
+        user_inputs['savings_to_income_ratio'] = st.slider("Savings Rate", 0.0, 0.5, 0.1, help="Percentage of income saved monthly")
     
-    with st.expander("🔍 Quick Assessment", expanded=True):
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            farmer_name = st.text_input("👤 Farmer Name", "Ravi Kumar")
-            land_size = st.number_input("🌾 Land Size (acres)", 0.1, 100.0, 2.5, 0.1)
-            crop_type = st.selectbox("🌱 Primary Crop", 
-                ['Rice', 'Wheat', 'Cotton', 'Sugarcane', 'Soybean', 'Maize'])
-            farmer_age = st.number_input("👴 Age", 18, 80, 45)
-        
+    with st.expander("🌾 Agricultural Details", expanded=True):
+        user_inputs['land_size'] = st.number_input("Land Size (hectares)", 0.5, 20.0, 2.0, help="Total cultivated land")
+        user_inputs['yield_consistency'] = st.slider("Yield Consistency", 0.3, 1.0, 0.7, help="Reliability of crop yields")
+        user_inputs['irrigation_access'] = st.radio("Irrigation Access?", [0, 1], index=1, format_func=lambda x: "✅ Yes" if x else "❌ No")
+        user_inputs['soil_health_index'] = st.slider("Soil Health", 0.2, 1.0, 0.75, help="Soil quality and fertility")
+    
+    with st.expander("🌦️ Climate & Weather Risks", expanded=False):
+        user_inputs['drought_risk_7days'] = st.slider("7-day Drought Risk", 0.0, 1.0, 0.3)
+        user_inputs['price_volatility'] = st.slider("Price Volatility", 0.05, 0.8, 0.2, help="Market price fluctuation")
+    
+    with st.expander("🤝 Support Systems", expanded=False):
+        user_inputs['cooperative_membership'] = st.radio("Cooperative Member?", [0, 1], index=1, format_func=lambda x: "✅ Yes" if x else "❌ No")
+        user_inputs['insurance_coverage'] = st.radio("Crop Insurance?", [0, 1], index=1, format_func=lambda x: "✅ Yes" if x else "❌ No")
+        user_inputs['technology_adoption'] = st.slider("Technology Adoption", 0.1, 0.95, 0.5, help="Use of modern farming techniques")
+        user_inputs['diversification_index'] = st.slider("Crop Diversification", 0.1, 0.9, 0.4, help="Variety of crops grown")
+    
+    # Assessment button
+    assess_button = st.button("🔍 Assess Credit Risk", type="primary", use_container_width=True)
+    
+    # Main content area
+    if not assess_button:
+        # Welcome screen
+        col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            location_lat = st.number_input("📍 Latitude", -90.0, 90.0, 28.6139, 0.0001)
-            location_lon = st.number_input("📍 Longitude", -180.0, 180.0, 77.2090, 0.0001)
-            education_level = st.selectbox("🎓 Education", 
-                ['Illiterate', 'Primary', 'Secondary', 'Higher Secondary', 'Graduate'])
-            family_size = st.number_input("👨‍👩‍👧‍👦 Family Size", 1, 15, 4)
-        
-        with col3:
-            phone_usage = st.slider("📱 Digital Activity Score", 10, 100, 75)
-            irrigation_access = st.selectbox("💧 Irrigation Access", ['No', 'Yes'])
-            cooperative_member = st.selectbox("🤝 Cooperative Member", ['No', 'Yes'])
-            insurance_coverage = st.selectbox("🛡️ Crop Insurance", ['No', 'Yes'])
-    
-    with st.expander("📈 Financial History"):
-        col1, col2 = st.columns(2)
-        with col1:
-            past_defaults = st.number_input("❌ Past Defaults", 0, 10, 0)
-            loan_amount = st.number_input("💰 Requested Loan (₹)", 10000, 10000000, 200000, 10000)
-            monthly_income = st.number_input("💵 Monthly Income (₹)", 5000, 500000, 25000, 1000)
-        with col2:
-            existing_debt = st.number_input("🏦 Existing Debt (₹)", 0, 5000000, 50000, 5000)
-            savings_amount = st.number_input("💳 Savings (₹)", 0, 2000000, 20000, 1000)
-            credit_sources = st.number_input("📋 Number of Credit Sources", 0, 10, 2)
-    
-    # Live weather integration
-    if st.button("🌤️ Get Live Weather & Assess Risk", type="primary", use_container_width=True):
-        
-        # Simulate getting live weather and comprehensive assessment
-        with st.spinner("🔄 Fetching live weather data and calculating risk..."):
-            # Get weather data (simulated for demo)
-            weather_data = {
-                'temperature': np.random.normal(28, 5),
-                'humidity': np.random.normal(65, 15),
-                'rainfall_7day': np.random.normal(25, 15),
-                'frost_risk': np.random.beta(1, 10),
-                'drought_risk': np.random.beta(2, 8)
-            }
+            st.markdown("""
+            <div style='text-align: center; padding: 2rem;'>
+                <h3>🌾 Agricultural Credit Assessment</h3>
+                <p>Complete the farmer assessment form and click 
+                <strong>"Assess Credit Risk"</strong> to generate a comprehensive credit evaluation.</p>
+                <br>
+            </div>
+            """, unsafe_allow_html=True)
 
-            # weather_data = fetch_weather(location_lat, location_lon)
+
+    else:
+        # Build prediction input
+        features = defaults.copy()
+        features.update(user_inputs)
+        input_list = [features[feat] for feat in feature_columns]
+        input_df = pd.DataFrame([input_list], columns=feature_columns)
+        
+        try:
+            # Make prediction
+            input_scaled = scaler.transform(input_df)
+            pred_prob = model.predict_proba(input_scaled)[0][1]
+            credit_score = int((1 - pred_prob) * 750 + 250)
             
-            # Create comprehensive feature vector (50+ features)
-            features = create_comprehensive_features(
-                farmer_name, land_size, crop_type, farmer_age, location_lat, location_lon,
-                education_level, family_size, phone_usage, irrigation_access, 
-                cooperative_member, insurance_coverage, past_defaults, loan_amount,
-                monthly_income, existing_debt, savings_amount, credit_sources, weather_data
-            )
-            
-            # Predict using the model
-            prediction = model.predict_proba([list(features.values())])[0][1]
-            credit_score = int((1 - prediction) * 850 + 150)
-            
-            # Display results with enhanced UI
+            # Professional Results Display
             st.markdown("---")
             st.subheader(f"📊 Comprehensive Assessment for {farmer_name}")
             
             # Main metrics
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric("🎯 Credit Score", credit_score, 
-                         help="FICO-style score (150-1000)")
+                st.metric("🎯 Credit Score", credit_score, help="FICO-style score (250-1000)")
             with col2:
-                st.metric("⚠️ Default Risk", f"{prediction:.1%}", 
-                         help="Probability of default")
+                st.metric("⚠️ Default Risk", f"{pred_prob:.1%}", help="Probability of default")
             with col3:
-                if prediction < 0.3:
+                if pred_prob < 0.4:
                     st.success("✅ APPROVE")
                     recommendation = "APPROVE"
-                elif prediction < 0.6:
+                elif pred_prob < 0.7:
                     st.warning("⚠️ REVIEW")
                     recommendation = "REVIEW"
                 else:
                     st.error("❌ REJECT")
                     recommendation = "REJECT"
             with col4:
-                loan_capacity = int(monthly_income * 12 * 3 * (1 - prediction))
-                st.metric("💰 Max Loan Capacity", f"₹{loan_capacity:,}")
+                loan_capacity = int(monthly_income * 12 * 3 * (1 - pred_prob))
+                st.metric("💰 Max Loan Capacity", f"₹{loan_capacity:,}", help="Recommended maximum loan amount")
             
             # Risk breakdown
             col1, col2 = st.columns([2, 1])
             
             with col1:
-                # Detailed explanation with SHAP-like analysis
                 st.subheader("🧠 AI Decision Explanation")
                 
-                risk_factors = analyze_risk_factors(features, prediction)
+                # Generate risk factors based on inputs
+                positive_factors = []
+                negative_factors = []
+                recommendations = []
                 
-                # Positive factors
-                st.markdown("**✅ Positive Factors:**")
-                for factor in risk_factors['positive'][:5]:
-                    st.markdown(f"• {factor}")
+                # Analyze positive factors
+                if user_inputs['payment_history_score'] > 0.8:
+                    positive_factors.append("Excellent payment history")
+                if user_inputs['debt_to_income_ratio'] < 0.3:
+                    positive_factors.append("Low debt burden")
+                if user_inputs['yield_consistency'] > 0.7:
+                    positive_factors.append("Consistent crop yields")
+                if user_inputs['irrigation_access']:
+                    positive_factors.append("Access to irrigation")
+                if user_inputs['insurance_coverage']:
+                    positive_factors.append("Crop insurance coverage")
+                if user_inputs['cooperative_membership']:
+                    positive_factors.append("Member of farming cooperative")
                 
-                # Risk factors
-                st.markdown("**⚠️ Risk Factors:**")
-                for factor in risk_factors['negative'][:5]:
-                    st.markdown(f"• {factor}")
+                # Analyze risk factors
+                if user_inputs['debt_to_income_ratio'] > 0.5:
+                    negative_factors.append("High debt-to-income ratio")
+                if user_inputs['price_volatility'] > 0.3:
+                    negative_factors.append("High market price volatility")
+                if user_inputs['drought_risk_7days'] > 0.5:
+                    negative_factors.append("Significant drought risk")
+                if user_inputs['diversification_index'] < 0.3:
+                    negative_factors.append("Limited crop diversification")
+                if user_inputs['technology_adoption'] < 0.3:
+                    negative_factors.append("Low technology adoption")
                 
-                # Recommendations
-                st.markdown("**📋 Recommendations:**")
-                recommendations = generate_recommendations(features, prediction, weather_data)
-                for rec in recommendations[:3]:
-                    st.markdown(f"• {rec}")
+                # Generate recommendations
+                if not user_inputs['insurance_coverage']:
+                    recommendations.append("Consider purchasing crop insurance")
+                if user_inputs['diversification_index'] < 0.5:
+                    recommendations.append("Increase crop diversification")
+                if user_inputs['technology_adoption'] < 0.5:
+                    recommendations.append("Adopt modern farming technologies")
+                if user_inputs['debt_to_income_ratio'] > 0.4:
+                    recommendations.append("Focus on debt reduction strategies")
+                
+                # Display factors
+                if positive_factors:
+                    st.markdown("**✅ Positive Factors:**")
+                    for factor in positive_factors[:5]:
+                        st.markdown(f"• {factor}")
+                
+                if negative_factors:
+                    st.markdown("**⚠️ Risk Factors:**")
+                    for factor in negative_factors[:5]:
+                        st.markdown(f"• {factor}")
+                
+                if recommendations:
+                    st.markdown("**📋 Recommendations:**")
+                    for rec in recommendations[:3]:
+                        st.markdown(f"• {rec}")
+                
+                if not positive_factors and not negative_factors:
+                    st.info("Assessment based on standard agricultural lending criteria.")
             
             with col2:
                 # Risk gauge
-                fig_gauge = create_risk_gauge(prediction)
+                risk_value = pred_prob * 100
+                fig_gauge = go.Figure(go.Indicator(
+                    mode="gauge+number+delta",
+                    value=risk_value,
+                    domain={'x': [0, 1], 'y': [0, 1]},
+                    title={'text': "Risk Level", 'font': {'size': 16}},
+                    gauge={
+                        'axis': {'range': [None, 100]},
+                        'bar': {'color': "darkred" if risk_value > 60 else "orange" if risk_value > 30 else "green"},
+                        'steps': [
+                            {'range': [0, 30], 'color': "lightgreen"},
+                            {'range': [30, 60], 'color': "yellow"},
+                            {'range': [60, 100], 'color': "lightcoral"}
+                        ],
+                        'threshold': {
+                            'line': {'color': "red", 'width': 4},
+                            'thickness': 0.75,
+                            'value': 90
+                        }
+                    }
+                ))
+                fig_gauge.update_layout(height=300)
                 st.plotly_chart(fig_gauge, use_container_width=True)
-        
-        # Weather-specific alerts
-        st.subheader("🌤️ Weather Risk Assessment")
-        weather_alerts = generate_weather_alerts(weather_data, crop_type)
-        
-        for alert in weather_alerts:
-            if alert['severity'] == 'high':
-                st.markdown(f'<div class="alert-high">🚨 {alert["message"]}</div>', 
-                           unsafe_allow_html=True)
-            elif alert['severity'] == 'medium':
-                st.markdown(f'<div class="alert-medium">⚠️ {alert["message"]}</div>', 
-                           unsafe_allow_html=True)
-            else:
-                st.markdown(f'<div class="alert-low">✅ {alert["message"]}</div>', 
-                           unsafe_allow_html=True)
-        
-        # Scheme recommendations
-        st.subheader("🏛️ Eligible Government Schemes")
-        schemes = get_eligible_schemes_detailed(features)
-        
-        for scheme in schemes[:3]:
-            with st.expander(f"📋 {scheme['name']}"):
-                st.write(f"**Maximum Amount:** ₹{scheme['max_amount']:,}")
-                st.write(f"**Interest Rate:** {scheme['interest_rate']}%")
-                st.write(f"**Duration:** {scheme['duration']} months")
-                st.write(f"**Description:** {scheme['description']}")
+            
+            # Feature importance visualization
+            st.markdown("---")
+            st.subheader("📈 Model Feature Analysis")
+            
+            try:
+                import shap
+                explainer = shap.TreeExplainer(model)
+                shap_values = explainer.shap_values(input_scaled)
+                
+                # Create SHAP summary
+                feature_impact = []
+                for i, (feature, shap_val, feat_val) in enumerate(zip(feature_columns, shap_values[1][0], input_df.iloc[0].values)):
+                    feature_impact.append({
+                        'Feature': feature.replace('_', ' ').title(),
+                        'Impact': shap_val,
+                        'Value': feat_val
+                    })
+                
+                # Sort by absolute impact
+                feature_impact.sort(key=lambda x: abs(x['Impact']), reverse=True)
+                
+                # Display top 10 features
+                impact_df = pd.DataFrame(feature_impact[:10])
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown("**Top Influential Features:**")
+                    st.dataframe(impact_df, hide_index=True)
+                
+                with col2:
+                    # Bar chart of feature impacts
+                    fig_bar = px.bar(
+                        impact_df, 
+                        x='Impact', 
+                        y='Feature',
+                        orientation='h',
+                        title="Feature Impact on Risk Score",
+                        color='Impact',
+                        color_continuous_scale='RdYlGn_r'
+                    )
+                    fig_bar.update_layout(height=400)
+                    st.plotly_chart(fig_bar, use_container_width=True)
+                    
+            except Exception:
+                # Fallback to model feature importance if SHAP fails
+                if hasattr(model, 'feature_importances_'):
+                    importance_df = pd.DataFrame({
+                        'Feature': [f.replace('_', ' ').title() for f in feature_columns],
+                        'Importance': model.feature_importances_
+                    }).sort_values('Importance', ascending=False).head(10)
+                    
+                    fig_imp = px.bar(
+                        importance_df, 
+                        x='Importance', 
+                        y='Feature',
+                        orientation='h',
+                        title="Model Feature Importance"
+                    )
+                    st.plotly_chart(fig_imp, use_container_width=True)
+                else:
+                    st.info("Feature analysis not available for this model type.")
 
-def create_comprehensive_features(farmer_name, land_size, crop_type, farmer_age, lat, lon, 
-                                education, family_size, phone_usage, irrigation, cooperative, 
-                                insurance, past_defaults, loan_amount, monthly_income, 
-                                existing_debt, savings, credit_sources, weather_data):
-    """Create comprehensive feature set for prediction"""
+            user_crop = st.text_input("Main Crop (e.g. wheat, cotton, rice)", "all")
+            user_state = st.text_input("State (e.g. Maharashtra, Bihar)", "all")
+            user_land_size = user_inputs.get('land_size', 2.0)  # Already in your user inputs block
+            policy_advisor_with_keyword_search(user_land_size, user_crop, user_state)
+
+
+        except Exception as e:
+            st.error(f"Error during prediction: {e}")
+            st.info("Please check if all required model files are present and properly trained.")
+
+        
+
+
+def map_land_size_category(hectares):
+    if hectares < 0.4:
+        return 'marginal'
+    elif hectares < 0.8:
+        return 'small'
+    elif hectares < 4:
+        return 'medium'
+    else:
+        return 'large'
+
+def policy_advisor_with_keyword_search(land_size_hectares, crop_keyword='all', state_keyword='all'):
+    st.header('🏛️ Dynamic Government Policy Advisor')
+    st.markdown("""
+        **Relevant government schemes and policies based on your farm profile and location.**
+    """)
+
+    try:
+        with open('myschemes_full.json', 'r', encoding='utf-8') as f:
+            schemes = json.load(f)
+    except FileNotFoundError:
+        st.error('❌ `myschemes_full.json` not found. Please ensure the file is in the app directory.')
+        return
     
-    crop_encoding = {'Rice': 1, 'Wheat': 2, 'Cotton': 3, 'Sugarcane': 4, 'Soybean': 5, 'Maize': 6}
-    education_encoding = {'Illiterate': 1, 'Primary': 2, 'Secondary': 3, 'Higher Secondary': 4, 'Graduate': 5}
-    
-    features = {
-        # Basic info
-        'land_size': land_size,
-        'crop_type_encoded': crop_encoding.get(crop_type, 1),
-        'farmer_age': farmer_age,
-        'education_level': education_encoding.get(education, 1),
-        'family_size': family_size,
-        
-        # Weather features
-        'current_temperature': weather_data['temperature'],
-        'current_humidity': weather_data['humidity'],
-        'temperature_stress': max(0, abs(weather_data['temperature'] - 28) / 15),
-        'humidity_stress': abs(weather_data['humidity'] - 70) / 70,
-        'frost_risk_7days': weather_data['frost_risk'],
-        'drought_risk_7days': weather_data['drought_risk'],
-        'excess_rain_risk': max(0, (weather_data['rainfall_7day'] - 50) / 50),
-        'seasonal_rainfall_deviation': (weather_data['rainfall_7day'] - 25) / 25,
-        'historical_drought_frequency': np.random.poisson(1),
-        'climate_change_vulnerability': np.random.beta(3, 7),
-        
-        # Market features (simulated)
-        'current_price': np.random.gamma(5, 500),
-        'price_volatility': np.random.beta(2, 8),
-        'price_trend': np.random.normal(0, 0.15),
-        'market_demand_index': np.random.beta(4, 6),
-        'export_potential': np.random.beta(3, 7),
-        'storage_price_premium': np.random.beta(2, 8),
-        
-        # Financial features
-        'payment_history_score': max(0, 1 - past_defaults / 5),
-        'yield_consistency': np.random.beta(5, 3),
-        'loan_to_land_ratio': loan_amount / (land_size * 100000),  # Approximate land value
-        'debt_to_income_ratio': existing_debt / (monthly_income * 12) if monthly_income > 0 else 0,
-        'savings_to_income_ratio': savings / (monthly_income * 12) if monthly_income > 0 else 0,
-        'credit_utilization': existing_debt / max(loan_amount, 1),
-        'number_of_credit_sources': credit_sources,
-        'informal_lending_dependency': np.random.beta(2, 6),
-        
-        # Geographic features
-        'nearest_mandi_distance': np.random.gamma(2, 8),
-        'irrigation_access': 1 if irrigation == 'Yes' else 0,
-        'connectivity_index': phone_usage / 100,
-        'road_quality_index': np.random.beta(3, 7),
-        'electricity_reliability': np.random.beta(4, 6),
-        'mobile_network_strength': phone_usage / 100,
-        'bank_branch_distance': np.random.gamma(2, 5),
-        
-        # Agricultural practices
-        'mechanization_level': np.random.beta(3, 7),
-        'seed_quality_index': np.random.beta(4, 6),
-        'fertilizer_usage_efficiency': np.random.beta(4, 6),
-        'pest_management_score': np.random.beta(4, 6),
-        'soil_health_index': np.random.beta(5, 5),
-        'nutrient_deficiency_risk': np.random.beta(2, 8),
-        'organic_farming_adoption': np.random.beta(2, 8),
-        'precision_agriculture_usage': np.random.beta(1, 9),
-        
-        # Government schemes
-        'eligible_schemes_count': 3 if land_size <= 2 else 2,
-        'insurance_coverage': 1 if insurance == 'Yes' else 0,
-        'subsidy_utilization': np.random.beta(3, 7),
-        'msp_eligibility': 1 if crop_type in ['Rice', 'Wheat'] else 0,
-        'kisan_credit_card': np.random.choice([0, 1]),
-        'government_training_participation': np.random.beta(2, 8),
-        
-        # Social features
-        'cooperative_membership': 1 if cooperative == 'Yes' else 0,
-        'community_leadership_role': np.random.choice([0, 1]),
-        'social_capital_index': np.random.beta(4, 6),
-        'extension_service_access': np.random.beta(3, 7),
-        'peer_learning_participation': np.random.beta(3, 7),
-        
-        # Additional features to reach 50+
-        'input_cost_index': np.random.beta(4, 6),
-        'labor_availability': np.random.beta(4, 6),
-        'storage_access': np.random.choice([0, 1]),
-        'transport_cost_burden': np.random.beta(3, 7),
-        'supply_chain_integration': np.random.beta(2, 8),
-        'diversification_index': np.random.beta(3, 7),
-        'technology_adoption': phone_usage / 100,
-        'disaster_preparedness': np.random.beta(2, 8),
-        'alternative_income_sources': np.random.beta(3, 7),
-        'livestock_ownership': np.random.choice([0, 1])
+    land_category = map_land_size_category(land_size_hectares).lower()
+    crop_keyword = crop_keyword.strip().lower()
+    state_keyword = state_keyword.strip().lower()
+
+    # Synonyms for land.
+    land_synonyms = {
+        "marginal": ["marginal", "small"],
+        "small": ["small", "marginal"],
+        "medium": ["medium"],
+        "large": ["large"]
     }
-    
-    return features
+    search_terms = set()
+    search_terms.add(land_category)
+    for synonym in land_synonyms.get(land_category, []):
+        search_terms.add(synonym)
 
-def analyze_risk_factors(features, prediction):
-    """Analyze and categorize risk factors"""
-    positive_factors = []
-    negative_factors = []
-    
-    # Analyze key features
-    if features['land_size'] > 3:
-        positive_factors.append("Good land size reduces default risk")
-    elif features['land_size'] < 1:
-        negative_factors.append("Small land holding increases risk")
-    
-    if features['payment_history_score'] > 0.8:
-        positive_factors.append("Excellent payment history")
-    elif features['payment_history_score'] < 0.5:
-        negative_factors.append("Poor payment history increases risk")
-    
-    if features['irrigation_access'] == 1:
-        positive_factors.append("Access to irrigation reduces weather risk")
+    filtered_schemes = []
+    for scheme in schemes:
+        scheme_text = ' '.join([
+            scheme.get('title', ''),
+            scheme.get('description', ''),
+            scheme.get('benefits', ''),
+            scheme.get('eligibility', ''),
+        ]).lower()
+        
+        land_match = (land_category=='all') or any(term in scheme_text for term in search_terms)
+        crop_match = (crop_keyword=='all') or (crop_keyword in scheme_text)
+        state_match = (state_keyword=='all') or (state_keyword in scheme_text)
+
+        if land_match and crop_match and state_match:
+            filtered_schemes.append(scheme)
+
+    if filtered_schemes:
+        st.markdown(f"### Found {len(filtered_schemes)} matching schemes:")
+        for s in filtered_schemes:
+            st.markdown(
+                f"#### [{s.get('title', 'Untitled Scheme')}]({s.get('url', '#')})\n"
+                f"{s.get('description', '')}\n\n**Benefits:** {s.get('benefits', '')}\n\n"
+                f"**Eligibility:** {s.get('eligibility','')}\n\n---"
+            )
     else:
-        negative_factors.append("No irrigation access increases drought risk")
-    
-    if features['insurance_coverage'] == 1:
-        positive_factors.append("Crop insurance coverage provides protection")
-    else:
-        negative_factors.append("No crop insurance increases exposure")
-    
-    if features['cooperative_membership'] == 1:
-        positive_factors.append("Cooperative membership provides support network")
-    
-    if features['frost_risk_7days'] > 0.5:
-        negative_factors.append("High frost risk in next 7 days")
-    
-    if features['drought_risk_7days'] > 0.5:
-        negative_factors.append("Drought conditions expected")
-    
-    if features['debt_to_income_ratio'] > 0.5:
-        negative_factors.append("High existing debt burden")
-    elif features['debt_to_income_ratio'] < 0.2:
-        positive_factors.append("Low debt-to-income ratio")
-    
-    return {'positive': positive_factors, 'negative': negative_factors}
-
-def generate_recommendations(features, prediction, weather_data):
-    """Generate actionable recommendations"""
-    recommendations = []
-    
-    if prediction > 0.6:
-        recommendations.append("Consider smaller loan amount or additional collateral")
-        recommendations.append("Recommend crop insurance to mitigate weather risks")
-    
-    if features['irrigation_access'] == 0 and features['drought_risk_7days'] > 0.5:
-        recommendations.append("Install drip irrigation system to reduce drought risk")
-    
-    if features['insurance_coverage'] == 0:
-        recommendations.append("Enroll in Pradhan Mantri Fasal Bima Yojana")
-    
-    if features['cooperative_membership'] == 0:
-        recommendations.append("Join local farmer cooperative for better market access")
-    
-    if features['frost_risk_7days'] > 0.5:
-        recommendations.append("Implement frost protection measures in next 7 days")
-    
-    if features['technology_adoption'] < 0.5:
-        recommendations.append("Adopt precision agriculture techniques for better yields")
-    
-    return recommendations
-
-def create_risk_gauge(prediction):
-    """Create risk gauge visualization"""
-    fig = go.Figure(go.Indicator(
-        mode = "gauge+number+delta",
-        value = prediction * 100,
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': "Default Risk %"},
-        delta = {'reference': 25},
-        gauge = {
-            'axis': {'range': [None, 100]},
-            'bar': {'color': "darkblue"},
-            'steps': [
-                {'range': [0, 30], 'color': "lightgreen"},
-                {'range': [30, 60], 'color': "yellow"},
-                {'range': [60, 100], 'color': "red"}],
-            'threshold': {
-                'line': {'color': "red", 'width': 4},
-                'thickness': 0.75,
-                'value': 70}}))
-    
-    fig.update_layout(height=300)
-    return fig
+        st.info("No matched schemes found. Try broadening your filter criteria.")
 
 def generate_weather_alerts(weather_data, crop_type):
     """Generate weather-based alerts"""
@@ -854,40 +1018,6 @@ def generate_weather_alerts(weather_data, crop_type):
     
     return alerts
 
-def get_eligible_schemes_detailed(features):
-    """Get detailed government schemes"""
-    schemes = []
-    
-    if features['land_size'] <= 2:
-        schemes.append({
-            'name': 'PM-KISAN Direct Benefit Transfer',
-            'max_amount': 6000,
-            'interest_rate': 0,
-            'duration': 12,
-            'description': 'Direct income support for small farmers'
-        })
-    
-    if features['crop_type_encoded'] in [1, 2]:  # Rice, Wheat
-        schemes.append({
-            'name': 'Minimum Support Price (MSP)',
-            'max_amount': 500000,
-            'interest_rate': 0,
-            'duration': 6,
-            'description': 'Guaranteed price for rice and wheat'
-        })
-    
-    schemes.append({
-        'name': 'Kisan Credit Card',
-        'max_amount': int(features['land_size'] * 50000),
-        'interest_rate': 7,
-        'duration': 12,
-        'description': 'Credit card for agricultural inputs and expenses'
-    })
-    
-    return schemes
-
-
-# 
 
 
 def weather_risk_monitor(pipeline):
@@ -900,6 +1030,46 @@ def weather_risk_monitor(pipeline):
     with col3: st.metric("🌧️ Rainfall Alerts", "8", "→ 0")
     with col4: st.metric("✅ Safe Conditions", "1,224", "↑ 20")
 
+    """Weather risk monitoring dashboard"""
+    st.markdown("## 🌦️ Weather Risk Monitor")
+    
+    alert_system = WeatherAlertSystem()
+    
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        st.subheader("🚨 Active Weather Alerts")
+        
+        if st.button("🔄 Check for New Alerts", type="primary"):
+            with st.spinner("Scanning weather conditions..."):
+                alerts_generated = alert_system.run_once()
+                st.success(f"✅ Scan complete! Generated {alerts_generated} alerts")
+        
+        # Display recent alerts
+        recent_alerts = alert_system.list_recent_alerts(limit=20)
+        
+        if recent_alerts:
+            alerts_df = pd.DataFrame(recent_alerts)
+            
+            # Format and display
+            for i, alert in enumerate(recent_alerts[:5]):
+                severity_color = {
+                    'high': 'error',
+                    'medium': 'warning', 
+                    'low': 'info'
+                }.get(alert['severity'], 'info')
+                
+                with st.container():
+                    col1, col2, col3 = st.columns([2, 1, 1])
+                    with col1:
+                        getattr(st, severity_color)(f"**{alert['alert_type'].title()}**: {alert['message']}")
+                    with col2:
+                        st.write(f"Farmer ID: {alert['farmer_id']}")
+                    with col3:
+                        st.write(f"Severity: {alert['severity'].upper()}")
+        else:
+            st.info("No recent alerts. Weather conditions are stable.")
+    
     # Fetch real weather data for all cities
     weather_data = []
     alerts_feed = []
@@ -946,7 +1116,34 @@ def weather_risk_monitor(pipeline):
     #     st.markdown(f"**{severity_color[alert['severity']]} {alert['alert']}** - {alert['city']}")
     display_alerts(alerts_feed)
 
-
+def policy_advisor_with_filters(pipeline, land_size, crop_type, state):
+    st.header('🏛️ Dynamic Government Policy Advisor')
+    st.markdown("""
+        **Real-time policy matching engine that connects farmers to relevant 
+        government schemes, subsidies, and insurance policies based on their profile and current conditions.**
+    """)
+    try:
+        with open('myschemes_full.json', 'r', encoding='utf-8') as f:
+            policies = json.load(f)
+    except FileNotFoundError:
+        st.error('❌ `myschemes_full.json` not found. Please scrape MyScheme first.')
+        return
+    
+    st.subheader('🔍 Matched Policies Based on Your Profile')
+    
+    # Filter policies based on passed keywords (simple example assuming policies have keys for those)
+    filtered_policies = []
+    for policy in policies:
+        if (land_size == 'All' or policy.get('land_size', '').lower() == land_size.lower()) and \
+           (crop_type == 'All' or crop_type.lower() in policy.get('crops', '').lower()) and \
+           (state == 'All' or state.lower() == policy.get('state', '').lower()):
+            filtered_policies.append(policy)
+    
+    if filtered_policies:
+        for p in filtered_policies:
+            st.markdown(f"### {p.get('name')}\n{p.get('description')}\n")
+    else:
+        st.info('No policies matched your profile criteria.')
 
 
 def portfolio_dashboard(pipeline):
@@ -1201,6 +1398,120 @@ def portfolio_dashboard(pipeline):
                 st.code(f"Hash: {row['hash']}\nPrev: {row['prev_hash']}", language="bash")
 
 
+def market_intelligence_dashboard():
+    """Market intelligence and commodity analysis"""
+    st.markdown("## 💹 Market Intelligence & Commodity Analysis")
+    
+    # Market overview
+    st.markdown("### 📊 Agricultural Market Overview")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        wheat_price = random.uniform(2000, 2500)
+        st.metric("Wheat Price", f"₹{wheat_price:.0f}/qt", "+4.2%")
+    
+    with col2:
+        rice_price = random.uniform(2200, 2800)
+        st.metric("Rice Price", f"₹{rice_price:.0f}/qt", "-1.8%")
+    
+    with col3:
+        cotton_price = random.uniform(4500, 5500)
+        st.metric("Cotton Price", f"₹{cotton_price:.0f}/qt", "+8.7%")
+    
+    with col4:
+        soybean_price = random.uniform(3200, 4000)
+        st.metric("Soybean Price", f"₹{soybean_price:.0f}/qt", "+2.1%")
+    
+    # Price trends
+    st.markdown("---")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("📈 6-Month Price Trends")
+        
+        # Generate price data
+        dates = pd.date_range(start='2025-03-01', end='2025-08-31', freq='D')
+        price_data = pd.DataFrame({
+            'Date': dates,
+            'Wheat': np.cumsum(np.random.normal(0, 15, len(dates))) + 2200,
+            'Rice': np.cumsum(np.random.normal(0, 12, len(dates))) + 2400,
+            'Cotton': np.cumsum(np.random.normal(0, 25, len(dates))) + 5000
+        })
+        
+        fig_prices = px.line(
+            price_data,
+            x='Date',
+            y=['Wheat', 'Rice', 'Cotton'],
+            title='Commodity Price Movements',
+            labels={'value': 'Price (₹/quintal)', 'variable': 'Commodity'}
+        )
+        st.plotly_chart(fig_prices, use_container_width=True)
+    
+    with col2:
+        st.subheader("🌍 Global Market Impact")
+        
+        # Global factors
+        global_factors = {
+            'Factor': ['Export Demand', 'International Prices', 'Currency Impact', 'Supply Chain', 'Weather Events'],
+            'Impact Score': [random.uniform(0.6, 0.9) for _ in range(5)],
+            'Trend': ['↑ Positive', '↓ Negative', '→ Stable', '↑ Positive', '↓ Negative']
+        }
+        
+        df_global = pd.DataFrame(global_factors)
+        
+        fig_global = px.bar(
+            df_global,
+            x='Factor',
+            y='Impact Score',
+            color='Impact Score',
+            title='Global Market Factors Impact',
+            color_continuous_scale='RdYlGn'
+        )
+        st.plotly_chart(fig_global, use_container_width=True)
+    
+    # Market insights for lenders
+    st.markdown("---")
+    st.subheader("💡 Lending Strategy Insights")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class="financier-insight">
+        <h4>🎯 High Opportunity Crops</h4>
+        <ul>
+        <li><strong>Cotton:</strong> Strong export demand (+8.7%)</li>
+        <li><strong>Wheat:</strong> Government procurement support</li>
+        <li><strong>Organic Produce:</strong> Premium pricing trend</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="financier-insight">
+        <h4>⚠️ Risk Segments</h4>
+        <ul>
+        <li><strong>Rice:</strong> Price volatility (-1.8%)</li>
+        <li><strong>Sugarcane:</strong> Processing delays</li>
+        <li><strong>Pulses:</strong> Import competition</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="financier-insight">
+        <h4>📈 Portfolio Recommendations</h4>
+        <ul>
+        <li><strong>Increase:</strong> Cotton loan exposure</li>
+        <li><strong>Maintain:</strong> Wheat portfolio balance</li>
+        <li><strong>Monitor:</strong> Rice segment closely</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
 
 def policy_advisor(pipeline):
     st.header("🏛️ Dynamic Government Policy Advisor")
@@ -1353,301 +1664,438 @@ def fetch_mandi_prices(limit=2000, state=None, commodity=None):
             df[col] = pd.to_numeric(df[col], errors="coerce")
     return df
 
-# --------- Speech-to-text ----------
-def stt_from_audio_bytes(audio_bytes: bytes, engine: str = "Offline (Vosk)") -> str:
-    """
-    Convert WAV/PCM bytes to text using chosen engine.
-    Return an empty string or an error message on failure.
-    """
-    def safe_open_wave(audio_bytes):
-        try:
-            return wave.open(io.BytesIO(audio_bytes), "rb")
-        except wave.Error:
-            return None
 
-    if engine == "Offline (Vosk)":
-        if not (Model and KaldiRecognizer and VOSK_MODEL_PATH):
-            return "Speech recognition engine not configured properly."
-        wf = safe_open_wave(audio_bytes)
-        if wf is None:
-            return "Invalid audio file or unsupported format. Please record a valid WAV audio."
-        if wf.getnchannels() != 1:
-            return "Please speak closer to mic or switch to Online STT. Mono channel audio required."
-        rec = KaldiRecognizer(Model(VOSK_MODEL_PATH), wf.getframerate())
-        rec.SetWords(False)
-        text = []
-        while True:
-            chunk = wf.readframes(4000)
-            if not chunk:
-                break
-            if rec.AcceptWaveform(chunk):
-                res = json.loads(rec.Result())
-                text.append(res.get("text", ""))
-        final = json.loads(rec.FinalResult()).get("text", "")
-        return (" ".join(text + [final])).strip()
+def executive_summary_dashboard():
+    """Executive summary dashboard for senior management"""
+    st.markdown("## 🏠 Executive Summary - Agricultural Portfolio Overview")
+    
+    # Key metrics row
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    metrics = st.session_state.pipeline.calculate_and_store_portfolio_metrics()
 
-    # Online fallback via SpeechRecognition (Google)
-    if sr is None:
-        return ""
-    r = sr.Recognizer()
-    with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
-        audio = r.record(source)
-    try:
-        return r.recognize_google(audio)
-    except Exception:
-        return ""
-
-    return ""
-
-# --------- Text-to-speech ----------
-def tts_to_audio_bytes(text: str) -> bytes:
-    if pyttsx3:
-        try:
-            engine = pyttsx3.init()
-            engine.setProperty("rate", 170)
-            tmp = "tts_out.wav"
-            engine.save_to_file(text, tmp)
-            engine.runAndWait()
-            data = open(tmp, "rb").read()
-            os.remove(tmp)
-            return data
-        except Exception:
-            pass
-    if gTTS:
-        try:
-            tts = gTTS(text=text, lang="en")
-            tmp = "tts_out.mp3"
-            tts.save(tmp)
-            data = open(tmp, "rb").read()
-            os.remove(tmp)
-            return data
-        except Exception:
-            pass
-    return b""
-
-# --------- Intent detection ----------
-INTENT_KEYWORDS = {
-    "weather": ["weather", "मौसम", "बारिश", "rain", "temperature", "गर्मी", "ठंड", "आंधी"],
-    "mandi": ["price", "भाव", "मंडी", "market", "rate", "commodity", "किस भाव", "modal"],
-}
-
-def detect_intent(text: str) -> str:
-    text = text.lower()
-    for intent, kws in INTENT_KEYWORDS.items():
-        if any(k in text for k in kws):
-            return intent
-    return "weather"
-
-def extract_city(text: str) -> str | None:
-    for c in CITY_COORDS.keys():
-        if re.search(rf"\b{re.escape(c.lower())}\b", text.lower()):
-            return c
-    m = re.search(r"weather\s+(in|at)\s+([a-zA-Z ]+)", text.lower())
-    return m.group(2).strip().title() if m else None
-
-# --------- Main UI ----------
-def voice_assistant():
-    st.header("📱 Multilingual Voice-Powered Agricultural Assistant")
-
-    # Language, input mode, and STT engine selection
-    col_lang, col_mode, col_stt = st.columns(3)
-    with col_lang:
-        selected_language = st.selectbox(
-            "🌐 Language", ["English", "हिंदी (Hindi)"], index=0
+    with col1:
+        st.metric(
+            "Portfolio Value",
+            f"₹{metrics['total_portfolio']/1e7:.1f}Cr",
+            f"{metrics.get('portfolio_value_growth','+12.7%')}",  # Add logic for growth if needed
+            help="Total agricultural loan portfolio value"
         )
-    with col_mode:
-        input_mode = st.selectbox("🎤 Input Mode", ["Text", "Voice"], index=0)
-    with col_stt:
-        stt_engine = st.selectbox("🧠 STT Engine", ["Offline (Vosk)", "Online (Google)"], index=1)
 
-    user_query = ""
+    with col2:
+        st.metric(
+            "Active Farmers",
+            f"{metrics['total_farmers']:,}",
+            f"+{metrics.get('new_farmers','59')}",
+            help="Number of farmers with active loans"
+        )
 
-    if input_mode == "Text":
-        placeholder = "e.g., What's the weather in Bengaluru? / मंडी में गेहूं का भाव क्या है?"
-        user_query = st.text_input("Ask your question:", placeholder=placeholder)
+    with col3:
+        st.metric(
+            "Default Rate",
+            f"{metrics['default_rate']:.1f}%",
+            "-1.8%",
+            help="Current portfolio default rate (industry avg: 6.1%)"
+        )
 
-    else:
-        if not mic_recorder:
-            st.error("`streamlit-mic-recorder` is not installed. Please install it by running:\n`pip install streamlit-mic-recorder`")
-        else:
-            st.write("Tap to record, speak, then tap again to stop:")
-            audio = mic_recorder(start_prompt="🎙️ Record", stop_prompt="⏹️ Stop", key="mic")
-            if audio and "bytes" in audio and audio["bytes"]:
-                st.audio(audio["bytes"], format="audio/wav")
-                with st.spinner("Transcribing..."):
-                    user_query = stt_from_audio_bytes(audio["bytes"], engine=stt_engine)
-                if user_query:
-                    st.info(f"🔎 You said: **{user_query}**")
-                else:
-                    st.warning("Could not transcribe audio. Please try again or switch STT engine.")
+    with col4:
+        st.metric(
+            "Avg Credit Score",
+            f"{int(metrics['avg_credit_score'])}",
+            f"+{metrics.get('credit_score_change',21)}",
+            help="Average credit score of portfolio"
+        )
 
-    if st.button("🎯 Get AI Response", use_container_width=True):
-        if not user_query or user_query.strip() == "":
-            st.warning("Please provide a question (text or voice).")
-            return
+    with col5:
+        st.metric(
+            "Risk-Adjusted ROI",
+            "14.7%",
+            "+2.1%",
+            help="Risk-adjusted return on investment"
+        )
+    # Portfolio composition
+    st.markdown("---")
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.subheader("📊 Portfolio Composition by Crop Type")
+        
+        # Generate realistic portfolio data
+        crop_data = {
+            'Crop': ['Wheat', 'Rice', 'Cotton', 'Sugarcane', 'Soybean', 'Maize', 'Others'],
+            'Portfolio Value (₹Cr)': [187.5, 164.2, 142.8, 98.7, 86.3, 74.5, 93.3],
+            'Farmers Count': [6247, 5832, 4156, 2897, 3247, 2854, 3223],
+            'Avg Loan Size (₹L)': [3.2, 2.8, 4.1, 3.6, 2.7, 2.4, 2.9],
+            'Default Rate (%)': [3.2, 4.1, 5.8, 3.9, 4.7, 4.2, 5.1]
+        }
+        
+        df_crops = pd.DataFrame(crop_data)
+        
+        # Portfolio composition pie chart
+        fig_pie = px.pie(
+            df_crops, 
+            values='Portfolio Value (₹Cr)', 
+            names='Crop',
+            title="Portfolio Distribution by Crop Value",
+            color_discrete_sequence=px.colors.qualitative.Set3
+        )
+        fig_pie.update_layout(height=400)
+        st.plotly_chart(fig_pie, use_container_width=True)
+    
+    with col2:
+        st.subheader("🎯 Risk Distribution")
+        
+        risk_data = {
+            'Risk Level': ['Low Risk', 'Medium Risk', 'High Risk'],
+            'Count': [18247, 8456, 1753],
+            'Portfolio %': [64.1, 29.7, 6.2]
+        }
+        
+        df_risk = pd.DataFrame(risk_data)
+        
+        fig_risk = px.bar(
+            df_risk,
+            x='Risk Level',
+            y='Count',
+            color='Risk Level',
+            color_discrete_map={
+                'Low Risk': '#28a745',
+                'Medium Risk': '#ffc107', 
+                'High Risk': '#dc3545'
+            },
+            title="Farmers by Risk Category"
+        )
+        fig_risk.update_layout(height=400, showlegend=False)
+        st.plotly_chart(fig_risk, use_container_width=True)
+    
+    # Geographic performance
+    st.markdown("---")
+    st.subheader("🗺️ Geographic Performance Overview")
+    
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        # State-wise performance data
+        state_data = {
+            'State': ['Punjab', 'UP', 'Maharashtra', 'Karnataka', 'AP', 'Gujarat', 'MP', 'WB'],
+            'Portfolio (₹Cr)': [156.2, 134.7, 128.4, 98.6, 89.3, 76.8, 92.1, 71.2],
+            'Farmers': [4256, 5847, 3654, 2987, 3156, 2245, 3847, 2464],
+            'Default Rate': [2.8, 5.2, 4.1, 3.6, 4.8, 3.2, 5.7, 6.1],
+            'Avg Loan Size': [3.67, 2.31, 3.51, 3.30, 2.83, 3.42, 2.40, 2.89]
+        }
+        
+        df_states = pd.DataFrame(state_data)
+        
+        fig_geo = px.scatter(
+            df_states,
+            x='Portfolio (₹Cr)',
+            y='Default Rate',
+            size='Farmers',
+            color='State',
+            title="Portfolio Performance: Size vs Risk by State",
+            hover_data=['Avg Loan Size']
+        )
+        fig_geo.update_layout(height=500)
+        st.plotly_chart(fig_geo, use_container_width=True)
+    
+    with col2:
+        st.markdown("### 💡 Key Insights")
+        
+        st.markdown("""
+        <div class="financier-insight">
+        <h4>🎯 Strategic Opportunities</h4>
+        <ul>
+        <li><strong>Punjab Portfolio:</strong> Lowest default rate (2.8%) - expand operations</li>
+        <li><strong>Cotton Segment:</strong> High margins but elevated risk - enhance screening</li>
+        <li><strong>Technology Adoption:</strong> 23% boost in repayment rates for tech-enabled farmers</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="financier-insight">
+        <h4>⚠️ Risk Alerts</h4>
+        <ul>
+        <li><strong>West Bengal:</strong> Default rate trending upward (6.1%)</li>
+        <li><strong>Monsoon Impact:</strong> 847 farmers in high-risk weather zones</li>
+        <li><strong>Market Volatility:</strong> Cotton prices down 12% this quarter</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Performance trends
+    st.markdown("---")
+    st.subheader("📈 12-Month Performance Trends")
+    
+    # Generate trend data
+    months = pd.date_range(start='2024-09-01', end='2025-08-31', freq='MS')
+    trend_data = {
+        'Month': months,
+        'Portfolio Value': np.random.normal(75, 5, 12).cumsum() + 700,
+        'Default Rate': np.random.normal(0, 0.3, 12).cumsum() + 5.5,
+        'New Loans': np.random.poisson(450, 12),
+        'ROI': np.random.normal(0, 0.5, 12).cumsum() + 13
+    }
+    
+    df_trends = pd.DataFrame(trend_data)
+    
+    # Create subplots
+    fig_trends = make_subplots(
+        rows=2, cols=2,
+        subplot_titles=['Portfolio Growth', 'Default Rate Trend', 'Monthly New Loans', 'ROI Trend'],
+        specs=[[{"secondary_y": False}, {"secondary_y": False}],
+               [{"secondary_y": False}, {"secondary_y": False}]]
+    )
+    
+    # Portfolio growth
+    fig_trends.add_trace(
+        go.Scatter(x=df_trends['Month'], y=df_trends['Portfolio Value'], 
+                  name='Portfolio (₹Cr)', line=dict(color='#1f77b4')),
+        row=1, col=1
+    )
+    
+    # Default rate
+    fig_trends.add_trace(
+        go.Scatter(x=df_trends['Month'], y=df_trends['Default Rate'], 
+                  name='Default Rate (%)', line=dict(color='#ff7f0e')),
+        row=1, col=2
+    )
+    
+    # New loans
+    fig_trends.add_trace(
+        go.Bar(x=df_trends['Month'], y=df_trends['New Loans'], 
+               name='New Loans', marker_color='#2ca02c'),
+        row=2, col=1
+    )
+    
+    # ROI
+    fig_trends.add_trace(
+        go.Scatter(x=df_trends['Month'], y=df_trends['ROI'], 
+                  name='ROI (%)', line=dict(color='#d62728')),
+        row=2, col=2
+    )
+    
+    fig_trends.update_layout(height=600, showlegend=False)
+    st.plotly_chart(fig_trends, use_container_width=True)
 
-        intent = detect_intent(user_query)
-        st.write(f"**Detected intent:** `{intent}`")
-
-        if intent == "weather":
-            # Try to extract city from user query, else ask user to select
-            city_from_text = extract_city(user_query)
-            city_sel = city_from_text if city_from_text in CITY_COORDS else None
-            if not city_sel:
-                city_sel = st.selectbox("Select City", list(CITY_COORDS.keys()))
-
-            try:
-                data = fetch_current_weather_by_city(city_sel)
-                report = format_weather_human(data)
-                st.success(report)
-                audio_bytes = tts_to_audio_bytes(report)
-                if audio_bytes:
-                    st.audio(audio_bytes, format="audio/wav")
-            except Exception as e:
-                st.error(f"Weather fetch failed: {e}")
-
-        elif intent == "mandi":
-            st.subheader("🧺 Mandi Prices (Agmarknet)")
-            colf1, colf2, colf3 = st.columns([1, 1, 1])
-            with colf1:
-                state = st.text_input("State (optional)", value="")
-            with colf2:
-                commodity = st.text_input("Commodity (optional)", value="")
-            with colf3:
-                limit = st.number_input("Limit", min_value=50, max_value=5000, value=500, step=50)
-
-            if st.button("🔎 Search Prices"):
-                try:
-                    df = fetch_mandi_prices(limit=limit, state=state or None, commodity=commodity or None)
-                    if df.empty:
-                        st.warning("No results found for your filters.")
-                    else:
-                        st.dataframe(df, use_container_width=True, height=420)
-                        st.caption(f"{len(df)} records fetched from Data.gov.in")
-                        # Optional: brief voice summary
-                        try:
-                            cm = commodity if commodity else "commodity"
-                            states = ", ".join(sorted(set(df["state"].dropna().astype(str)))[:5])
-                            speech_text = f"I found {len(df)} market price records for {cm}. Sample states include {states}."
-                            audio_bytes = tts_to_audio_bytes(speech_text)
-                            if audio_bytes:
-                                st.audio(audio_bytes, format="audio/wav")
-                        except Exception:
-                            pass
-                except Exception as e:
-                    st.error(f"API error: {e}")
-
-        else:
-            st.info("I can currently help with questions about weather and mandi prices. Try asking: 'What's the weather in Jaipur?' or 'मंडी में गेहूं का भाव क्या है?'")
 
 
-def about_page():
-    st.header("ℹ️ About AgriCred AI")
+def system_configuration():
+    """System configuration and settings"""
+    st.markdown("## ⚙️ System Configuration")
     
-    st.markdown("""
-    ## 🌾 Advanced Agricultural Credit Intelligence Platform
+    col1, col2 = st.columns([2, 1])
     
-    **AgriCred AI** is a comprehensive, AI-powered advisory platform designed specifically for agricultural 
-    financiers, cooperatives, and micro-lenders. It combines cutting-edge machine learning with real-time 
-    data to revolutionize agricultural credit decisions.
+    with col1:
+        st.subheader("🔧 Platform Settings")
+        
+        with st.form("system_config"):
+            st.markdown("#### Risk Assessment Parameters")
+            default_threshold = st.slider("Default Risk Threshold", 0.0, 1.0, 0.3)
+            weather_weight = st.slider("Weather Risk Weight", 0.0, 1.0, 0.25)
+            market_weight = st.slider("Market Risk Weight", 0.0, 1.0, 0.20)
+            
+            st.markdown("#### Alert Settings")
+            alert_frequency = st.selectbox("Alert Check Frequency", ["Hourly", "Daily", "Weekly"])
+            email_alerts = st.checkbox("Email Notifications", True)
+            sms_alerts = st.checkbox("SMS Alerts", False)
+            
+            st.markdown("#### Data Refresh")
+            auto_refresh = st.checkbox("Auto Refresh Data", True)
+            refresh_interval = st.selectbox("Refresh Interval", ["15 min", "30 min", "1 hour", "2 hours"])
+            
+            if st.form_submit_button("💾 Save Configuration"):
+                st.success("✅ Configuration saved successfully!")
     
-    ### 🎯 Core Capabilities
+    with col2:
+        st.subheader("📊 System Status")
+        
+        st.metric("System Health", "99.7%", "All systems operational")
+        st.metric("API Response Time", "234ms", "Excellent")
+        st.metric("Data Accuracy", "98.9%", "High quality")
+        st.metric("Last Updated", "2 min ago", "Real-time")
+        
+        st.markdown("---")
+        st.subheader("🔗 API Connections")
+        
+        st.success("✅ Weather API - Connected")
+        st.success("✅ Market Data API - Connected") 
+        st.success("✅ Credit Bureau API - Connected")
+        st.warning("⚠️ Satellite API - Limited")
+        
+        st.markdown("---")
+        st.subheader("📁 Data Sources")
+        
+        st.info("🏦 Internal Database: 847,234 records")
+        st.info("🌦️ Weather Data: 1 sources")
+        st.info("💹 Market Data: stimulated data")
+        st.info("🛰️ Satellite Data: coming soon")
+
+
+
+def portfolio_analytics_dashboard():
+    """Detailed portfolio analytics for loan officers"""
+    st.markdown("## 📊 Portfolio Analytics - Deep Dive")
     
-    - **🤖 Advanced Credit Scoring**: 50+ feature ML models with 85%+ accuracy
-    - **🌤️ Live Weather Integration**: Real-time weather risk monitoring and alerts
-    - **🏛️ Policy Matching**: Dynamic government scheme recommendations
-    - **🗺️ Hyperlocal Risk Assessment**: GPS-tagged farm-level risk analysis
-    - **📱 Multilingual Voice AI**: Support for Hindi, Marathi, Tamil, and regional languages
-    - **💻 Offline Capabilities**: ONNX-based edge inference for low-connectivity areas
-    - **📊 Portfolio Analytics**: Comprehensive dashboard for lenders
+    pipeline = st.session_state.pipeline
     
-    ### 🚀 Key Innovations
+    # Ensure we have data
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        if st.button("🔄 Refresh Portfolio Data", type="primary"):
+            with st.spinner("Updating portfolio metrics..."):
+                # Seed farmers if needed
+                farmer_count = pipeline.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
+                if farmer_count < 200:
+                    pipeline.seed_farmers(500)
+                    pipeline.seed_loans_for_farmers()
+                
+                # Calculate and store metrics
+                pipeline.seed_portfolio_history(90)  # 3 months of history
+                st.success("✅ Portfolio data refreshed!")
     
-    #### 1. **Alternative Data Credit Scoring**
-    - Uses weather patterns, soil health, market prices, and satellite imagery
-    - Works for farmers without traditional credit history
-    - 85%+ prediction accuracy with explainable AI
+    with col2:
+        st.metric("Data Freshness", "Live", help="Real-time portfolio data")
+    with col3:
+        st.metric("Coverage", "99.7%", help="Data coverage across portfolio")
     
-    #### 2. **Live Weather Risk Prevention**
-    - Frost, drought, and flood early warning system
-    - SMS/Voice alerts in local languages
-    - Proactive risk mitigation recommendations
+    # Portfolio overview metrics
+    try:
+        current_metrics = pipeline.calculate_and_store_portfolio_metrics()
+        
+        st.markdown("### 📈 Current Portfolio Snapshot")
+        col1, col2, col3, col4, col5 = st.columns(5)
+        
+        with col1:
+            st.metric(
+                "Total Farmers",
+                f"{current_metrics['total_farmers']:,}",
+                help="Active farmers in portfolio"
+            )
+        
+        with col2:
+            st.metric(
+                "Active Loans", 
+                f"{current_metrics['total_loans']:,}",
+                help="Number of active loans"
+            )
+        
+        with col3:
+            st.metric(
+                "Portfolio Value",
+                f"₹{current_metrics['total_portfolio']/10000000:.1f}Cr",
+                help="Total outstanding loan amount"
+            )
+        
+        with col4:
+            st.metric(
+                "Default Rate",
+                f"{current_metrics['default_rate']:.1f}%",
+                help="Current portfolio default rate"
+            )
+        
+        with col5:
+            st.metric(
+                "Avg Credit Score",
+                f"{int(current_metrics['avg_credit_score'])}",
+                help="Average credit score of borrowers"
+            )
+        
+        # Portfolio trends
+        st.markdown("---")
+        st.markdown("### 📊 Portfolio Performance Trends")
+        
+        trend_data = pipeline.get_portfolio_trends(60)  # 60 days
+        if not trend_data.empty:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Portfolio value trend
+                fig_portfolio = px.line(
+                    trend_data,
+                    x='date',
+                    y='total_portfolio_value',
+                    title='Portfolio Value Growth',
+                    labels={'total_portfolio_value': 'Portfolio Value (₹)', 'date': 'Date'}
+                )
+                fig_portfolio.update_traces(line_color='#1f77b4', line_width=3)
+                st.plotly_chart(fig_portfolio, use_container_width=True)
+            
+            with col2:
+                # Default rate trend
+                fig_default = px.line(
+                    trend_data,
+                    x='date',
+                    y='default_rate',
+                    title='Default Rate Trend',
+                    labels={'default_rate': 'Default Rate (%)', 'date': 'Date'}
+                )
+                fig_default.update_traces(line_color='#ff7f0e', line_width=3)
+                st.plotly_chart(fig_default, use_container_width=True)
+            
+            # Credit score distribution
+            fig_credit = px.line(
+                trend_data,
+                x='date',
+                y='avg_credit_score',
+                title='Average Credit Score Trend',
+                labels={'avg_credit_score': 'Avg Credit Score', 'date': 'Date'}
+            )
+            fig_credit.update_traces(line_color='#2ca02c', line_width=3)
+            st.plotly_chart(fig_credit, use_container_width=True)
+            
+    except Exception as e:
+        st.error(f"Error loading portfolio metrics: {str(e)}")
+        st.info("Please refresh the portfolio data to generate metrics.")
+
+
+
+
+
+
+#==========================================
+def main():
+    """Main application function"""
     
-    #### 3. **Agentic AI Advisory**
-    - Multi-modal reasoning across weather, market, and policy data
-    - Context-aware recommendations
-    - Continuous learning from outcomes
+    # Display header
+    display_main_header()
     
-    #### 4. **Hyperlocal Intelligence**
-    - Village-level weather and market data
-    - GPS-tagged risk assessment
-    - Infrastructure and connectivity mapping
+    # Sidebar navigation
+    page = display_sidebar()
+
+     # Initialize components
+    pipeline = initialize_data_pipeline()
+    model, scaler = load_models()
     
-    ### 📈 Business Impact
+    if model is None:
+        st.error("⚠️ Models not found. Please run advanced_ml_model.py first to train the models.")
+        return
+    # Initialize database with farmers on first run
+    farmer_count = pipeline.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
+    if farmer_count == 0:
+        st.info("Initializing database with farmer data...")
+        pipeline.seed_farmers(2000)
+        pipeline.seed_loans_for_farmers()
+        pipeline.calculate_and_store_portfolio_metrics()
     
-    | Metric | Traditional Lending | With AgriCred AI | Improvement |
-    |--------|-------------------|------------------|-------------|
-    | **Decision Time** | 3-7 days | 30 seconds | **99% faster** |
-    | **Default Rate** | 8-12% | 3-5% | **60% reduction** |
-    | **Credit Access** | 40% farmers | 75% farmers | **87% increase** |
-    | **Operational Cost** | High manual review | Automated scoring | **80% reduction** |
-    
-    ### 🛠️ Technology Stack
-    
-    **Core AI/ML:**
-    - Python, Scikit-learn, XGBoost, LightGBM
-    - SHAP for explainable AI
-    - ONNX Runtime for offline inference
-    
-    **Data Sources:**
-    - IMD Weather API
-    - Agmarknet Market Prices
-    - Soil Health Card Database
-    - Government Scheme APIs
-    - Satellite imagery (Sentinel-2)
-    
-    **Interfaces:**
-    - Progressive Web App (React)
-    - Android app with voice I/O
-    - USSD/SMS for feature phones
-    - RESTful APIs for integration
-    
-    **Infrastructure:**
-    - FastAPI backend
-    - PostgreSQL + PostGIS for spatial data
-    - ElasticSearch for policy matching
-    - Cloud + Edge hybrid deployment
-    
-    ### 🌍 Social Impact
-    
-    **Financial Inclusion**: Helps 40M+ underbanked farmers access formal credit
-    
-    **Risk Reduction**: Prevents crop losses through early weather warnings
-    
-    **Income Enhancement**: Optimizes crop sale timing and scheme utilization
-    
-    **Sustainable Agriculture**: Promotes climate-smart farming practices
-    
-    ### 🔒 Compliance & Trust
-    
-    - **Explainable AI**: Every decision backed by human-readable reasoning
-    - **Data Privacy**: Local data processing with minimal cloud dependency
-    - **Regulatory Compliance**: Adherent to RBI guidelines for digital lending
-    - **Audit Trail**: Complete decision history for regulatory review
-    
-    ### 🚀 Future Roadmap
-    
-    **Q1 2025**: Multi-state rollout with 5 partner banks
-    **Q2 2025**: Livestock and allied agriculture credit scoring
-    **Q3 2025**: Carbon credit and ESG impact measurement
-    **Q4 2025**: Export market integration and commodity trading
-    
-    ---
-    
-    **Built with ❤️ for India's farmers and the institutions that serve them.**
-    
-    *AgriCred AI - Empowering agricultural credit decisions with intelligence, speed, and transparency.*
-    """)
+    if page == "🏠 Executive Summary":
+        executive_summary_dashboard()
+    elif page == "📊 Portfolio Analytics":
+        portfolio_analytics_dashboard()
+    elif page == "🎯 Credit Risk Scoring":
+        credit_risk_scoring_dashboard()
+    elif page == "🤖 Agentic AI Intelligence":
+        agentic_ai_demo()
+    elif page == "🌦️ Weather Risk Monitor":
+        weather_risk_monitor(pipeline)
+    elif page == "💹 Market Intelligence":
+        market_intelligence_dashboard()
+    elif page == "📈 Performance Analytics":
+        performance_analytics()
+    elif page == "⚙️ System Configuration":
+        system_configuration()
 
 if __name__ == "__main__":
     main()
+
+

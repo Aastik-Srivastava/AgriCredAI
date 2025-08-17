@@ -1,74 +1,72 @@
 # AgriCred AI - Advanced Agricultural Credit Intelligence Platform
-# Core dependencies for the complete system
+# Core Dependencies
 
 # Web Application Framework
-streamlit>=1.28.0
-streamlit-folium>=0.13.0
+streamlit==1.28.1
+streamlit-extras==0.3.5
+streamlit-folium==0.13.0
+streamlit-mic-recorder
 
 # Data Processing and Analysis
-pandas>=2.0.0
-numpy>=1.24.0
-scikit-learn>=1.3.0
+pandas==2.0.3
+numpy==1.24.3
+scikit-learn==1.3.0
+scipy==1.10.0
+pyarrow
 
-# Machine Learning and AI
-xgboost>=1.7.0
-lightgbm>=4.0.0
-shap>=0.42.0
-joblib>=1.3.0
+# Machine Learning & AI
+xgboost==1.7.6
+lightgbm==4.0.0
+shap==0.42.1
+joblib==1.3.2
 
 # Visualization
-plotly>=5.15.0
-folium>=0.14.0
+plotly==5.15.0
+matplotlib==3.7.2
+seaborn==0.12.2
+folium==0.14.0
 
-# HTTP Requests and API Integration
-requests>=2.31.0
+# HTTP & APIs
+requests==2.31.0
+aiohttp==3.8.5
+ratelimit==2.2.1
 
-# Geospatial and Location Services
-geopy>=2.3.0
+# Geospatial
+geopy==2.3.0
 
-# Date and Time Handling
-python-dateutil>=2.8.0
+# Date & Time
+python-dateutil==2.8.2
 
-# Environment Variables (for API keys)
-python-dotenv>=1.0.0
+# Environment Management
+python-dotenv==1.0.0
 
-# Additional ML Libraries
-scipy>=1.10.0
+# Voice Processing
+SpeechRecognition
+pyttsx3
+gTTS
+pyaudio
 
-# Web Scraping (for scheme details)
-playwright>=1.40.0
-beautifulsoup4>=4.12.0
-lxml>=4.9.0
+# Web Scraping
+playwright==1.40.0
+beautifulsoup4==4.12.0
+lxml==4.9.0
 
-# API Rate Limiting
-ratelimit>=2.2.1
+# Data Validation
+pydantic==2.1.1
+typing-extensions==4.7.1
 
-# Configuration Management
-configparser>=5.3.0
+# Utilities
+loguru==0.7.0
+configparser==5.3.0
 
-# Testing
-pytest>=7.4.0
-pytest-cov>=4.1.0
-
-# Code Quality
-black>=23.0.0
-flake8>=6.0.0
-isort>=5.12.0
+# Testing & Code Quality
+pytest==7.4.0
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+black==23.7.0
+flake8==6.0.0
+isort==5.12.0
 
 # Documentation
-sphinx>=7.0.0
-sphinx-rtd-theme>=1.3.0
-
-
-streamlit 
-streamlit-mic-recorder 
-vosk 
-SpeechRecognition 
-pyttsx3 
-gTTS 
-requests 
-pandas
-pyarrow
-streamlit
-streamlit-extras
-pyarrow
+sphinx==7.0.0
+sphinx-rtd-theme==1.3.0
