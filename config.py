@@ -109,6 +109,10 @@ LOG_FILE = os.getenv('LOG_FILE', 'agricred.log')
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 TESTING = os.getenv('TESTING', 'False').lower() == 'true'
 
+# Model and Scaler Paths
+MODEL_PATH = os.getenv('MODEL_PATH', 'advanced_credit_model.pkl')
+SCALER_PATH = os.getenv('SCALER_PATH', 'feature_scaler.pkl')
+
 # Cache Configuration
 CACHE_ENABLED = True
 CACHE_TTL = 3600  # 1 hour

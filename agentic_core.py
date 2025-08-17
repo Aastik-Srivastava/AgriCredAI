@@ -23,6 +23,35 @@ class AgentAction:
     confidence_score: float
     timestamp: datetime
     execution_time_ms: int
+    # Added data provenance fields
+    data_sources: List[Dict[str, Any]] = None  # List of data sources used in this action
+    data_transformations: List[str] = None  # List of transformations applied to the data
+    decision_factors: Dict[str, float] = None  # Factors that influenced the decision and their weights
+    action_id: str = None  # Unique identifier for this action
+    parent_actions: List[str] = None  # IDs of parent actions that led to this action
+    # Added explanation fields
+    explanation: str = None  # Human-readable explanation of the action
+    confidence_breakdown: Dict[str, Any] = None  # Detailed breakdown of confidence score
+    alternative_actions: List[Dict[str, Any]] = None  # Alternative actions that were considered
+    limitations: List[str] = None  # Known limitations of this action
+    
+    def __post_init__(self):
+        if self.data_sources is None:
+            self.data_sources = []
+        if self.data_transformations is None:
+            self.data_transformations = []
+        if self.decision_factors is None:
+            self.decision_factors = {}
+        if self.action_id is None:
+            self.action_id = str(uuid.uuid4())
+        if self.parent_actions is None:
+            self.parent_actions = []
+        if self.confidence_breakdown is None:
+            self.confidence_breakdown = {}
+        if self.alternative_actions is None:
+            self.alternative_actions = []
+        if self.limitations is None:
+            self.limitations = []
 
 @dataclass
 class PerceptionData:
@@ -32,6 +61,19 @@ class PerceptionData:
     content: Dict[str, Any]
     timestamp: datetime
     reliability_score: float
+    # Added data provenance fields
+    data_origin: str = "unknown"  # e.g., "api", "database", "user_input", "simulation"
+    data_version: str = "1.0"
+    collection_method: str = "unknown"  # e.g., "api_call", "database_query", "sensor_reading"
+    processing_steps: List[str] = None  # List of processing steps applied to the data
+    access_permissions: List[str] = None  # Who can access this data
+    retention_policy: str = "standard"  # Data retention policy
+    
+    def __post_init__(self):
+        if self.processing_steps is None:
+            self.processing_steps = []
+        if self.access_permissions is None:
+            self.access_permissions = ["system"]
 
 class BaseAgent(ABC):
     """Abstract base class for all agentic AI components"""
@@ -189,15 +231,41 @@ def generate_blockchain_hash(data: str) -> str:
     """Generate a mock blockchain-style hash"""
     return hashlib.sha256(f"{data}_{datetime.now().isoformat()}".encode()).hexdigest()[:16]
 
-def calculate_confidence_score(factors: Dict[str, float], weights: Dict[str, float] = None) -> float:
-    """Calculate confidence score from multiple factors"""
+def generate_confidence_explanation(factors: Dict[str, float], weights: Dict[str, float] = None) -> Dict[str, Any]:
+    """Generate a detailed explanation of confidence score calculation"""
     if not weights:
         weights = {k: 1.0 for k in factors.keys()}
     
     total_weight = sum(weights.values())
-    weighted_sum = sum(factors[k] * weights.get(k, 1.0) for k in factors.keys())
+    weighted_factors = {}
+    factor_impacts = {}
     
-    return min(1.0, weighted_sum / total_weight)
+    for k in factors.keys():
+        weighted_factors[k] = factors[k] * weights.get(k, 1.0)
+        factor_impacts[k] = weighted_factors[k] / total_weight
+    
+    weighted_sum = sum(weighted_factors.values())
+    confidence_score = min(1.0, weighted_sum / total_weight)
+    
+    # Generate natural language explanations
+    factor_explanations = []
+    for k, impact in sorted(factor_impacts.items(), key=lambda x: x[1], reverse=True):
+        factor_explanations.append({
+            'factor': k,
+            'raw_value': factors[k],
+            'weight': weights.get(k, 1.0),
+            'weighted_value': weighted_factors[k],
+            'impact_percentage': impact * 100,
+            'explanation': f"{k.replace('_', ' ').title()} contributed {impact:.1%} to the confidence score"
+        })
+    
+    return {
+        'confidence_score': confidence_score,
+        'factors': factor_explanations,
+        'calculation_method': 'weighted_average',
+        'highest_impact_factor': max(factor_impacts.items(), key=lambda x: x[1])[0] if factor_impacts else None,
+        'summary': f"Overall confidence of {confidence_score:.1%} based on {len(factors)} factors"
+    }
 
 def simulate_api_call(api_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
     """Simulate API calls for demo purposes"""
@@ -230,6 +298,28 @@ def simulate_api_call(api_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
     else:
         return {'status': 'success', 'data': f'Mock data for {api_name}'}
 
+def track_data_provenance(data_source: str, operation: str, metadata: Dict[str, Any] = None) -> Dict[str, Any]:
+    """Create a data provenance record for tracking data lineage"""
+    if metadata is None:
+        metadata = {}
+        
+    provenance_record = {
+        'source': data_source,
+        'operation': operation,
+        'timestamp': datetime.now().isoformat(),
+        'operation_id': str(uuid.uuid4()),
+        'metadata': metadata
+    }
+    
+    return provenance_record
+
 # Export the main classes for use in specific agents
 __all__ = ['BaseAgent', 'AgenticOrchestrator', 'AgentAction', 'PerceptionData', 
-           'generate_blockchain_hash', 'calculate_confidence_score', 'simulate_api_call']
+           'generate_blockchain_hash', 'calculate_confidence_score', 'simulate_api_call',
+           'track_data_provenance', 'generate_confidence_explanation']
+
+
+def calculate_confidence_score(factors: Dict[str, float], weights: Dict[str, float] = None) -> float:
+    """Calculate confidence score from multiple factors"""
+    explanation = generate_confidence_explanation(factors, weights)
+    return explanation['confidence_score']

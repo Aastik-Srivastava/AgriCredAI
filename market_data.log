@@ -1,0 +1,71 @@
+2025-08-17 15:42:14,317 | INFO | Fetching market data for wheat in all
+2025-08-17 15:42:24,502 | ERROR | Market API error: HTTPSConnectionPool(host='api.data.gov.in', port=443): Read timed out. (read timeout=10)
+2025-08-17 15:42:24,503 | INFO | Fetching market data for rice in all
+2025-08-17 15:42:25,586 | WARNING | No market data found for rice in all
+2025-08-17 15:42:25,588 | INFO | Fetching market data for cotton in all
+2025-08-17 15:42:28,679 | WARNING | No market data found for cotton in all
+2025-08-17 15:42:28,683 | INFO | Fetching market data for soybean in all
+2025-08-17 15:42:38,781 | ERROR | Market API error: HTTPSConnectionPool(host='api.data.gov.in', port=443): Read timed out. (read timeout=10)
+2025-08-17 15:42:38,987 | INFO | Fetching market data for wheat in all
+2025-08-17 15:42:40,117 | WARNING | No market data found for wheat in all
+2025-08-17 15:42:40,121 | INFO | Fetching market data for rice in all
+2025-08-17 15:42:40,645 | WARNING | No market data found for rice in all
+2025-08-17 15:42:40,649 | INFO | Fetching market data for cotton in all
+2025-08-17 15:42:42,000 | WARNING | No market data found for cotton in all
+2025-08-17 15:42:42,002 | INFO | Fetching market data for soybean in all
+2025-08-17 15:42:42,758 | WARNING | No market data found for soybean in all
+2025-08-17 15:42:44,380 | INFO | Fetching market data for wheat in all
+2025-08-17 15:42:45,054 | WARNING | No market data found for wheat in all
+2025-08-17 15:42:45,057 | INFO | Fetching market data for rice in all
+2025-08-17 15:42:47,235 | WARNING | No market data found for rice in all
+2025-08-17 15:42:47,240 | INFO | Fetching market data for cotton in all
+2025-08-17 15:42:57,361 | ERROR | Market API error: HTTPSConnectionPool(host='api.data.gov.in', port=443): Read timed out. (read timeout=10)
+2025-08-17 15:42:57,363 | INFO | Fetching market data for soybean in all
+2025-08-17 15:42:57,782 | WARNING | No market data found for soybean in all
+2025-08-17 15:46:03,111 | INFO | Fetching market data for wheat in all
+2025-08-17 15:46:04,245 | WARNING | No market data found for wheat in all
+2025-08-17 15:46:04,247 | INFO | Fetching market data for rice in all
+2025-08-17 15:46:04,764 | WARNING | No market data found for rice in all
+2025-08-17 15:46:04,769 | INFO | Fetching market data for cotton in all
+2025-08-17 15:46:06,735 | WARNING | No market data found for cotton in all
+2025-08-17 15:46:06,738 | INFO | Fetching market data for soybean in all
+2025-08-17 15:46:07,455 | WARNING | No market data found for soybean in all
+2025-08-17 16:20:06,091 | INFO | Fetching market data for wheat in all
+2025-08-17 16:20:08,407 | WARNING | No market data found for wheat in all
+2025-08-17 16:20:08,412 | INFO | Fetching market data for rice in all
+2025-08-17 16:20:11,440 | WARNING | No market data found for rice in all
+2025-08-17 16:20:11,443 | INFO | Fetching market data for cotton in all
+2025-08-17 16:20:12,542 | WARNING | No market data found for cotton in all
+2025-08-17 16:20:12,546 | INFO | Fetching market data for soybean in all
+2025-08-17 16:20:15,818 | WARNING | No market data found for soybean in all
+2025-08-17 16:28:40,390 | INFO | Fetching market data for wheat in all
+2025-08-17 16:28:43,209 | WARNING | No market data found for wheat in all
+2025-08-17 16:28:43,215 | INFO | Fetching market data for rice in all
+2025-08-17 16:28:45,135 | WARNING | No market data found for rice in all
+2025-08-17 16:28:45,138 | INFO | Fetching market data for cotton in all
+2025-08-17 16:28:45,524 | WARNING | No market data found for cotton in all
+2025-08-17 16:28:45,525 | INFO | Fetching market data for soybean in all
+2025-08-17 16:28:46,089 | WARNING | No market data found for soybean in all
+2025-08-17 16:29:02,695 | INFO | Fetching market data for wheat in all
+2025-08-17 16:29:03,675 | WARNING | No market data found for wheat in all
+2025-08-17 16:29:03,678 | INFO | Fetching market data for rice in all
+2025-08-17 16:29:04,145 | WARNING | No market data found for rice in all
+2025-08-17 16:29:04,148 | INFO | Fetching market data for cotton in all
+2025-08-17 16:29:04,873 | WARNING | No market data found for cotton in all
+2025-08-17 16:29:04,877 | INFO | Fetching market data for soybean in all
+2025-08-17 16:29:14,976 | ERROR | Market API error: HTTPSConnectionPool(host='api.data.gov.in', port=443): Read timed out. (read timeout=10)
+2025-08-17 16:45:17,610 | INFO | Fetching market data for Wheat in all
+2025-08-17 16:45:22,705 | INFO | Successfully fetched market data: Wheat @ ₹2700.0/quintal
+2025-08-17 16:45:22,712 | INFO | Fetching market data for Rice in all
+2025-08-17 16:45:26,616 | INFO | Successfully fetched market data: Rice @ ₹3180.0/quintal
+2025-08-17 16:45:26,619 | INFO | Fetching market data for Cotton in all
+2025-08-17 16:45:27,118 | INFO | Successfully fetched market data: Cotton @ ₹5800.0/quintal
+2025-08-17 16:45:27,122 | INFO | Fetching market data for Soybean in all
+2025-08-17 16:45:27,564 | WARNING | No records found in API response for Soybean
+2025-08-17 16:45:27,564 | INFO | Using fallback data for Soybean
+2025-08-17 17:38:32,505 | INFO | Using cached market data for Wheat in all
+2025-08-17 17:38:32,506 | INFO | Using cached market data for Rice in all
+2025-08-17 17:38:32,506 | INFO | Using cached market data for Cotton in all
+2025-08-17 17:38:32,507 | INFO | Fetching market data for Soybean in all
+2025-08-17 17:38:33,112 | WARNING | No records found in API response for Soybean
+2025-08-17 17:38:33,112 | INFO | Using fallback data for Soybean

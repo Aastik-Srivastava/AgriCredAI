@@ -15,16 +15,42 @@ import pandas as pd
 import numpy as np
 import requests
 import sqlite3
-from datetime import datetime
-from config import WEATHER_API_KEY, MARKET_API_KEY, DATABASE_PATH, WEATHER_API_BASE_URL, WEATHER_UNITS
-from datetime import datetime
+import json
+import hashlib
+import logging
+from datetime import datetime, timedelta
+from config import (WEATHER_API_KEY, MARKET_API_KEY, DATABASE_PATH, WEATHER_API_BASE_URL, 
+                   WEATHER_UNITS, CACHE_ENABLED, CACHE_TTL, RATE_LIMIT_ENABLED, 
+                   RATE_LIMIT_CALLS, RATE_LIMIT_PERIOD, MARKET_API_BASE_URL)
+
+# Setup logging
+logger = logging.getLogger("market_data")
+logger.setLevel(logging.INFO)
+
+# Remove any existing handlers (to avoid duplicate logs)
+if logger.hasHandlers():
+    logger.handlers.clear()
+
+# StreamHandler (console)
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
+logger.addHandler(stream_handler)
+
+# FileHandler (line-by-line log file)
+file_handler = logging.FileHandler("market_data.log", mode='a', encoding='utf-8')
+file_handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
+logger.addHandler(file_handler)
 
 class AdvancedDataPipeline:
     def __init__(self):
         self.setup_database()
+        self.setup_market_cache()  # Add this line
         self.weather_api_key = WEATHER_API_KEY
         self.weather_base_url = WEATHER_API_BASE_URL
         self.weather_units = WEATHER_UNITS
+        self.market_api_key = MARKET_API_KEY
+        self.rate_limit_count = 0
+        self.rate_limit_reset = datetime.now() + timedelta(seconds=RATE_LIMIT_PERIOD)
 
     def setup_database(self):
         self.conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
@@ -188,24 +214,146 @@ class AdvancedDataPipeline:
         return []
 
     def get_market_prices(self, crop_type, state=""):
+        """Get market prices with corrected data.gov.in API format"""
+        
+        # Standardize crop name for API (data.gov.in expects proper case)
+        crop_mapping = {
+            'wheat': 'Wheat', 
+            'rice': 'Rice', 
+            'cotton': 'Cotton',
+            'soybean': 'Soybean', 
+            'maize': 'Maize', 
+            'sugarcane': 'Sugarcane',
+            'potato': 'Potato',
+            'onion': 'Onion',
+            'tomato': 'Tomato'
+        }
+        
+        standardized_crop = crop_mapping.get(crop_type.lower(), crop_type.title())
+        
+        # Create cache key
+        crop_hash = hashlib.md5(f"{standardized_crop.lower()}:{state.lower()}".encode()).hexdigest()
+        
+        # Check cache first if enabled
+        if CACHE_ENABLED:
+            cached_data = self._get_cached_market_data(crop_hash)
+            if cached_data:
+                logger.info(f"Using cached market data for {standardized_crop} in {state or 'all states'}")
+                return cached_data
+        
+        # Check rate limit
+        if RATE_LIMIT_ENABLED and not self._check_market_rate_limit():
+            logger.warning("Market API rate limit exceeded, using fallback data")
+            return self._get_fallback_market_data(crop_type, state)
+        
         try:
-            url = (f"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070"
-                   f"?format=json&api-key={MARKET_API_KEY}&limit=1&filters[commodity]={crop_type}")
-            if state:
-                url += f"&filters[state]={state}"
-            r = requests.get(url, timeout=10)
-            if r.status_code == 200:
-                records = r.json().get("records", [])
-                if records:
-                    rec = records[0]
-                    return {
-                        'price_per_quintal': float(rec.get('modal_price', 0)),
-                        'date': rec.get('arrival_date'),
-                        'volatility': 0
-                    }
+            # Use correct data.gov.in resource ID for market data
+            resource_id = "9ef84268-d588-465a-a308-a864a43d0070"
+            base_url = f"https://api.data.gov.in/resource/{resource_id}"
+            
+            # Build parameters properly
+            params = {
+                'api-key': self.market_api_key,
+                'format': 'json',
+                'limit': 5  # Get multiple records for better data
+            }
+            
+            # Add filters with correct format
+            if standardized_crop:
+                params[f'filters[commodity]'] = standardized_crop
+            if state and state.lower() != "all":
+                params[f'filters[state]'] = state.title()
+                
+            logger.info(f"Fetching market data for {standardized_crop} in {state or 'all states'}")
+            logger.debug(f"API URL: {base_url}")
+            logger.debug(f"Parameters: {params}")
+            
+            # Make the API call with proper headers
+            headers = {
+                'User-Agent': 'Agricultural-Credit-Intelligence/1.0',
+                'Accept': 'application/json'
+            }
+            
+            response = requests.get(base_url, params=params, headers=headers, timeout=15)
+            
+            # Increment rate limit counter
+            if RATE_LIMIT_ENABLED:
+                self.rate_limit_count += 1
+            
+            logger.debug(f"Response status: {response.status_code}")
+            logger.debug(f"Response headers: {dict(response.headers)}")
+            
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                    logger.debug(f"Raw API response: {json.dumps(data, indent=2)}")
+                    
+                    # Handle different response structures
+                    records = []
+                    if isinstance(data, dict):
+                        records = data.get("records", [])
+                        if not records and "data" in data:
+                            records = data["data"]
+                    elif isinstance(data, list):
+                        records = data
+                    
+                    if records:
+                        # Use the most recent record
+                        record = records[0] if isinstance(records[0], dict) else records[0]
+                        
+                        # Extract price data with proper field mapping
+                        market_data = {
+                            'price_per_quintal': float(record.get('modal_price', record.get('modalPrice', 0))),
+                            'min_price': float(record.get('min_price', record.get('minPrice', 0))), 
+                            'max_price': float(record.get('max_price', record.get('maxPrice', 0))),
+                            'market': record.get('market', record.get('marketName', '')),
+                            'district': record.get('district', ''),
+                            'state': record.get('state', ''),
+                            'date': record.get('arrival_date', record.get('arrivalDate', record.get('date', ''))),
+                            'variety': record.get('variety', ''),
+                            'commodity': record.get('commodity', ''),
+                            'volatility': 0,  # Calculate if historical data available
+                            'source': 'data.gov.in API'
+                        }
+                        
+                        # Cache successful result
+                        if CACHE_ENABLED:
+                            self._cache_market_data(crop_hash, standardized_crop, state, market_data)
+                        
+                        logger.info(f"Successfully fetched market data: {standardized_crop} @ ₹{market_data['price_per_quintal']}/quintal")
+                        return market_data
+                    else:
+                        logger.warning(f"No records found in API response for {standardized_crop}")
+                        logger.debug(f"Full response: {response.text}")
+                        
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse JSON response: {e}")
+                    logger.debug(f"Raw response: {response.text}")
+                    
+            elif response.status_code == 403:
+                logger.error("API Access Denied - Check your API key permissions")
+                logger.debug(f"Response: {response.text}")
+                
+            elif response.status_code == 404:
+                logger.error("API endpoint not found - Check resource ID")
+                logger.debug(f"URL: {base_url}")
+                
+            else:
+                logger.error(f"API returned status {response.status_code}")
+                logger.debug(f"Response: {response.text}")
+                
+        except requests.exceptions.Timeout:
+            logger.error("API request timed out")
+        except requests.exceptions.ConnectionError:
+            logger.error("Failed to connect to data.gov.in API")
         except Exception as e:
-            print(f"Market API error: {e}")
-        return {'price_per_quintal': None, 'volatility': None}
+            logger.error(f"Unexpected error in API call: {str(e)}")
+            import traceback
+            logger.debug(f"Full traceback: {traceback.format_exc()}")
+        
+        # Fallback to simulated data
+        logger.info(f"Using fallback data for {standardized_crop}")
+        return self._get_fallback_market_data(crop_type, state)
 
     def get_soil_health(self, district):
         #Demo fallback: always returns fixed demo values for now
@@ -527,4 +675,122 @@ class AdvancedDataPipeline:
 
 
 
-pipeline = AdvancedDataPipeline()
+    def _get_cached_market_data(self, crop_hash):
+        """Get market data from cache if available and not expired"""
+        try:
+            cur = self.conn.execute(
+                "SELECT market_data, source FROM market_data_cache WHERE crop_hash = ? AND expires_at > ?", 
+                (crop_hash, datetime.now())
+            )
+            result = cur.fetchone()
+            if result:
+                market_data = json.loads(result[0])
+                market_data['source'] = result[1]  # Add data provenance
+                return market_data
+            return None
+        except Exception as e:
+            logger.error(f"Error retrieving cached market data: {e}")
+            return None
+
+    def _cache_market_data(self, crop_hash, crop_type, state, market_data):
+        """Cache market data for future use"""
+        try:
+            market_json = json.dumps(market_data)
+            expires_at = datetime.now() + timedelta(seconds=CACHE_TTL)
+            
+            self.conn.execute(
+                "INSERT OR REPLACE INTO market_data_cache "
+                "(crop_hash, crop_type, state, market_data, source, created_at, expires_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (crop_hash, crop_type, state, market_json, market_data['source'], 
+                 datetime.now(), expires_at)
+            )
+            self.conn.commit()
+        except Exception as e:
+            logger.error(f"Error caching market data: {e}")
+
+    def _check_market_rate_limit(self):
+        """Check if rate limit is exceeded. Returns True if within limit, False if exceeded."""
+        now = datetime.now()
+        if now > self.rate_limit_reset:
+            # Reset counter if period has passed
+            self.rate_limit_count = 0
+            self.rate_limit_reset = now + timedelta(seconds=RATE_LIMIT_PERIOD)
+            return True
+        
+        return self.rate_limit_count < RATE_LIMIT_CALLS
+
+    def _get_fallback_market_data(self, crop_type, state):
+        """Generate realistic fallback market data based on crop type"""
+        import random
+        
+        # Base prices for common crops (in INR per quintal)
+        base_prices = {
+            'Rice': 2000,
+            'Wheat': 1800,
+            'Cotton': 6000,
+            'Sugarcane': 300,
+            'Soybean': 3800,
+            'Maize': 1600,
+            'Potato': 1200,
+            'Onion': 1500,
+            'Tomato': 1800
+        }
+        
+        # Use the base price for the crop or a default value
+        base_price = base_prices.get(crop_type, 2000)
+        
+        # Add some randomness to make it realistic
+        modal_price = base_price * (1 + random.uniform(-0.1, 0.1))
+        min_price = modal_price * (1 - random.uniform(0.05, 0.15))
+        max_price = modal_price * (1 + random.uniform(0.05, 0.15))
+        
+        # Generate a realistic date (within last 7 days)
+        days_ago = random.randint(0, 7)
+        date_str = (datetime.now() - timedelta(days=days_ago)).strftime('%d/%m/%Y')
+        
+        # List of markets by state
+        markets_by_state = {
+            'Maharashtra': ['Pune', 'Nagpur', 'Mumbai', 'Nashik'],
+            'Punjab': ['Amritsar', 'Ludhiana', 'Jalandhar', 'Patiala'],
+            'Karnataka': ['Bangalore', 'Mysore', 'Hubli', 'Belgaum'],
+            'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Varanasi', 'Agra'],
+            'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Salem']
+        }
+        
+        # Select a market based on state or random
+        if state and state in markets_by_state:
+            market = random.choice(markets_by_state[state])
+            district = market  # Simplification
+        else:
+            all_markets = [m for markets in markets_by_state.values() for m in markets]
+            market = random.choice(all_markets)
+            district = market  # Simplification
+        
+        return {
+            'price_per_quintal': round(modal_price, 2),
+            'min_price': round(min_price, 2),
+            'max_price': round(max_price, 2),
+            'market': market,
+            'district': district,
+            'date': date_str,
+            'variety': 'Common',
+            'volatility': round(random.uniform(0.02, 0.15), 2),
+            'source': 'fallback_simulation'
+        }
+
+    def setup_market_cache(self):
+        """Create market_data_cache table for storing market price data"""
+        self.conn.execute('''
+        CREATE TABLE IF NOT EXISTS market_data_cache (
+            id INTEGER PRIMARY KEY,
+            crop_hash TEXT UNIQUE,
+            crop_type TEXT,
+            state TEXT,
+            market_data TEXT,
+            source TEXT,
+            created_at DATETIME,
+            expires_at DATETIME
+        )
+        ''')
+        self.conn.commit()

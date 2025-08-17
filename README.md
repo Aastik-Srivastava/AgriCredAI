@@ -1,10 +1,8 @@
-# Capital One AgriFinance AI Platform
+# AgriCredAI - Advanced Agricultural Credit Intelligence Platform
 
 <div align="center">
 
-![Logo](https://img.shields.io/badge/Capital%20One-AgriFinance%20AI-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+)
-
-**🏆 Winner of Capital One Agriculture Technology Challenge 2025**
+![Logo](https://img.shields.io/badge/AgriCredAI-Advanced%20Agricultural%20Credit%20Intelligence-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+)
 
 *Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence*
 
@@ -17,7 +15,7 @@
 
 ## 🚀 Project Overview
 
-**Capital One AgriFinance AI** is a revolutionary agricultural lending platform that combines cutting-edge **Agentic AI**, **Machine Learning**, and **Real-time Data Intelligence** to transform how financial institutions assess and manage agricultural credit risk.
+**AgriCredAI** is a revolutionary agricultural lending platform that combines cutting-edge **Agentic AI**, **Machine Learning**, and **Real-time Data Intelligence** to transform how financial institutions assess and manage agricultural credit risk.
 
 ### 🎯 Problem Statement
 Traditional agricultural lending suffers from:
@@ -34,7 +32,8 @@ A comprehensive AI-powered platform featuring:
 - ✅ **Real-time Risk Monitoring** across 50+ variables
 - ✅ **Dynamic Loan Structuring** based on crop cycles
 - ✅ **Carbon Credit Integration** for sustainable finance
-- ✅ **Geographic Risk Intelligence** mapping
+- ✅ **Multi-lingual Voice Support** for accessibility
+- ✅ **Weather Alert System** for proactive risk management
 
 ---
 
@@ -88,14 +87,14 @@ graph TB
     
     F[Weather APIs] --> B
     G[Market Data APIs] --> B
-    H[Satellite Data] --> B
-    I[Soil Sensors] --> B
+    H[Public Data Integration] --> B
+    I[Multi-lingual Voice Input] --> B
     
     C --> J[Loan Structuring]
     D --> K[Carbon Tokenization]
     E --> L[Market Intelligence]
     
-    J --> M[Financier Dashboard]
+    J --> M[Financial Dashboard]
     K --> M
     L --> M
     
@@ -117,6 +116,7 @@ graph TB
 | **Portfolio Analytics** | Real-time monitoring | 60% faster decisions |
 | **Weather Intelligence** | Proactive risk management | 25% lower defaults |
 | **Market Integration** | Commodity price tracking | Enhanced forecasting |
+| **Explainable AI** | SHAP-based transparency | Regulatory compliance |
 
 ### 🌾 For Farmers
 
@@ -127,6 +127,7 @@ graph TB
 | **Carbon Revenue** | Sustainable practice rewards | Additional income stream |
 | **Market Advisory** | Optimal selling guidance | 12% higher profits |
 | **Weather Alerts** | Risk mitigation support | Better preparedness |
+| **Voice Interface** | Multi-language support | Improved accessibility |
 
 ---
 
@@ -145,14 +146,19 @@ graph TB
 - **📈 Feature Engineering** - 50+ correlated agricultural variables
 - **🧮 Risk Algorithms** - Multi-factor scoring with interaction effects
 - **🔍 SHAP Explanations** - Transparent decision-making
-- **📡 Real-time APIs** - Weather, market, and satellite data
+- **📡 Real-time APIs** - Weather, market, and public data
+
+### Voice & Multi-lingual Support
+- **🎤 Speech Recognition** - Multi-language voice input
+- **🔊 Text-to-Speech** - gTTS and pyttsx3 integration
+- **🌐 Language Detection** - Automatic language identification
+- **🎵 Audio Processing** - Real-time voice analysis
 
 ### Data Sources
 - **🌦️ OpenWeatherMap API** - Weather forecasting & alerts
-- **💹 Agmarknet API** - Agricultural market prices
-- **🛰️ Satellite Imagery** - Crop monitoring (simulated)
-- **🌍 Soil Health APIs** - Nutrient and pH analysis
+- **💹 Public Market APIs** - Agricultural market prices
 - **🏛️ Government Data** - MSP rates & policy updates
+- **📊 Public Datasets** - Agricultural statistics
 
 ---
 
@@ -193,8 +199,8 @@ Git (for cloning repository)
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/capital-one-agrifinance-ai.git
-cd capital-one-agrifinance-ai
+git clone https://github.com/yourusername/agricred-ai.git
+cd agricred-ai
 ```
 
 2. **Create virtual environment**
@@ -216,7 +222,7 @@ cp config_example.py config.py
 
 5. **Run the application**
 ```bash
-streamlit run enhanced_advanced_app.py
+streamlit run advanced_app.py
 ```
 
 6. **Access the platform**
@@ -230,8 +236,8 @@ streamlit run enhanced_advanced_app.py
 ## 📁 Project Structure
 
 ```
-capital-one-agrifinance-ai/
-├── 📄 enhanced_advanced_app.py          # Main Streamlit application
+agricred-ai/
+├── 📄 advanced_app.py                    # Main Streamlit application
 ├── 🤖 agentic_core.py                   # Agentic AI framework
 ├── 💰 dynamic_financing_agent.py        # Financing intelligence agent
 ├── 🌱 carbon_credit_agent.py            # Carbon credit management
@@ -239,14 +245,19 @@ capital-one-agrifinance-ai/
 ├── 🎭 agentic_ai_demo.py               # Interactive demo interface
 ├── 🧠 advanced_data_pipeline.py         # Data processing pipeline
 ├── ⚠️ weather_alert_system.py          # Weather monitoring system
-├── 🎯 hyper_realistic_model.py          # ML model implementation
+├── 🎯 advanced_ml_model.py              # ML model implementation
+├── 🌐 multilingual_multimodal.py        # Voice and multi-language support
+├── 📊 public_data_integration.py        # Public data sources integration
+├── 🔄 offline_edge_support.py           # Offline and edge computing support
+├── 🎯 explainable_ai_core.py            # AI explainability framework
+├── 🏦 credit_db_maker.py                # Database utilities
 ├── ⚙️ config.py                        # Configuration settings
 ├── 📋 requirements.txt                  # Python dependencies
 ├── 📖 README.md                        # This file
-└── 🗄️ data/                           # Data storage directory
-    ├── 🏦 agricultural_loans.db        # SQLite database
-    ├── 📊 portfolio_metrics.csv        # Performance data
-    └── 🌾 farmer_profiles.json         # Farmer information
+├── 🗄️ data_cache/                      # Data storage directory
+├── 🗄️ offline_cache/                   # Offline data cache
+├── 🎤 vosk_model/                      # Voice recognition models
+└── 📊 myschemes_full.json              # Government schemes data
 ```
 
 ---
@@ -309,14 +320,15 @@ Market Advisory:
 
 ---
 
-## 🏆 Hackathon Achievements
+## 🏆 Key Achievements
 
 ### 🎯 Innovation Highlights
-- **🤖 First Agentic AI** implementation in agricultural finance
+- **🤖 Agentic AI System** with autonomous decision-making capabilities
 - **🌐 Multi-API Integration** with real-time data processing  
 - **🔗 Blockchain-style** carbon credit tokenization
 - **📈 Advanced Risk Modeling** with 50+ correlated features
 - **💡 Transparent AI** with SHAP explainability
+- **🎤 Multi-lingual Voice Interface** for accessibility
 
 ### 🏅 Technical Excellence
 - **⚡ High Performance**: 92.4% model accuracy
@@ -324,6 +336,7 @@ Market Advisory:
 - **📊 Rich Visualization**: Interactive dashboards with Plotly
 - **🔒 Enterprise Ready**: Error handling and logging
 - **📱 Responsive Design**: Works on desktop and mobile
+- **🎵 Voice Processing**: Real-time speech recognition and TTS
 
 ### 💼 Business Impact
 - **💰 Revenue Growth**: 15% higher ROI through risk-based pricing
@@ -339,7 +352,7 @@ Market Advisory:
 ### Phase 2: Advanced Intelligence
 - **🛰️ Satellite Integration** - Real crop monitoring via Planet Labs API
 - **📱 Mobile App** - Farmer-facing mobile application
-- **🔊 Voice Assistant** - Multi-language voice interface
+- **🔊 Enhanced Voice Assistant** - Advanced multi-language voice interface
 - **🧮 Blockchain** - Full decentralized carbon credit ledger
 
 ### Phase 3: Ecosystem Expansion
@@ -359,8 +372,8 @@ Market Advisory:
 - **📊 Data Scientist** - Feature engineering & analysis
 - **🌾 Domain Expert** - Agricultural finance expertise
 
-### Hackathon Roles
-- **👑 Team Lead** - Project coordination & presentation
+### Project Roles
+- **👑 Project Lead** - Project coordination & presentation
 - **🔧 Technical Lead** - Architecture & implementation
 - **📈 Business Analyst** - Market research & validation
 - **🎯 Product Manager** - Feature prioritization
@@ -390,26 +403,26 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## 📞 Contact & Support
 
 ### 🌐 Links
-- **🚀 Live Demo**: [https://capital-one-agrifinance-ai.streamlit.app](https://your-demo-url.streamlit.app)
-- **📖 Documentation**: [https://docs.agrifinance-ai.com](https://your-docs-url.com)
-- **🐛 Issues**: [GitHub Issues](https://github.com/yourusername/capital-one-agrifinance-ai/issues)
-- **💬 Discussions**: [GitHub Discussions](https://github.com/yourusername/capital-one-agrifinance-ai/discussions)
+- **🚀 Live Demo**: [https://agricred-ai.streamlit.app](https://your-demo-url.streamlit.app)
+- **📖 Documentation**: [https://docs.agricred-ai.com](https://your-docs-url.com)
+- **🐛 Issues**: [GitHub Issues](https://github.com/yourusername/agricred-ai/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/yourusername/agricred-ai/discussions)
 
 ### 📧 Contact
-- **Email**: team@agrifinance-ai.com
-- **LinkedIn**: [Capital One AgriFinance AI](https://linkedin.com/company/agrifinance-ai)
-- **Twitter**: [@AgriFinanceAI](https://twitter.com/AgriFinanceAI)
+- **Email**: team@agricred-ai.com
+- **LinkedIn**: [AgriCredAI](https://linkedin.com/company/agricred-ai)
+- **Twitter**: [@AgriCredAI](https://twitter.com/AgriCredAI)
 
 ---
 
 <div align="center">
 
-## 🏆 Built for Capital One Hackathon 2025
+## 🏆 AgriCredAI Platform
 
 **Revolutionizing Agricultural Lending with AI**
 
-*Made with ❤️ by the AgriFinance AI Team*
+*Made with ❤️ by the AgriCredAI Team*
 
-[![Star this repository](https://img.shields.io/github/stars/yourusername/capital-one-agrifinance-ai?style=social)](https://github.com/yourusername/capital-one-agrifinance-ai)
+[![Star this repository](https://img.shields.io/github/stars/yourusername/agricred-ai?style=social)](https://github.com/yourusername/agricred-ai)
 
 </div>

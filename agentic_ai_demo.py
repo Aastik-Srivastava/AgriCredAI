@@ -46,7 +46,7 @@ async def run_agentic_workflow(farmer_context):
     return results
 
 def display_agent_reasoning(agent_name, action):
-    """Display the reasoning trace of an agent"""
+    """Display the reasoning trace of an agent with enhanced explanations"""
     st.subheader(f"🧠 {agent_name} Reasoning Process")
     
     if action and hasattr(action, 'reasoning_trace'):
@@ -61,6 +61,49 @@ def display_agent_reasoning(agent_name, action):
             st.metric("Confidence Score", f"{action.confidence_score:.1%}")
         with col2:
             st.metric("Execution Time", f"{action.execution_time_ms}ms")
+        
+        # Display human-readable explanation if available
+        if hasattr(action, 'explanation') and action.explanation:
+            st.markdown("### 📝 Explanation")
+            st.write(action.explanation)
+        
+        # Display confidence breakdown if available
+        if hasattr(action, 'confidence_breakdown') and action.confidence_breakdown:
+            st.markdown("### 🎯 Confidence Breakdown")
+            confidence = action.confidence_breakdown
+            
+            # Display summary
+            if 'summary' in confidence:
+                st.write(confidence['summary'])
+            
+            # Display factor breakdown
+            if 'factors' in confidence:
+                factor_data = []
+                for factor in confidence['factors']:
+                    factor_data.append({
+                        'Factor': factor['factor'].replace('_', ' ').title(),
+                        'Impact': f"{factor['impact_percentage']:.1f}%",
+                        'Value': f"{factor['raw_value']:.2f}",
+                        'Weight': f"{factor['weight']:.1f}"
+                    })
+                
+                if factor_data:
+                    st.dataframe(pd.DataFrame(factor_data))
+        
+        # Display limitations if available
+        if hasattr(action, 'limitations') and action.limitations:
+            with st.expander("⚠️ Limitations"):
+                for limitation in action.limitations:
+                    st.write(f"- {limitation}")
+        
+        # Display alternative actions if available
+        if hasattr(action, 'alternative_actions') and action.alternative_actions:
+            with st.expander("🔄 Alternative Actions Considered"):
+                for alt in action.alternative_actions:
+                    st.write(f"**{alt.get('action', 'Unknown')}** (confidence: {alt.get('confidence', 0):.1%})")
+                    if 'reason' in alt:
+                        st.write(f"*Reason:* {alt['reason']}")
+                    st.write("---")
 
 def display_financing_results(action):
     """Display financing agent results"""
