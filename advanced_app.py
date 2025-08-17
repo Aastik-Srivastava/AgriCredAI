@@ -52,43 +52,44 @@ from config import (
 )
 
 # Multi-lingual support
-import speech_recognition as sr
-import pyttsx3
-from gtts import gTTS
+# import speech_recognition as sr
+# import pyttsx3
+# from gtts import gTTS
 import hashlib
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
-# Optional speech libs
-try:
-    from streamlit_mic_recorder import mic_recorder
-except Exception:
-    mic_recorder = None
 
-try:
-    import speech_recognition as sr
-except Exception:
-    sr = None
+# # Optional speech libs
+# try:
+#     from streamlit_mic_recorder import mic_recorder
+# except Exception:
+#     mic_recorder = None
 
-try:
-    from vosk import Model, KaldiRecognizer
-except Exception:
-    Model = KaldiRecognizer = None
+# try:
+#     import speech_recognition as sr
+# except Exception:
+#     sr = None
 
-try:
-    import pyttsx3
-except Exception:
-    pyttsx3 = None
+# try:
+#     from vosk import Model, KaldiRecognizer
+# except Exception:
+#     Model = KaldiRecognizer = None
 
-try:
-    from gtts import gTTS
-except Exception:
-    gTTS = None
+# try:
+#     import pyttsx3
+# except Exception:
+#     pyttsx3 = None
 
-try:
-    from config import VOSK_MODEL_PATH
-except Exception:
-    VOSK_MODEL_PATH = None
+# try:
+#     from gtts import gTTS
+# except Exception:
+#     gTTS = None
+
+# try:
+#     from config import VOSK_MODEL_PATH
+# except Exception:
+#     VOSK_MODEL_PATH = None
 
 # Multi-lingual support classes
 @dataclass
@@ -723,7 +724,6 @@ def display_sidebar():
         "💹 Market Intelligence",
         "📈 Performance Analytics",
         "⚙️ System Configuration",
-        "🌍 Multi-lingual Demo",
         "📱 Offline Capabilities"
     ]
 
@@ -2866,128 +2866,130 @@ def system_configuration():
         st.info("💹 Market Data: stimulated data")
         st.info("🛰️ Satellite Data: coming soon")
 
-def multilingual_demo():
-    """Multi-lingual and multi-modal capabilities demo"""
-    st.markdown("## 🌍 Multi-lingual & Multi-modal Demo")
-    st.markdown("### Demonstrating language support and voice capabilities")
+# def multilingual_demo():
+#     """Multi-lingual and multi-modal capabilities demo"""
+#     st.markdown("## 🌍 Multi-lingual & Multi-modal Demo")
+#     st.markdown("### Demonstrating language support and voice capabilities")
     
-    col1, col2 = st.columns(2)
+#     col1, col2 = st.columns(2)
     
-    with col1:
-        st.subheader("🌐 Language Support")
+#     with col1:
+#         st.subheader("🌐 Language Support")
         
-        # Language selection
-        selected_lang = st.selectbox(
-            "Select Language for Demo",
-            list(SUPPORTED_LANGUAGES.keys()),
-            format_func=lambda x: f"{SUPPORTED_LANGUAGES[x].native_name} ({SUPPORTED_LANGUAGES[x].name})"
-        )
+#         # Language selection
+#         selected_lang = st.selectbox(
+#             "Select Language for Demo",
+#             list(SUPPORTED_LANGUAGES.keys()),
+#             format_func=lambda x: f"{SUPPORTED_LANGUAGES[x].native_name} ({SUPPORTED_LANGUAGES[x].name})"
+#         )
         
-        if selected_lang:
-            lang_info = SUPPORTED_LANGUAGES[selected_lang]
-            st.info(f"**Selected:** {lang_info.native_name}")
-            st.write(f"**Language Code:** {lang_info.code}")
-            st.write(f"**Confidence Threshold:** {lang_info.confidence_threshold:.1%}")
+#         if selected_lang:
+#             lang_info = SUPPORTED_LANGUAGES[selected_lang]
+#             st.info(f"**Selected:** {lang_info.native_name}")
+#             st.write(f"**Language Code:** {lang_info.code}")
+#             st.write(f"**Confidence Threshold:** {lang_info.confidence_threshold:.1%}")
             
-            # Language-specific greeting
-            greetings = {
-                'en': "Welcome to AgriCredAI!",
-                'hi': "AgriCredAI में आपका स्वागत है!",
-                'mr': "AgriCredAI मध्ये आपले स्वागत आहे!",
-                'bn': "AgriCredAI তে স্বাগতম!",
-                'te': "AgriCredAI కి స్వాగతం!",
-                'ta': "AgriCredAI க்கு வரவேற்கிறோம்!",
-                'gu': "AgriCredAI માં આપનું સ્વાગત છે!",
-                'pa': "AgriCredAI ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ!",
-                'kn': "AgriCredAI ಗೆ ಸುಸ್ವಾಗತ!",
-                'ml': "AgriCredAI ലേക്ക് സ്വാഗതം!"
-            }
+#             # Language-specific greeting
+#             greetings = {
+#                 'en': "Welcome to AgriCredAI!",
+#                 'hi': "AgriCredAI में आपका स्वागत है!",
+#                 'mr': "AgriCredAI मध्ये आपले स्वागत आहे!",
+#                 'bn': "AgriCredAI তে স্বাগতম!",
+#                 'te': "AgriCredAI కి స్వాగతం!",
+#                 'ta': "AgriCredAI க்கு வரவேற்கிறோம்!",
+#                 'gu': "AgriCredAI માં આપનું સ્વાગત છે!",
+#                 'pa': "AgriCredAI ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ!",
+#                 'kn': "AgriCredAI ಗೆ ಸುಸ್ವಾಗತ!",
+#                 'ml': "AgriCredAI ലേക്ക് സ്വാഗതം!"
+#             }
             
-            greeting = greetings.get(selected_lang, greetings['en'])
-            st.success(f"**Greeting:** {greeting}")
+#             greeting = greetings.get(selected_lang, greetings['en'])
+#             st.success(f"**Greeting:** {greeting}")
     
-    with col2:
-        st.subheader("🎤 Voice & Text Demo")
+#     with col2:
+#         st.subheader("🎤 Voice & Text Demo")
         
-        # Text input for language detection
-        demo_text = st.text_input("Enter text in any supported language:")
+#         # Text input for language detection
+#         demo_text = st.text_input("Enter text in any supported language:")
         
-        if demo_text:
-            detected_lang, confidence = detect_language(demo_text)
-            st.success(f"**Detected Language:** {get_language_display_name(detected_lang)}")
-            st.info(f"**Confidence:** {confidence:.1%}")
+#         if demo_text:
+#             detected_lang, confidence = detect_language(demo_text)
+#             st.success(f"**Detected Language:** {get_language_display_name(detected_lang)}")
+#             st.info(f"**Confidence:** {confidence:.1%}")
             
-            # Show if detection matches selection
-            if detected_lang == selected_lang:
-                st.success("✅ Language detection matches selection!")
-            else:
-                st.warning(f"⚠️ Detected {get_language_display_name(detected_lang)} instead of {get_language_display_name(selected_lang)}")
+#             # Show if detection matches selection
+#             if detected_lang == selected_lang:
+#                 st.success("✅ Language detection matches selection!")
+#             else:
+#                 st.warning(f"⚠️ Detected {get_language_display_name(detected_lang)} instead of {get_language_display_name(selected_lang)}")
         
-        # Voice input simulation
-        if st.button("🎙️ Simulate Voice Input"):
-            st.info("🎤 Voice input would be processed here in a real implementation")
-            st.success("✅ Voice input simulated successfully!")
+#         # Voice input simulation
+#         if st.button("🎙️ Simulate Voice Input"):
+#             st.info("🎤 Voice input would be processed here in a real implementation")
+#             st.success("✅ Voice input simulated successfully!")
     
-    # Multi-modal query demo
-    st.markdown("---")
-    st.subheader("🔍 Multi-modal Query Demo")
+#     # Multi-modal query demo
+#     st.markdown("---")
+#     st.subheader("🔍 Multi-modal Query Demo")
     
-    col3, col4 = st.columns(2)
+#     col3, col4 = st.columns(2)
     
-    with col3:
-        query_text = st.text_area("Enter your agricultural query:", 
-                                 placeholder="e.g., What is the weather for wheat farming?")
+#     with col3:
+#         query_text = st.text_area("Enter your agricultural query:", 
+#                                  placeholder="e.g., What is the weather for wheat farming?")
         
-        if st.button("🔍 Process Query"):
-            if query_text:
-                detected_lang, confidence = detect_language(query_text)
-                st.success("Query processed!")
-                st.info(f"**Language:** {get_language_display_name(detected_lang)}")
-                st.info(f"**Confidence:** {confidence:.1%}")
+#         if st.button("🔍 Process Query"):
+#             if query_text:
+#                 detected_lang, confidence = detect_language(query_text)
+#                 st.success("Query processed!")
+#                 st.info(f"**Language:** {get_language_display_name(detected_lang)}")
+#                 st.info(f"**Confidence:** {confidence:.1%}")
                 
-                # Simple intent detection
-                if 'weather' in query_text.lower():
-                    st.info("🌦️ Intent: Weather Information Request")
-                elif 'credit' in query_text.lower() or 'loan' in query_text.lower():
-                    st.info("🏦 Intent: Credit/Loan Information Request")
-                elif 'market' in query_text.lower() or 'price' in query_text.lower():
-                    st.info("💹 Intent: Market Information Request")
-                else:
-                    st.info("❓ Intent: General Agricultural Query")
+#                 # Simple intent detection
+#                 if 'weather' in query_text.lower():
+#                     st.info("🌦️ Intent: Weather Information Request")
+#                 elif 'credit' in query_text.lower() or 'loan' in query_text.lower():
+#                     st.info("🏦 Intent: Credit/Loan Information Request")
+#                 elif 'market' in query_text.lower() or 'price' in query_text.lower():
+#                     st.info("💹 Intent: Market Information Request")
+#                 else:
+#                     st.info("❓ Intent: General Agricultural Query")
     
-    with col4:
-        st.subheader("📱 Export Options")
+#     with col4:
+#         st.subheader("📱 Export Options")
         
-        if query_text:
-            # SMS export
-            if st.button("📱 Export as SMS"):
-                sms_text = create_sms_text(query_text, st.session_state.selected_language)
-                st.success("SMS text generated!")
-                st.code(sms_text)
+#         if query_text:
+#             # SMS export
+#             if st.button("📱 Export as SMS"):
+#                 sms_text = create_sms_text(query_text, st.session_state.selected_language)
+#                 st.success("SMS text generated!")
+#                 st.code(sms_text)
             
-            # Text-to-speech
-            if st.button("🔊 Generate Audio"):
-                audio_data = text_to_speech(query_text, st.session_state.selected_language)
-                if audio_data:
-                    st.success("Audio generated! (Would play in real implementation)")
-                else:
-                    st.warning("Audio generation failed")
+#             # Text-to-speech
+#             if st.button("🔊 Generate Audio"):
+#                 audio_data = text_to_speech(query_text, st.session_state.selected_language)
+#                 if audio_data:
+#                     st.success("Audio generated! (Would play in real implementation)")
+#                 else:
+#                     st.warning("Audio generation failed")
     
-    # Language statistics
-    st.markdown("---")
-    st.subheader("📊 Language Support Statistics")
+#     # Language statistics
+#     st.markdown("---")
+#     st.subheader("📊 Language Support Statistics")
     
-    col5, col6, col7 = st.columns(3)
+#     col5, col6, col7 = st.columns(3)
     
-    with col5:
-        st.metric("Total Languages", len(SUPPORTED_LANGUAGES))
+#     with col5:
+#         st.metric("Total Languages", len(SUPPORTED_LANGUAGES))
     
-    with col6:
-        indian_languages = len([lang for lang in SUPPORTED_LANGUAGES.values() if lang.code != 'en'])
-        st.metric("Indian Languages", indian_languages)
+#     with col6:
+#         indian_languages = len([lang for lang in SUPPORTED_LANGUAGES.values() if lang.code != 'en'])
+#         st.metric("Indian Languages", indian_languages)
     
-    with col7:
-        st.metric("Voice Support", "10/10")
+#     with col7:
+#         st.metric("Voice Support", "10/10")
+
+
 
 def offline_capabilities_demo():
     """Offline capabilities and edge support demo"""
@@ -3295,8 +3297,8 @@ def main():
         performance_analytics()
     elif page == "⚙️ System Configuration":
         system_configuration()
-    elif page == "🌍 Multi-lingual Demo":
-        multilingual_demo()
+    # elif page == "🌍 Multi-lingual Demo":
+    #     multilingual_demo()
     elif page == "📱 Offline Capabilities":
         offline_capabilities_demo()
 

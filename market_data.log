@@ -7,3 +7,13 @@
 2025-08-17 21:22:56,869 | INFO | Fetching market data for Soybean in all
 2025-08-17 21:22:57,351 | WARNING | No records found in API response for Soybean
 2025-08-17 21:22:57,352 | INFO | Using fallback data for Soybean
+2025-08-17 23:39:52,981 | INFO | Fetching market data for Wheat in all
+2025-08-17 23:39:53,585 | INFO | Successfully fetched market data: Wheat @ ₹2700.0/quintal
+2025-08-17 23:39:53,587 | INFO | Fetching market data for Rice in all
+2025-08-17 23:40:08,691 | ERROR | API request timed out
+2025-08-17 23:40:08,693 | INFO | Using fallback data for Rice
+2025-08-17 23:40:08,696 | INFO | Fetching market data for Cotton in all
+2025-08-17 23:40:09,293 | INFO | Successfully fetched market data: Cotton @ ₹5800.0/quintal
+2025-08-17 23:40:09,294 | INFO | Fetching market data for Soybean in all
+2025-08-17 23:40:09,752 | WARNING | No records found in API response for Soybean
+2025-08-17 23:40:09,752 | INFO | Using fallback data for Soybean
