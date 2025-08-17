@@ -1,11 +1,24 @@
 # AgriCredAI - Advanced Agricultural Credit Intelligence Platform
 
-Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence
+_Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence_
 
-[![Python](https://img.shields.io/badge/Python-3.9+-blue)](https://python.org)  
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red)](https://streamlit.io)  
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)  
-[![Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](https://agricred-ai.streamlit.app)
+<div align="center">
+  <img src="logo.png" alt="AgriCredAI Logo" width="120"/>
+
+  <h3>Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence</h3>
+
+  <p>
+    <a href="https://www.python.org/">
+      <img src="https://img.shields.io/badge/Python-3.11-blue" alt="Python"/>
+    </a>
+    <a href="https://streamlit.io/">
+      <img src="https://img.shields.io/badge/Streamlit-1.28+-red" alt="Streamlit"/>
+    </a>
+    <a href="https://your-demo-link.com/">
+      <img src="https://img.shields.io/badge/Demo-Live-brightgreen" alt="Live Demo"/>
+    </a>
+  </p>
+</div>
 
 ---
 
@@ -39,13 +52,53 @@ You can explore the ML training and modeling for our credit risk assessment in t
 
 The model assesses farmer creditworthiness across India with 85-92% accuracy by analyzing 50+ features grouped into these weighted risk categories:
 
-- **Primary Risk Factors (40%)**: Payment history, debt burden, income stability  
-- **Climate & Weather Risks (25%)**: Region-specific drought probability, crop vulnerabilities, temperature stress  
-- **Market & Economic Risks (20%)**: Price volatility, market access, input costs  
-- **Infrastructure & Support (10%)**: Irrigation access, insurance coverage, cooperative membership  
-- **Agricultural Practices (5%)**: Soil health, technology adoption, crop diversification  
+## Key Innovation: Multi-Factor Risk Scoring
 
-The risk model integrates regional intelligence for 8 major Indian states, incorporates interaction effects and protective factors, and uses ensemble methods for optimal accuracy. It enables business use cases such as risk-based pricing, financial inclusion, and portfolio management with real-time scoring powered by Streamlit.
+### 1. **Primary Risk Factors (40% weight)**
+
+- **Payment History**: Track record of loan repayments
+- **Debt Burden**: Debt-to-income ratio with exponential penalties above 50%
+- **Income Stability**: Yield consistency based on farming practices
+
+### 2. **Climate & Weather Risks (25% weight)**
+
+- **Drought Risk**: Region-specific drought probability (Maharashtra 60% vs Punjab 20%)
+- **Crop-Specific Vulnerabilities**: Rice/Cotton/Sugarcane more frost-sensitive
+- **Temperature Stress**: Non-linear impact of extreme weather
+
+### 3. **Market & Economic Risks (20% weight)**
+
+- **Price Volatility**: Cotton (35%) vs Wheat (12%) volatility
+- **Market Access**: Distance to mandis affects selling costs
+- **Input Cost Pressure**: Fertilizer and seed cost fluctuations
+
+### 4. **Infrastructure & Support (10% weight)**
+
+- **Irrigation Access**: Reduces drought risk by 30%
+- **Insurance Coverage**: Safety net against crop failures
+- **Cooperative Membership**: Community support systems
+
+### 5. **Agricultural Practices (5% weight)**
+
+- **Soil Health**: Nutrient deficiency and degradation risks
+- **Technology Adoption**: Modern farming techniques
+- **Diversification**: Multiple crops reduce single-crop risk
+
+## Regional Intelligence
+
+- **8 Major States**: Punjab (wheat/rice), Maharashtra (cotton), UP (diverse), etc.
+- **State-Specific Patterns**: Irrigation rates, cooperative culture, income levels
+- **Crop-Region Matching**: Realistic crop selection based on geography
+
+## Advanced Features
+
+- **Interaction Effects**: High debt + weather stress = exponential risk
+- **Protective Factors**: Education, cooperatives, insurance reduce risk
+- **Ensemble Methods**: Random Forest, XGBoost, LightGBM for optimal accuracy [ Best Model: XGBoost (CV AUC: 0.9060) ]
+- **SHAP Explanations**: Transparent decision-making for loan officers
+- **20% Default Rate**: Realistic for agricultural sector
+
+It enables business use cases such as risk-based pricing, financial inclusion, and portfolio management with real-time scoring powered by Streamlit.
 
 ---
 
@@ -64,7 +117,7 @@ The **AgenticOrchestrator** manages three autonomous AI agents concurrently, eac
 
 ### Machine Learning Risk Model  
 - Uses 50+ hyper-realistic, correlated features covering demographics, climate stress, market volatility, and physical infrastructure  
-- Ensemble of Random Forest, XGBoost & LightGBM models achieving 92.4% AUC  
+- Ensemble of Random Forest, XGBoost & LightGBM models achieving 90.60% AUC  
 - Uses SHAP for transparent feature importance explanations
 
 ### Dashboard & User Interface  
@@ -83,6 +136,33 @@ A comprehensive Streamlit UI with nine sections delivers rich, interactive insig
 The autonomous agents continuously collect outcome data to refine loan decisions and improve the machine learning models over time.
 
 ---
+## 🏗️ System Architecture
+```mermaid
+graph TB
+    A[Farmer Data Input] --> B[Agentic AI Orchestrator]
+    B --> C[Dynamic Financing Agent]
+    B --> D[Carbon Credit Agent] 
+    B --> E[Market Advisory Agent]
+    
+    F[Weather APIs] --> B
+    G[Market Data APIs] --> B
+    H[Public Data Integration] --> B
+    I[Multi-lingual Voice Input] --> B
+    
+    C --> J[Loan Structuring]
+    D --> K[Carbon Tokenization]
+    E --> L[Market Intelligence]
+    
+    J --> M[Financial Dashboard]
+    K --> M
+    L --> M
+    
+    M --> N[Risk Management]
+    M --> O[Portfolio Analytics]
+    M --> P[Performance Monitoring]
+```
+---
+
 
 ## 🤖 Key Innovations & Differentiators
 
@@ -113,7 +193,7 @@ The autonomous agents continuously collect outcome data to refine loan decisions
 | Portfolio Growth (₹ Cr)      | ₹847.3                | +12.4% YoY growth     | Significant expansion |
 | Loan Decision Time           | 72 hours              | 2 minutes             | 99% faster decisions  |
 | Loan Approval Rate           | 68%                   | 84%                   | +24% more approvals   |
-| Risk Model AUC Accuracy      | ~87%–91% (single)     | 92.4% (ensemble)      | Best-in-class accuracy|
+
 
 ---
 
@@ -165,20 +245,6 @@ text
 
 ---
 
-## 👥 Team
-
-- AI/ML Engineer  
-- Backend Developer  
-- Frontend Developer  
-- Data Scientist  
-- Agricultural Finance Expert  
-- Project Lead  
-- Technical Lead  
-- Business Analyst  
-- Product Manager  
-- UX Designer  
-
----
 
 ## 🤝 Contribution
 
@@ -200,5 +266,3 @@ We welcome contributions! Please refer to our [Contributing Guidelines](CONTRIBU
 Revolutionizing Agricultural Lending with AI
 
 *Made with ❤️ by the AgriCredAI Team*
-
-[![Star this repository](https://img.shields.io/github/stars/yourusername/agricred-ai?style=social)](https://github.com/yourusername/agricred-ai)
