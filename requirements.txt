@@ -29,3 +29,5 @@ typing-extensions==4.7.1
 
 # Utilities
 loguru==0.7.0
+
+rich==13.9.4
