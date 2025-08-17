@@ -21,9 +21,7 @@ _Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligen
 ---
 
 ## 🚀 Project Overview
-
-**AgriCredAI** is an innovative agricultural lending platform that harnesses **Agentic AI**, **Machine Learning**, and **Real-time Data Intelligence** to revolutionize credit risk assessment for financial institutions and enhance financial inclusion for farmers.
-
+**AgriCredAI** is an innovative agricultural lending platform that harnesses **Agentic AI**, **Machine Learning**, and **Real-time Data Intelligence** to revolutionize credit risk assessment for financial institutions and enhance financial inclusion for farmers. Additionally, the platform integrates **carbon credit tracking and tokenization**, enabling farmers to participate in **green finance initiatives** by monetizing sustainable practices. These carbon credits are securely recorded and managed on a blockchain-like ledger, ensuring transparency and immutability while linking environmental impact directly to agricultural financing.
 ### 🎯 Problem Statement
 Agricultural lending traditionally faces challenges such as:
 - High default rates (8-15% industry average)
@@ -35,7 +33,7 @@ Agricultural lending traditionally faces challenges such as:
 ### 💡 Our Solution
 AgriCredAI delivers an AI-driven platform that features:
 - Autonomous Agentic AI for smart decision-making
-- Advanced ML models with 85-92% prediction accuracy
+- Advanced ML models with High prediction accuracy
 - Real-time monitoring of 50+ influential variables
 - Dynamic, crop cycle-aligned loan structuring
 - Carbon credit tokenization for sustainable finance
@@ -108,6 +106,11 @@ It enables business use cases such as risk-based pricing, financial inclusion, a
 
 ### Agentic AI Orchestration  
 The **AgenticOrchestrator** manages three autonomous AI agents concurrently, each with perception → reasoning → action → feedback learning loops:
+
+```mermaid
+graph LR
+    A[Perception] --> B[Reasoning] --> C[Action] --> D[Feedback] --> A
+```
 
 1. **Dynamic Financing Agent**: Tailors loan amounts and adaptive repayments based on real-time risk and crop cycles  
 2. **Carbon Credit Agent**: Calculates CO₂ sequestration by farmers and issues tokenized carbon credits on a blockchain-like ledger  
@@ -203,13 +206,13 @@ text
 ### Installation
 
 1. Clone the repo  
-git clone https://github.com/Aastik-Srivastava/AgriCredAI.git
+git clone https://github.com/Aastik-Srivastava/AgriCredAI.git__
 cd agricred-ai
 
 text
 
 2. Create and activate virtual environment  
-python -m venv venv
+python -m venv venv__
 source venv/bin/activate # Windows: venv\Scripts\activate
 
 text
@@ -238,6 +241,45 @@ text
 
 ---
 
+## 📁 Project Structure
+```
+agricred-ai/
+├── 📄 advanced_app.py                    # Main Streamlit application
+├── 🤖 agentic_core.py                   # Agentic AI framework
+├── 💰 dynamic_financing_agent.py        # Financing intelligence agent
+├── 🌱 carbon_credit_agent.py            # Carbon credit management
+├── 📊 market_advisory_agent.py          # Market intelligence agent
+├── 🎭 agentic_ai_demo.py               # Interactive demo interface
+├── 🧠 advanced_data_pipeline.py         # Data processing pipeline
+├── ⚠️ weather_alert_system.py          # Weather monitoring system
+├── 🎯 advanced_ml_model.py              # ML model implementation
+├── 🌐 multilingual_multimodal.py        # Voice and multi-language support
+├── 📊 public_data_integration.py        # Public data sources integration
+├── 🔄 offline_edge_support.py           # Offline and edge computing support
+├── 🎯 explainable_ai_core.py            # AI explainability framework
+├── 🏦 credit_db_maker.py                # Database utilities
+├── ⚙️ config.py                        # Configuration settings
+├── 📋 requirements.txt                  # Python dependencies
+├── 📖 README.md                        # This file
+├── 🗄️ data_cache/                      # Data storage directory
+├── 🗄️ offline_cache/                   # Offline data cache
+├── 🎤 vosk_model/                      # Voice recognition models
+└── 📊 myschemes_full.json              # Government schemes data
+```
+
+---
+## 🔮 Future Enhancements
+### Phase 2: Advanced Intelligence
+- 🛰️ Satellite Integration - Real crop monitoring via Planet Labs API
+- 📱 Mobile App - Farmer-facing mobile application
+- 🔊 Enhanced Voice Assistant - Advanced multi-language voice interface
+- 🧮 Blockchain - Full decentralized carbon credit ledger
+### Phase 3: Ecosystem Expansion
+- 🏭 Supply Chain Finance - End-to-end agricultural financing
+- 🏪 Marketplace Integration - Direct farmer-to-buyer platform
+- 📚 Financial Literacy - AI-powered education modules
+- 🌍 Global Expansion - International market adaptation
+---
 
 ## 🤝 Contribution
 
