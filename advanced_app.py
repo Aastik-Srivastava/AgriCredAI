@@ -715,7 +715,7 @@ def display_sidebar():
     <div class="sidebar-logo">
         <h2>🏦 AgriCredAI</h2>
         <p><strong>Agricultural Lending Intelligence</strong></p>
-        <p style="font-size: 12px; opacity: 0.8;">Agricultural Lending Intelligence</p>
+        <p style="font-size: 12px; opacity: 0.8;">Credit & Risk Insights for Farmers</p>
     </div>
     """, unsafe_allow_html=True)
 
