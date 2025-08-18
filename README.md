@@ -101,6 +101,15 @@ The model assesses farmer creditworthiness across India with 85-92% accuracy by 
 It enables business use cases such as risk-based pricing, financial inclusion, and portfolio management with real-time scoring powered by Streamlit.
 
 ---
+### Credit Score Formula
+![Credit Score Formula](credit_png.png)
+
+### Risk Score Formula
+![Risk Score Formula](risk_png.png)
+
+### Loan Capacity Formula
+![Loan Capacity Formula](loan_png.png)
+
 
 ## 🏗️ How It Works: System Architecture & Workflow
 
