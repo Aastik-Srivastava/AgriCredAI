@@ -19,14 +19,14 @@ if 'selected_language' not in st.session_state:
 
 # Page configuration
 st.set_page_config(
-    page_title=translate_text("Capital One AgriCred AI - Agricultural Credit Intelligence Platform", lang),
+    page_title=translate_text("AgriCred AI - Agricultural Credit Intelligence Platform", lang),
     page_icon="🏦",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
         'Get Help': 'https://github.com/Aastik-Srivastava/AgriCredAI',
         'Report a bug': 'https://github.com/Aastik-Srivastava/AgriCredAI/issues',
-        'About': translate_text("Capital One AgriCred AI - Revolutionizing agricultural lending with AI", lang)
+        'About': translate_text("AgriCred AI - Revolutionizing agricultural lending with AI", lang)
     }
 )
 
@@ -704,7 +704,7 @@ st.markdown("""
 def display_main_header():
     st.markdown(f"""
     <div class="main-header">
-        <h1>🏦 {translate_text("Capital One AgriCred AI Platform", lang)}</h1>
+        <h1>🏦 {translate_text("AgriCred AI Platform", lang)}</h1>
         <h3>{translate_text("Advanced Agricultural Credit Intelligence & Risk Management", lang)}</h3>
         <p>{translate_text("Empowering financial institutions with AI-driven insights for agricultural lending", lang)}</p>
     </div>
@@ -713,8 +713,8 @@ def display_sidebar():
     # --- Branding ---
     st.sidebar.markdown(f"""
     <div class="sidebar-logo">
-        <h2>🏦 Capital One</h2>
-        <p><strong>AgriCred AI</strong></p>
+        <h2>🏦 AgriCredAI</h2>
+        <p><strong>Agricultural Lending Intelligence</strong></p>
         <p style="font-size: 12px; opacity: 0.8;">Agricultural Lending Intelligence</p>
     </div>
     """, unsafe_allow_html=True)
