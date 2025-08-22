@@ -41,3 +41,38 @@
 2025-08-18 19:48:24,986 | INFO | Fetching market data for Soybean in all
 2025-08-18 19:48:26,785 | WARNING | No records found in API response for Soybean
 2025-08-18 19:48:26,786 | INFO | Using fallback data for Soybean
+2025-08-20 16:36:22,681 | INFO | Fetching market data for Wheat in all
+2025-08-20 16:36:45,144 | ERROR | API request timed out
+2025-08-20 16:36:45,145 | INFO | Using fallback data for Wheat
+2025-08-20 16:36:45,147 | INFO | Fetching market data for Rice in all
+2025-08-20 16:37:00,317 | ERROR | API request timed out
+2025-08-20 16:37:00,318 | INFO | Using fallback data for Rice
+2025-08-20 16:37:00,319 | INFO | Fetching market data for Cotton in all
+2025-08-20 16:37:17,626 | ERROR | API request timed out
+2025-08-20 16:37:17,627 | INFO | Using fallback data for Cotton
+2025-08-20 16:37:17,629 | INFO | Fetching market data for Soybean in all
+2025-08-20 16:37:34,499 | ERROR | API request timed out
+2025-08-20 16:37:34,502 | INFO | Using fallback data for Soybean
+2025-08-20 16:38:05,824 | INFO | Fetching market data for Wheat in all
+2025-08-20 16:38:20,984 | ERROR | API request timed out
+2025-08-20 16:38:20,986 | INFO | Using fallback data for Wheat
+2025-08-20 16:38:20,987 | INFO | Fetching market data for Rice in all
+2025-08-20 16:38:37,472 | ERROR | API request timed out
+2025-08-20 16:38:37,474 | INFO | Using fallback data for Rice
+2025-08-20 16:38:37,479 | INFO | Fetching market data for Cotton in all
+2025-08-20 16:38:37,485 | ERROR | Failed to connect to data.gov.in API
+2025-08-20 16:38:37,485 | INFO | Using fallback data for Cotton
+2025-08-20 16:38:37,486 | INFO | Fetching market data for Soybean in all
+2025-08-20 16:38:37,488 | ERROR | Failed to connect to data.gov.in API
+2025-08-20 16:38:37,488 | INFO | Using fallback data for Soybean
+2025-08-22 09:19:42,874 | INFO | Fetching market data for Wheat in all
+2025-08-22 09:19:43,773 | INFO | Successfully fetched market data: Wheat @ ₹2450.0/quintal
+2025-08-22 09:19:43,777 | INFO | Fetching market data for Rice in all
+2025-08-22 09:19:46,807 | WARNING | No records found in API response for Rice
+2025-08-22 09:19:46,807 | INFO | Using fallback data for Rice
+2025-08-22 09:19:46,811 | INFO | Fetching market data for Cotton in all
+2025-08-22 09:19:48,290 | WARNING | No records found in API response for Cotton
+2025-08-22 09:19:48,290 | INFO | Using fallback data for Cotton
+2025-08-22 09:19:48,295 | INFO | Fetching market data for Soybean in all
+2025-08-22 09:19:48,813 | WARNING | No records found in API response for Soybean
+2025-08-22 09:19:48,814 | INFO | Using fallback data for Soybean
