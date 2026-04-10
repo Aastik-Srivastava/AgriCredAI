@@ -1,5 +1,5 @@
-# AGENTIC AI DEMO INTERFACE
-# Streamlit interface to showcase the agentic AI system in action
+# MULTI-AGENT ADVISORY SYSTEM INTERFACE
+# Streamlit interface to showcase the multi-agent advisory system in action
 
 import streamlit as st
 import asyncio
@@ -13,8 +13,8 @@ from dynamic_financing_agent import DynamicFinancingAgent
 from carbon_credit_agent import CarbonCreditAgent  
 from market_advisory_agent import MarketAdvisoryAgent
 
-def initialize_agentic_system():
-    """Initialize the complete agentic AI system"""
+def initialize_advisory_system():
+    """Initialize the complete multi-agent advisory system"""
     if 'orchestrator' not in st.session_state:
         orchestrator = AgenticOrchestrator()
         
@@ -201,12 +201,12 @@ def display_market_advisory_results(action):
             st.write(f"**Step {step.get('step', '?')}:** {step.get('action', 'Unknown')} - *{step.get('timeline', 'Unknown')}*")
 
 def agentic_ai_demo():
-    """Main demo interface"""
-    st.title("🤖 Agentic AI System - Live Demo")
-    st.markdown("**Experience the power of autonomous AI agents working together to provide comprehensive agricultural intelligence.**")
+    """Main interface for the Multi-Agent Advisory System"""
+    st.title("🤖 Multi-Agent Advisory System")
+    st.markdown("**An automated pipeline of specialized AI agents that work together to provide comprehensive agricultural and financial analysis.**")
     
     # Initialize system
-    initialize_agentic_system()
+    initialize_advisory_system()
     
     # Demo farmer profiles
     demo_farmers = {
@@ -280,7 +280,7 @@ def agentic_ai_demo():
     st.sidebar.write(f"**Insurance:** {'✅' if farmer['insurance_coverage'] else '❌'}")
     
     # Run analysis button
-    if st.button("🚀 **Run Agentic Analysis**", type="primary"):
+    if st.button("🚀 **Run Advisory Analysis**", type="primary"):
         st.markdown("---")
         st.subheader("🔄 Multi-Agent Analysis in Progress...")
         
@@ -298,7 +298,7 @@ def agentic_ai_demo():
     # Display results if available
     if st.session_state.agent_results:
         st.markdown("---")
-        st.header("📊 Agentic AI Results")
+        st.header("📊 Advisory System Results")
         
         results = st.session_state.agent_results
         
@@ -371,7 +371,7 @@ def agentic_ai_demo():
 # Streamlit app configuration
 if __name__ == "__main__":
     st.set_page_config(
-        page_title="AgriCred AI - Agentic Demo",
+        page_title="AgriCred AI - Multi-Agent Advisory",
         page_icon="🤖", 
         layout="wide"
     )

@@ -1,0 +1,16 @@
+{
+  "models": {
+    "reasoning": {
+      "provider": "ollama",
+      "name": "phi3:mini"
+    },
+    "editing": {
+      "provider": "ollama",
+      "name": "qwen2.5-coder:3b"
+    },
+    "embedding": {
+      "provider": "ollama",
+      "name": "nomic-embed-text"
+    }
+  }
+}

@@ -1,7 +1,5 @@
 # AgriCredAI - Advanced Agricultural Credit Intelligence Platform
 
-_Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence_
-
 <div align="center">
   <h3>Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence</h3>
 
@@ -13,7 +11,7 @@ _Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligen
       <img src="https://img.shields.io/badge/Streamlit-1.28+-red" alt="Streamlit"/>
     </a>
     <a href="https://your-demo-link.com/">
-      <img src="https://img.shields.io/badge/Demo-Live-brightgreen" alt="Live Demo"/>
+      <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen" alt="Live Demo"/>
     </a>
   </p>
 </div>
@@ -21,82 +19,46 @@ _Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligen
 ---
 
 ## 🚀 Project Overview
-**AgriCredAI** is an innovative agricultural lending platform that harnesses **Agentic AI**, **Machine Learning**, and **Real-time Data Intelligence** to revolutionize credit risk assessment for financial institutions and enhance financial inclusion for farmers. Additionally, the platform integrates **carbon credit tracking and tokenization**, enabling farmers to participate in **green finance initiatives** by monetizing sustainable practices. These carbon credits are securely recorded and managed on a blockchain-like ledger, ensuring transparency and immutability while linking environmental impact directly to agricultural financing.
+**AgriCredAI** is an innovative FinTech platform that harnesses **Agentic AI**, **Machine Learning**, and **Real-time Data Polling** to revolutionize credit risk assessment for financial institutions. By ingesting dynamic variables such as live OpenWeatherMap data and Government Market APIs, the platform actively reduces default rates and enhances financial inclusion for small-scale farmers through fault-tolerant, data-driven loan structuring.
 
 - 🌐 Live Demo: https://AgriCredAI.streamlit.app
 
-  
 ### 🎯 Problem Statement
 Agricultural lending traditionally faces challenges such as:
 - High default rates (8-15% industry average)
 - Manual and slow risk assessment
-- Limited data integration from critical sources like weather, market, and soil
-- Poor access for small-scale farmers
+- Disconnected infrastructure lacking real-time environmental data (weather, soil)
 - Reactive instead of proactive risk management
 
 ### 💡 Our Solution
 AgriCredAI delivers an AI-driven platform that features:
-- Autonomous Agentic AI for smart decision-making
-- Advanced ML models with High prediction accuracy
-- Real-time monitoring of 50+ influential variables
-- Dynamic, crop cycle-aligned loan structuring
-- Carbon credit tokenization for sustainable finance
-- Multi-lingual voice-enabled accessibility
-- Weather forecasting alerts for proactive risk mitigation
+- **Autonomous Agentic AI** for smart decision-making
+- **Advanced XGBoost ML models** delivering high prediction accuracy
+- **Real-time API Polling** monitoring live weather risks and market volatility
+- **Dynamic Loan Structuring** aligned with crop cycles and environmental reality
+- **Enterprise-Grade Fault Tolerance** handling API timeouts and SQLite transactions
 
 ---
 
 ## 📈 Hyper-Realistic Agricultural Credit Risk Model
 
-You can explore the ML training and modeling for our credit risk assessment in this [Google Colab notebook](https://colab.research.google.com/drive/12xL5iaHnDJRT7C_rj4rDcs5yKoJI8jcn?usp=sharing).
-
 The model assesses farmer creditworthiness across India with 85-92% accuracy by analyzing 50+ features grouped into these weighted risk categories:
 
-## Key Innovation: Multi-Factor Risk Scoring
-
 ### 1. **Primary Risk Factors (40% weight)**
-
 - **Payment History**: Track record of loan repayments
 - **Debt Burden**: Debt-to-income ratio with exponential penalties above 50%
 - **Income Stability**: Yield consistency based on farming practices
 
 ### 2. **Climate & Weather Risks (25% weight)**
-
-- **Drought Risk**: Region-specific drought probability (Maharashtra 60% vs Punjab 20%)
-- **Crop-Specific Vulnerabilities**: Rice/Cotton/Sugarcane more frost-sensitive
-- **Temperature Stress**: Non-linear impact of extreme weather
+- Live integrations pulling from OpenWeatherMap to identify:
+- **Drought & Frost Risks**: Region-specific and crop-specific vulnerability alerts
 
 ### 3. **Market & Economic Risks (20% weight)**
-
-- **Price Volatility**: Cotton (35%) vs Wheat (12%) volatility
-- **Market Access**: Distance to mandis affects selling costs
+- **Price Volatility**: Evaluated using realtime Gov.in Market Data API integrations
 - **Input Cost Pressure**: Fertilizer and seed cost fluctuations
 
-### 4. **Infrastructure & Support (10% weight)**
-
-- **Irrigation Access**: Reduces drought risk by 30%
-- **Insurance Coverage**: Safety net against crop failures
-- **Cooperative Membership**: Community support systems
-
-### 5. **Agricultural Practices (5% weight)**
-
-- **Soil Health**: Nutrient deficiency and degradation risks
-- **Technology Adoption**: Modern farming techniques
-- **Diversification**: Multiple crops reduce single-crop risk
-
-## Regional Intelligence
-
-- **8 Major States**: Punjab (wheat/rice), Maharashtra (cotton), UP (diverse), etc.
-- **State-Specific Patterns**: Irrigation rates, cooperative culture, income levels
-- **Crop-Region Matching**: Realistic crop selection based on geography
-
-## Advanced Features
-
-- **Interaction Effects**: High debt + weather stress = exponential risk
-- **Protective Factors**: Education, cooperatives, insurance reduce risk
-- **Ensemble Methods**: Random Forest, XGBoost, LightGBM for optimal accuracy [ Best Model: XGBoost (CV AUC: 0.9060) ]
-- **SHAP Explanations**: Transparent decision-making for loan officers
-- **20% Default Rate**: Realistic for agricultural sector
+### 4. **Infrastructure & Practices (15% weight)**
+- **Irrigation Access**, **Insurance Coverage**, and **Soil Health Index**
 
 It enables business use cases such as risk-based pricing, financial inclusion, and portfolio management with real-time scoring powered by Streamlit.
 
@@ -111,86 +73,58 @@ It enables business use cases such as risk-based pricing, financial inclusion, a
 ![Loan Capacity Formula](loan_png.png)
 
 
-## 🏗️ How It Works: System Architecture & Workflow
+## 🏗️ System Architecture & Orchestration
 
-### Data Ingestion & Perception  
-- Data sources: Agmarknet (commodity prices), OpenWeatherMap (weather), satellite imagery, soil sensors, credit bureau data, farmer surveys  
-- Collection Agents aggregate diverse sensor and API data asynchronously into a local SQLite cache  
-
-### Agentic AI Orchestration  
-The **AgenticOrchestrator** manages three autonomous AI agents concurrently, each with perception → reasoning → action → feedback learning loops:
+### Agentic AI Orchestration
+The **AgenticOrchestrator** manages autonomous AI agents concurrently. Each agent evaluates live infrastructure variables operating on a continuous learning loop:
 
 ```mermaid
 graph LR
     A[Perception] --> B[Reasoning] --> C[Action] --> D[Feedback] --> A
 ```
 
-1. **Dynamic Financing Agent**: Tailors loan amounts and adaptive repayments based on real-time risk and crop cycles  
-2. **Carbon Credit Agent**: Calculates CO₂ sequestration by farmers and issues tokenized carbon credits on a blockchain-like ledger  
-3. **Market Advisory Agent**: Provides intelligent pricing forecasts and sale recommendations for crop marketing
+### Overall System Architecture
+Built defensively with clean separation-of-concerns using `.env` configurations and SQLite abstraction layers.
 
-### Dashboard & User Interface  
-A comprehensive Streamlit UI with nine sections delivers rich, interactive insights:  
-- Executive Summary  
-- Portfolio Analytics  
-- Credit Risk Scoring  
-- Agentic AI Demo  
-- Weather Risk Monitor  
-- Market Intelligence  
-- Geographic Risk Mapping  
-- Performance Analytics  
-- System Configuration
-
-### Feedback & Continuous Learning  
-The autonomous agents continuously collect outcome data to refine loan decisions and improve the machine learning models over time.
-
----
-## 🏗️ System Architecture
 ```mermaid
 graph TB
     A[Farmer Data Input] --> B[Agentic AI Orchestrator]
     B --> C[Dynamic Financing Agent]
-    B --> D[Carbon Credit Agent] 
     B --> E[Market Advisory Agent]
     
     F[Weather APIs] --> B
     G[Market Data APIs] --> B
-    H[Public Data Integration] --> B
-    I[Multi-lingual Voice Input] --> B
+    H[SQLite Database] --> B
     
     C --> J[Loan Structuring]
-    D --> K[Carbon Tokenization]
     E --> L[Market Intelligence]
     
     J --> M[Financial Dashboard]
-    K --> M
     L --> M
     
     M --> N[Risk Management]
     M --> O[Portfolio Analytics]
     M --> P[Performance Monitoring]
 ```
----
 
+---
 
 ## 🤖 Key Innovations & Differentiators
 
-- **Agentic AI System** with autonomous, real-time acting agents, not just static dashboards  
-- **Hyper-Realistic Synthetic & Real Data** capturing 50+ interconnected features across regions  
-- **Explainable AI with SHAP** to build trust and compliance with lenders and regulators  
-- **Sustainability Integration** through blockchain-style carbon credit tokenization linked to financing  
-- **End-to-End Platform** spanning farmer onboarding to portfolio-level monitoring in one seamless interface  
+- **Agentic AI System**: Autonomous reasoning loops powering the advisory mechanics, rather than static if-else logic.
+- **Fault-Tolerant External Polling**: Defensive `requests` implementation with graceful fallback data mechanisms when government APIs experience downtime.
+- **Hyper-Realistic Pipeline**: Generating and utilizing realistic crop distributions across 2,000 seeded farmers.
+- **Explainable AI with SHAP**: Providing transparent decision-making logs for loan officers, building enterprise trust.
 
 ---
 
 ## 🔧 Technical Highlights
 
-- Built with Python 3.11, Streamlit, and AsyncIO for asynchronous concurrent processing  
-- Ensemble ML stack: Random Forest, XGBoost, LightGBM tuned for agricultural data  
-- Interactive data visualization powered by Plotly  
-- Robust enterprise-grade error handling, logging with Loguru  
-- Voice-enabled multi-lingual support with speech recognition and TTS  
-- Modular design enabling easy agent additions like Insurance or Subsidy agents  
+- **Frontend & App Logic:** Built natively with Python 3.11 and Streamlit 1.28+
+- **Machine Learning Stack:** Ensemble ML utilizing XGBoost, LightGBM, and Random Forest
+- **Data Engineering:** Managed via Pandas DataFrames routing into a local `sqlite3` cache
+- **Visualizations:** Interactive dashboards powered by Plotly (`px` and `go`)
+- **Security & CI:** Decoupled secrets management via `dotenv` and custom `config.py`
 
 ---
 
@@ -203,112 +137,76 @@ graph TB
 | Loan Decision Time           | 72 hours              | 2 minutes             | 99% faster decisions  |
 | Loan Approval Rate           | 68%                   | 84%                   | +24% more approvals   |
 
-
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
-Python 3.11+
-pip or conda package manager
-Git (for cloning repo)
-
-text
+- Python 3.11+
+- Git
 
 ### Installation
 
 1. Clone the repo  
-git clone https://github.com/Aastik-Srivastava/AgriCredAI.git__
+```bash
+git clone https://github.com/Aastik-Srivastava/AgriCredAI.git
 cd AgriCredAI
-
-text
+```
 
 2. Create and activate virtual environment  
-python -m venv venv__
+```bash
+python -m venv venv
 source venv/bin/activate # Windows: venv\Scripts\activate
-
-text
+```
 
 3. Install dependencies  
+```bash
 pip install -r requirements.txt
+```
 
-text
-
-4. Set up configuration  
-cp config_example.py config.py
-
-Edit config.py with your API keys
-text
+4. Configure your environment keys
+Create an `.env` file in the root directory and add your OpenWeatherMap key:
+```env
+WEATHER_API_KEY=your_openweathermap_api_key_here
+```
 
 5. Run the Streamlit app  
+```bash
 streamlit run advanced_app.py
-
-text
-
-6. Access platform at:  
-Local URL: http://localhost:8501
-Network URL: http://your-ip:8501
-
-text
+```
 
 ---
 
 ## 📁 Project Structure
 ```
 AgriCredAI/
-├── 📄 advanced_app.py                    # Main Streamlit application
+├── 📄 advanced_app.py                   # Main Streamlit application
+├── ⚙️ config.py                         # Decoupled environment variables architecture
+├── 🧠 advanced_data_pipeline.py         # Data processing & SQLite pipeline
+├── ⚠️ weather_dashboard.py              # Weather monitoring system & Risk Mapping
+├── 🎯 advanced_ml_model.py              # ML model implementation & Pickling
 ├── 🤖 agentic_core.py                   # Agentic AI framework
 ├── 💰 dynamic_financing_agent.py        # Financing intelligence agent
-├── 🌱 carbon_credit_agent.py            # Carbon credit management
 ├── 📊 market_advisory_agent.py          # Market intelligence agent
-├── 🎭 agentic_ai_demo.py               # Interactive demo interface
-├── 🧠 advanced_data_pipeline.py         # Data processing pipeline
-├── ⚠️ weather_alert_system.py          # Weather monitoring system
-├── 🎯 advanced_ml_model.py              # ML model implementation
-├── 🌐 multilingual_multimodal.py        # Voice and multi-language support
-├── 📊 public_data_integration.py        # Public data sources integration
-├── 🔄 offline_edge_support.py           # Offline and edge computing support
-├── 🎯 explainable_ai_core.py            # AI explainability framework
-├── 🏦 credit_db_maker.py                # Database utilities
-├── ⚙️ config.py                        # Configuration settings
+├── 🎯 explainable_ai_core.py            # SHAP & AI explainability framework
 ├── 📋 requirements.txt                  # Python dependencies
-├── 📖 README.md                        # This file
-├── 🗄️ data_cache/                      # Data storage directory
-├── 🗄️ offline_cache/                   # Offline data cache
-├── 🎤 vosk_model/                      # Voice recognition models
-└── 📊 myschemes_full.json              # Government schemes data
+└── 📖 README.md                         # Project documentation
 ```
 
 ---
-## 🔮 Future Enhancements
-### Phase 2: Advanced Intelligence
-- 🛰️ Satellite Integration - Real crop monitoring via Planet Labs API
-- 📱 Mobile App - Farmer-facing mobile application
-- 🔊 Enhanced Voice Assistant - Advanced multi-language voice interface
-- 🧮 Blockchain - Full decentralized carbon credit ledger
-### Phase 3: Ecosystem Expansion
-- 🏭 Supply Chain Finance - End-to-end agricultural financing
-- 🏪 Marketplace Integration - Direct farmer-to-buyer platform
-- 📚 Financial Literacy - AI-powered education modules
-- 🌍 Global Expansion - International market adaptation
----
-
-## 🤝 Contribution
-
-We welcome contributions! Please refer to our [Contributing Guidelines](CONTRIBUTING.md).
+## 🔮 Roadmap / Future Enhancements
+- **Automated CI/CD**: Integrate GitHub Actions for automated unit testing upon pull requests.
+- **Advanced Graphing Databases**: Transition backend logic from SQLite to Neo4j to properly map complex farmer-cooperative relationships.
+- **Push Notification Microservice**: Upgrade the Streamlit UI alert structure into a background task queue (e.g. Celery) that dispatches email warnings on severe weather.
 
 ---
 
-## 📞 Contact & Support
-
-- Gmail: srivastavaaastik@gmail.com  
-
+## 📞 Contact
+- Email: srivastavaaastik@gmail.com  
 
 ---
 
-## 🏆 AgriCredAI Platform
-
-Revolutionizing Agricultural Lending with AI
-
-*Made with ❤️ by the AgriCredAI Team*
+<div align="center">
+  <h3>🏆 AgriCredAI Platform</h3>
+  <p><i>Made with ❤️ by the AgriCredAI Team</i></p>
+</div>

@@ -312,7 +312,7 @@ class AdvancedCreditModel:
         # Protective factors
         coop_protection = arrays['cooperative_membership'] * 0.02
         diversification_protection = arrays['diversification_index'] * 0.015
-        tech_protection = arrays['technology_adoption'] * 0.01
+        tech_protection = arrays['technology_adoption'] * 0.01 
         education_protection = (arrays['education_level'] / 5) * 0.01
 
         # Calculate total risk score

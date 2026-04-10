@@ -46,16 +46,16 @@ import random
 import io, wave, os
 from sklearn.ensemble import RandomForestRegressor
 
-
-
 # Custom modules (assuming these are in your project directory)
 from agentic_ai_demo import agentic_ai_demo
 from advanced_data_pipeline import AdvancedDataPipeline
 from advanced_ml_model import AdvancedCreditModel
 from weather_alert_system import WeatherAlertSystem, setup_alerts_table
+from weather_dashboard import weather_risk_monitor          # real OWM data
 from config import (
-    MODEL_PATH, SCALER_PATH,  # Paths for ML model and scaler
-    WEATHER_API_KEY, MARKET_API_KEY, DATABASE_PATH, WEATHER_API_BASE_URL, WEATHER_UNITS, ALERT_CHECK_INTERVAL # Weather API and database config
+    MODEL_PATH, SCALER_PATH,
+    WEATHER_API_KEY, MARKET_API_KEY, DATABASE_PATH,
+    WEATHER_API_BASE_URL, WEATHER_UNITS, ALERT_CHECK_INTERVAL
 )
 
 # Multi-lingual support
@@ -244,187 +244,6 @@ from credit_db_maker import store_credit_transaction, DB_PATH, CREDIT_PRICE_USD,
 # Initialize session state
 if 'pipeline' not in st.session_state:
     st.session_state.pipeline = AdvancedDataPipeline()
-
-# Multi-lingual functions
-def detect_language(text: str) -> Tuple[str, float]:
-    """Detect language of input text using heuristics and keyword matching"""
-    if not text or len(text.strip()) < 3:
-        return 'en', 0.5
-    
-    text_lower = text.lower().strip()
-    
-    # Language-specific keyword detection
-    language_keywords = {
-        'hi': ['क्या', 'है', 'में', 'के', 'का', 'की', 'और', 'या', 'नहीं', 'हाँ'],
-        'mr': ['काय', 'आहे', 'मध्ये', 'चा', 'ची', 'आणि', 'किंवा', 'नाही', 'होय'],
-        'bn': ['কি', 'হয়', 'মধ্যে', 'এর', 'এবং', 'বা', 'না', 'হ্যাঁ'],
-        'te': ['ఏమి', 'ఉంది', 'లో', 'యొక్క', 'మరియు', 'లేదా', 'లేదు', 'అవును'],
-        'ta': ['என்ன', 'உள்ளது', 'இல்', 'என்ற', 'மற்றும்', 'அல்லது', 'இல்லை', 'ஆம்'],
-        'gu': ['શું', 'છે', 'માં', 'નો', 'અને', 'અથવા', 'નહીં', 'હા'],
-        'pa': ['ਕੀ', 'ਹੈ', 'ਵਿੱਚ', 'ਦਾ', 'ਅਤੇ', 'ਜਾਂ', 'ਨਹੀਂ', 'ਹਾਂ'],
-        'kn': ['ಏನು', 'ಇದೆ', 'ನಲ್ಲಿ', 'ನ', 'ಮತ್ತು', 'ಅಥವಾ', 'ಇಲ್ಲ', 'ಹೌದು'],
-        'ml': ['എന്ത്', 'ആണ്', 'ൽ', 'ന്റെ', 'ഒപ്പം', 'അല്ലെങ്കിൽ', 'ഇല്ല', 'അതെ']
-    }
-    
-    # Calculate language scores
-    language_scores = {}
-    for lang_code, keywords in language_keywords.items():
-        score = 0
-        for keyword in keywords:
-            if keyword in text_lower:
-                score += 1
-        if score > 0:
-            language_scores[lang_code] = score / len(keywords)
-    
-    # Check for English patterns
-    english_patterns = ['the', 'and', 'or', 'is', 'are', 'was', 'were', 'have', 'has', 'will', 'can', 'should']
-    english_score = sum(1 for pattern in english_patterns if pattern in text_lower) / len(english_patterns)
-    language_scores['en'] = english_score
-    
-    # Find best match
-    if language_scores:
-        best_lang = max(language_scores, key=language_scores.get)
-        confidence = language_scores[best_lang]
-        
-        # Boost confidence for longer texts
-        if len(text) > 20:
-            confidence = min(1.0, confidence + 0.2)
-        
-        return best_lang, confidence
-    
-    return 'en', 0.5
-
-def get_language_display_name(language_code: str) -> str:
-    """Get display name for language code"""
-    if language_code in SUPPORTED_LANGUAGES:
-        return SUPPORTED_LANGUAGES[language_code].native_name
-    return language_code.upper()
-
-def text_to_speech(text: str, language: str = 'en') -> bytes:
-    """Convert text to speech"""
-    try:
-        if language in ['hi', 'mr', 'bn', 'te', 'ta', 'gu', 'pa', 'kn', 'ml']:
-            # Use gTTS for Indian languages
-            tts = gTTS(text=text, lang=language, slow=False)
-            # For demo purposes, we'll just return success
-            return b"audio_generated"
-        else:
-            # Use pyttsx3 for English
-            return b"audio_generated"
-    except Exception as e:
-        st.warning(f"{translate_text('Text-to-speech failed', lang)}: {e}")
-        return b""
-
-def create_sms_text(response: str, language: str = 'en') -> str:
-    """Create SMS-friendly text from response"""
-    import re
-    clean_text = re.sub(r'<[^>]+>', '', response)
-    clean_text = re.sub(r'[^\w\s\.\,\!\?\-]', '', clean_text)
-    
-    # Simple translation mapping for common phrases
-    translations = {
-        'hi': {
-            'loan_approved': 'आपका लोन स्वीकृत हो गया है',
-            'loan_rejected': 'आपका लोन अस्वीकृत हो गया है',
-            'weather_alert': 'मौसम चेतावनी',
-            'market_update': 'बाजार अपडेट',
-            'credit_score': 'क्रेडिट स्कोर',
-            'risk_level': 'जोखिम स्तर',
-            'approved': 'स्वीकृत',
-            'rejected': 'अस्वीकृत',
-            'high': 'उच्च',
-            'medium': 'मध्यम',
-            'low': 'कम'
-        },
-        'mr': {
-            'loan_approved': 'तुमचे कर्ज मंजूर झाले आहे',
-            'loan_rejected': 'तुमचे कर्ज नाकारले गेले आहे',
-            'weather_alert': 'हवामान सूचना',
-            'market_update': 'बाजार अद्ययावत',
-            'credit_score': 'क्रेडिट स्कोअर',
-            'risk_level': 'जोखीम पातळी',
-            'approved': 'मंजूर',
-            'rejected': 'नाकारले',
-            'high': 'उच्च',
-            'medium': 'मध्यम',
-            'low': 'कमी'
-        }
-    }
-    
-    if language in translations:
-        # Replace common phrases with translations
-        for eng_phrase, translated_phrase in translations[language].items():
-            clean_text = clean_text.replace(eng_phrase, translated_phrase)
-    
-    # Truncate if too long for SMS
-    max_length = 160
-    if len(clean_text) > max_length:
-        clean_text = clean_text[:max_length-3] + "..."
-    
-    return clean_text
-
-def translate_text(text: str, target_language: str = 'en') -> str:
-    """Translate text to the target language"""
-    # Simple translation dictionary for common UI elements
-    translations = {
-        'hi': {
-            'Executive Summary': 'कार्यकारी सारांश',
-            'Portfolio Analytics': 'पोर्टफोलियो विश्लेषण',
-            'Credit Risk Scoring': 'क्रेडिट जोखिम स्कोरिंग',
-            'Agentic AI Intelligence': 'एजेंटिक AI बुद्धिमत्ता',
-            'Weather Risk Monitor': 'मौसम जोखिम मॉनिटर',
-            'Market Intelligence': 'बाजार बुद्धिमत्ता',
-            'Performance Analytics': 'प्रदर्शन विश्लेषण',
-            'System Configuration': 'सिस्टम कॉन्फ़िगरेशन',
-            'Multi-lingual Demo': 'बहुभाषी डेमो',
-            'Offline Capabilities': 'ऑफ़लाइन क्षमताएं',
-            'Select Language': 'भाषा चुनें',
-            'Current Language': 'वर्तमान भाषा',
-            'Accessibility': 'पहुंच',
-            'Font Size': 'फ़ॉन्ट आकार',
-            'High Contrast Mode': 'उच्च कंट्रास्ट मोड',
-            'Navigation Dashboard': 'नेविगेशन डैशबोर्ड',
-            'Select Dashboard': 'डैशबोर्ड चुनें',
-            'Live Metrics': 'लाइव मेट्रिक्स',
-            'Weather Alerts': 'मौसम चेतावनी',
-            'Portfolio Value': 'पोर्टफोलियो मूल्य',
-            'Active Loans': 'सक्रिय ऋण',
-            'Default Rate': 'डिफ़ॉल्ट दर',
-            'Avg Credit Score': 'औसत क्रेडिट स्कोर'
-        },
-        'mr': {
-            'Executive Summary': 'कार्यकारी सारांश',
-            'Portfolio Analytics': 'पोर्टफोलियो विश्लेषण',
-            'Credit Risk Scoring': 'क्रेडिट जोखीम स्कोरिंग',
-            'Agentic AI Intelligence': 'एजेंटिक AI बुद्धिमत्ता',
-            'Weather Risk Monitor': 'हवामान जोखीम मॉनिटर',
-            'Market Intelligence': 'बाजार बुद्धिमत्ता',
-            'Performance Analytics': 'कार्यक्षमता विश्लेषण',
-            'System Configuration': 'सिस्टम कॉन्फिगरेशन',
-            'Multi-lingual Demo': 'बहुभाषी डेमो',
-            'Offline Capabilities': 'ऑफलाइन क्षमता',
-            'Select Language': 'भाषा निवडा',
-            'Current Language': 'सध्याची भाषा',
-            'Accessibility': 'प्रवेशक्षमता',
-            'Font Size': 'फॉन्ट आकार',
-            'High Contrast Mode': 'उच्च कंट्रास्ट मोड',
-            'Navigation Dashboard': 'नेविगेशन डॅशबोर्ड',
-            'Select Dashboard': 'डॅशबोर्ड निवडा',
-            'Live Metrics': 'लाइव मेट्रिक्स',
-            'Weather Alerts': 'हवामान सूचना',
-            'Portfolio Value': 'पोर्टफोलियो मूल्य',
-            'Active Loans': 'सक्रिय कर्ज',
-            'Default Rate': 'डिफॉल्ट दर',
-            'Avg Credit Score': 'सरासरी क्रेडिट स्कोअर'
-        }
-    }
-    
-    if target_language in translations:
-        for eng_text, translated_text in translations[target_language].items():
-            text = text.replace(eng_text, translated_text)
-    
-    return text
-
 
 # Explainable AI functions
 def calculate_confidence_score(data_quality: float, model_performance: float, 
@@ -724,48 +543,15 @@ def display_sidebar():
     
     page_options = [
         "🏠 Executive Summary",
-        "📊 Portfolio Analytics", 
+        "📊 Portfolio Analytics",
         "🎯 Credit Risk Scoring",
-        "🤖 Agentic AI Intelligence",
+        "🤖 Multi-Agent Advisory",
         "🌦️ Weather Risk Monitor",
         "💹 Market Intelligence",
-        "📈 Performance Analytics",
-        "⚙️ System Configuration",
-        "📱 Offline Capabilities"
+        "📈 Performance Analytics"
     ]
 
-    # Use English first, will re-translate after language selection
     selected_page = st.sidebar.selectbox("Select Dashboard", page_options, help="Choose your dashboard view")
-    original_page = selected_page
-
-    # --- Language Settings ---
-    st.sidebar.markdown("### 🌍 Language Settings")
-
-    language_options = [(code, f"{lang.native_name} ({lang.name})") 
-                       for code, lang in SUPPORTED_LANGUAGES.items()]
-    selected_language = st.sidebar.selectbox(
-        "🌐 Select Language",
-        [opt[0] for opt in language_options],
-        index=0,
-        format_func=lambda x: next(opt[1] for opt in language_options if opt[0] == x)
-    )
-    st.session_state.selected_language = selected_language
-
-    # Show current language info
-    current_lang = SUPPORTED_LANGUAGES[selected_language]
-    st.sidebar.info(f"🌐 **Current Language**: {current_lang.native_name}")
-
-    # Translate options AFTER language selection
-    translated_options = [translate_text(option, selected_language) for option in page_options]
-    selected_page_translated = translate_text(original_page, selected_language)
-
-    # --- Accessibility options ---
-    st.sidebar.markdown("### ♿ Accessibility")
-    font_scale = st.sidebar.slider("📝 Font Size", 0.8, 1.5, 1.0, 0.1)
-    high_contrast = st.sidebar.checkbox("🎨 High Contrast Mode", False)
-
-    if font_scale != 1.0:
-        st.markdown(f"<style>div.stMarkdown {{ font-size: {font_scale}em; }}</style>", unsafe_allow_html=True)
 
     # --- Live Metrics ---
     st.sidebar.markdown("---")
@@ -789,18 +575,22 @@ def display_sidebar():
     except:
         st.sidebar.warning("Weather alerts unavailable")
 
-    return original_page
+    return selected_page
 
 
 @st.cache_data
 def fetch_market_prices():
-    response = requests.get(API_URL)
-    if response.status_code == 200:
+    try:
+        from config import MARKET_API_BASE_URL, MARKET_API_KEY
+        url = f"{MARKET_API_BASE_URL}?api-key={MARKET_API_KEY}&format=json&limit=100"
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
         data = response.json()
         records = data.get("records", [])
-        df = pd.DataFrame(records)
-        return df
-    else:
+        return pd.DataFrame(records)
+    except Exception as e:
+        import traceback
+        st.warning("Market prices API failed to sync. Using empty DataFrame fallback to prevent crash.")
         return pd.DataFrame()
 
 @st.cache_resource
@@ -825,9 +615,6 @@ def initialize_data_pipeline():
 def get_alert_system():
     setup_alerts_table()
     return WeatherAlertSystem()
-
-
-API_URL = f"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key={MARKET_API_KEY}&format=json&limit=100"
 
 # List of cities and coordinates
 CITIES = [
@@ -1766,243 +1553,8 @@ def generate_weather_alerts(weather_data, crop_type):
 #         st.error(f"Weather monitoring system error: {str(e)}")
 #         st.info("Please check your configuration and internet connection.")
 
-def weather_risk_monitor(pipeline=None):
-    """Improved weather risk monitoring with real data integration"""
-    st.header(f"🌤️ {translate_text('Live Weather Risk Monitoring System', lang)}")
-    
-    # Initialize systems
-    try:
-        from weather_alert_system import WeatherAlertSystem
-        weather_system = WeatherAlertSystem()
-    except ImportError:
-        st.error(translate_text("Weather Alert System not available", lang))
-        return
-    
-    # Get real metrics from pipeline
-    if pipeline:
-        try:
-            real_metrics = pipeline.calculate_and_store_portfolio_metrics()
-            total_farmers = real_metrics.get('total_farmers', 0)
-            
-            # Get recent alerts count
-            recent_alerts = weather_system.list_recent_alerts(limit=50)
-            high_risk_alerts = len([a for a in recent_alerts if a.get('severity') == 'high'])
-            rainfall_alerts = len([a for a in recent_alerts if 'rain' in a.get('message', '').lower() or 'drought' in a.get('message', '').lower()])
-            safe_farmers = max(0, total_farmers - high_risk_alerts)
-            
-        except Exception as e:
-            st.warning(f"{translate_text('Could not fetch real metrics', lang)}: {e}")
-            # Fallback to demo values
-            total_farmers, high_risk_alerts, rainfall_alerts, safe_farmers = 1247, 15, 8, 1224
-    else:
-        # Demo values for MVP
-        total_farmers, high_risk_alerts, rainfall_alerts, safe_farmers = 1247, 15, 8, 1224
 
-    # Dashboard metrics with real data
-    col1, col2, col3, col4 = st.columns(4)
-    with col1: 
-        st.metric(f"🌡️ {translate_text('Active Farmers', lang)}", f"{total_farmers:,}", "↑ 23")
-    with col2: 
-        st.metric(f"⚠️ {translate_text('High Risk Alerts', lang)}", str(high_risk_alerts), "↓ 3" if high_risk_alerts < 20 else "↑ 5")
-    with col3: 
-        st.metric(f"🌧️ {translate_text('Rainfall Alerts', lang)}", str(rainfall_alerts), "→ 0")
-    with col4: 
-        st.metric(f"✅ {translate_text('Safe Conditions', lang)}", f"{safe_farmers:,}", "↑ 20")
-
-    st.markdown("---")
-
-    # Alert System Integration
-    st.subheader(f"🚨 {translate_text('Live Weather Alert System', lang)}")
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        if st.button(f"🔄 {translate_text('Check for New Alerts', lang)}", type="primary", use_container_width=True):
-            with st.spinner(translate_text("Analyzing weather conditions for farmers...", lang)):
-                try:
-                    # Use the MVP method we created
-                    alert_results = weather_system.run_once_mvp()
-
-                    if alert_results["status"] == "success":
-                        st.success(f"✅ {alert_results['summary']}")
-
-                        if alert_results["alerts"]:
-                            st.subheader(f"⚠️ {translate_text('Critical Weather Alerts', lang)}")
-                            
-                            # Display alerts in an organized way
-                            for i, alert in enumerate(alert_results["alerts"][:5], 1):
-                                severity_icon = "🔴" if alert["severity"] == "high" else "🟡" if alert["severity"] == "medium" else "🟢"
-                                
-                                with st.expander(f"{severity_icon} {translate_text('Alert', lang)} #{i}: {alert['farmer_name']} - {alert['type'].replace('_', ' ').title()}", expanded=i<=2):
-                                    st.markdown(f"**{translate_text('Message', lang)}:** {alert['message']}")
-                                    st.markdown(f"**{translate_text('Recommended Action', lang)}:** {alert['recommended_action']}")
-                                    st.markdown(f"**{translate_text('Severity', lang)}:** {alert['severity'].title()}")
-                                    st.markdown(f"**{translate_text('Risk Level', lang)}:** {alert['risk_level']:.1%}")
-                        else:
-                            st.info(f"🌤️ {translate_text('No critical weather alerts at this time. All farmers are in safe conditions.', lang)}")
-                    else:
-                        st.error(f"❌ {translate_text('Weather alert check failed', lang)}: {alert_results['summary']}")
-
-                except Exception as e:
-                    st.error(f"{translate_text('Error running weather analysis', lang)}: {str(e)}")
-                    st.info(translate_text("Please check the weather alert system configuration.", lang))
-    
-    with col2:
-        st.metric(translate_text("Last Check", lang), datetime.now().strftime("%H:%M"), "2 min ago")
-
-    st.markdown("---")
-
-    # Weather Risk Map Section
-    st.subheader("🗺️ Regional Weather Risk Overview")
-    
-    try:
-        # Define major agricultural regions in India for demo
-        AGRICULTURAL_REGIONS = [
-            {"name": "Punjab (Ludhiana)", "lat": 30.9010, "lon": 75.8573, "crop": "Wheat"},
-            {"name": "Maharashtra (Pune)", "lat": 18.5204, "lon": 73.8567, "crop": "Sugarcane"}, 
-            {"name": "Karnataka (Bangalore)", "lat": 12.9716, "lon": 77.5946, "crop": "Rice"},
-            {"name": "Tamil Nadu (Chennai)", "lat": 13.0827, "lon": 80.2707, "crop": "Cotton"},
-            {"name": "Uttar Pradesh (Lucknow)", "lat": 26.8467, "lon": 80.9462, "crop": "Wheat"},
-            {"name": "West Bengal (Kolkata)", "lat": 22.5726, "lon": 88.3639, "crop": "Rice"},
-            {"name": "Gujarat (Ahmedabad)", "lat": 23.0225, "lon": 72.5714, "crop": "Cotton"},
-            {"name": "Rajasthan (Jaipur)", "lat": 26.9124, "lon": 75.7873, "crop": "Soybean"}
-        ]
-        
-        # Generate realistic risk data
-        weather_data = []
-        for region in AGRICULTURAL_REGIONS:
-            # Simulate weather conditions
-            temp = random.uniform(20, 40)  # Temperature in Celsius
-            humidity = random.uniform(40, 90)
-            rainfall = random.uniform(0, 15)
-            
-            # Calculate risk factors
-            temp_risk = 0.8 if temp > 35 or temp < 10 else 0.3 if temp > 32 or temp < 15 else 0.1
-            humidity_risk = 0.6 if humidity > 85 else 0.2
-            rain_risk = 0.7 if rainfall > 10 else 0.8 if rainfall < 2 else 0.1
-            
-            overall_risk = min((temp_risk + humidity_risk + rain_risk) / 3, 1.0)
-            
-            weather_data.append({
-                "lat": region["lat"],
-                "lon": region["lon"], 
-                "region": region["name"],
-                "crop": region["crop"],
-                "temperature": temp,
-                "humidity": humidity,
-                "rainfall": rainfall,
-                "risk_level": overall_risk,
-                "farmers_count": int(50 + overall_risk * 150),
-                "risk_category": "High" if overall_risk > 0.6 else "Medium" if overall_risk > 0.3 else "Low"
-            })
-
-        if weather_data:
-            weather_df = pd.DataFrame(weather_data)
-            
-            # Create map
-            fig_map = px.scatter_mapbox(
-                weather_df, 
-                lat="lat", 
-                lon="lon", 
-                color="risk_level",
-                size="farmers_count", 
-                hover_name="region",
-                hover_data={
-                    "crop": True,
-                    "temperature": ":.1f",
-                    "humidity": ":.1f", 
-                    "rainfall": ":.1f",
-                    "risk_category": True,
-                    "lat": False,
-                    "lon": False,
-                    "risk_level": False
-                },
-                color_continuous_scale="RdYlGn_r", 
-                size_max=30, 
-                zoom=4.5,
-                center={"lat": 23.5, "lon": 78},  # Center on India
-                title="Weather Risk Levels Across Agricultural Regions"
-            )
-            
-            fig_map.update_layout(
-                mapbox_style="open-street-map", 
-                height=500, 
-                margin={"r":0,"t":40,"l":0,"b":0},
-                coloraxis_colorbar=dict(
-                    title="Risk Level",
-                    tickvals=[0, 0.25, 0.5, 0.75, 1.0],
-                    ticktext=["Very Low", "Low", "Medium", "High", "Very High"]
-                )
-            )
-            
-            st.plotly_chart(fig_map, use_container_width=True)
-            
-            # Risk summary table
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.subheader("📊 Risk Summary by Region")
-                summary_df = weather_df[['region', 'crop', 'risk_category', 'farmers_count']].copy()
-                summary_df.columns = ['Region', 'Primary Crop', 'Risk Level', 'Farmers']
-                st.dataframe(summary_df, use_container_width=True, hide_index=True)
-            
-            with col2:
-                st.subheader("📈 Risk Distribution")
-                risk_counts = weather_df['risk_category'].value_counts()
-                fig_pie = px.pie(
-                    values=risk_counts.values,
-                    names=risk_counts.index,
-                    color_discrete_map={'High': '#ff4444', 'Medium': '#ffaa00', 'Low': '#44ff44'}
-                )
-                st.plotly_chart(fig_pie, use_container_width=True)
-        
-        else:
-            st.warning("Unable to generate weather risk map data.")
-            
-    except Exception as e:
-        st.error(f"Error creating weather risk map: {str(e)}")
-
-    st.markdown("---")
-
-    # Recent Weather Activity Feed
-    st.subheader("📰 Recent Weather Activity")
-    
-    try:
-        # Get recent alerts from database
-        recent_alerts = weather_system.list_recent_alerts(limit=10)
-        
-        if recent_alerts:
-            for alert in recent_alerts[:5]:
-                severity_color = "🔴" if alert.get('severity') == 'high' else "🟡" if alert.get('severity') == 'medium' else "🟢"
-                
-                # Format timestamp
-                created_at = alert.get('created_at')
-                if isinstance(created_at, str):
-                    try:
-                        time_str = datetime.fromisoformat(created_at.replace('Z', '+00:00')).strftime("%H:%M")
-                    except:
-                        time_str = "Recent"
-                else:
-                    time_str = "Recent"
-                
-                st.info(f"{severity_color} **{time_str}** - {alert.get('message', 'Weather alert')} (Farmer ID: {alert.get('farmer_id', 'Unknown')})")
-        else:
-            st.info("No recent weather alerts in the system.")
-            
-    except Exception as e:
-        st.warning(f"Could not load recent alerts: {e}")
-
-    # Footer with system status
-    st.markdown("---")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.success("🟢 Weather API: Online")
-    with col2:
-        st.success("🟢 Alert System: Active")  
-    with col3:
-        st.info(f"🔄 Last Updated: {datetime.now().strftime('%H:%M:%S')}")
-
+# weather_risk_monitor is imported from weather_dashboard.py
 
 
 def policy_advisor_with_filters(pipeline, land_size, crop_type, state):
@@ -2863,15 +2415,13 @@ def system_configuration():
         st.success("✅ Weather API - Connected")
         st.success("✅ Market Data API - Connected") 
         st.success("✅ Credit Bureau API - Connected")
-        st.warning("⚠️ Satellite API - Limited")
         
         st.markdown("---")
         st.subheader("📁 Data Sources")
         
-        st.info("🏦 Internal Database: 847,234 records")
-        st.info("🌦️ Weather Data: 1 sources")
-        st.info("💹 Market Data: stimulated data")
-        st.info("🛰️ Satellite Data: coming soon")
+        st.info("🏦 Internal Database: Active")
+        st.info("🌦️ Weather Data: OpenWeatherMap API + Regional Fallback")
+        st.info("💹 Market Data: Agmarknet API + Historical Simulations")
 
 # def multilingual_demo():
 #     """Multi-lingual and multi-modal capabilities demo"""
@@ -3294,7 +2844,7 @@ def main():
         portfolio_analytics_dashboard()
     elif page == "🎯 Credit Risk Scoring":
         credit_risk_scoring_dashboard()
-    elif page == "🤖 Agentic AI Intelligence":
+    elif page == "🤖 Multi-Agent Advisory":
         agentic_ai_demo()
     elif page == "🌦️ Weather Risk Monitor":
         weather_risk_monitor(pipeline)
@@ -3302,12 +2852,6 @@ def main():
         market_intelligence_dashboard()
     elif page == "📈 Performance Analytics":
         performance_analytics()
-    elif page == "⚙️ System Configuration":
-        system_configuration()
-    # elif page == "🌍 Multi-lingual Demo":
-    #     multilingual_demo()
-    elif page == "📱 Offline Capabilities":
-        offline_capabilities_demo()
 
 if __name__ == "__main__":
     main()
