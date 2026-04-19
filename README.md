@@ -1,7 +1,7 @@
-# AgriCredAI - Advanced Agricultural Credit Intelligence Platform
+# AgriCredAI - Agricultural Credit Intelligence Platform
 
 <div align="center">
-  <h3>Revolutionizing Agricultural Lending with Expert Intelligence & Advanced Risk Intelligence</h3>
+  <h3>Data-Driven Credit Risk Assessment & Financial Advisory</h3>
 
   <p>
     <a href="https://www.python.org/">
@@ -10,8 +10,8 @@
     <a href="https://streamlit.io/">
       <img src="https://img.shields.io/badge/Streamlit-1.28+-red" alt="Streamlit"/>
     </a>
-    <a href="https://your-demo-link.com/">
-      <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen" alt="Live Demo"/>
+    <a href="https://xgboost.readthedocs.io/">
+      <img src="https://img.shields.io/badge/Model-XGBoost%20v3.0-orange" alt="XGBoost"/>
     </a>
   </p>
 </div>
@@ -19,195 +19,80 @@
 ---
 
 ## 🚀 Project Overview
-**AgriCredAI** is an innovative FinTech platform that harnesses **Expert Intelligence**, **Machine Learning**, and **Real-time Data Polling** to revolutionize credit risk assessment for financial institutions. By ingesting dynamic variables such as live OpenWeatherMap data and Government Market APIs, the platform actively reduces default rates and enhances financial inclusion for small-scale farmers through fault-tolerant, data-driven loan structuring.
+**AgriCredAI** is a comprehensive FinTech platform designed to modernize credit risk assessment for the agricultural sector. It utilizes **XGBoost machine learning** models and a **Expert Intelligence System** to provide real-time credit scoring and financial recommendations.
 
-- 🌐 Live Demo: https://AgriCredAI.streamlit.app
-
-### 🎯 Problem Statement
-Agricultural lending traditionally faces challenges such as:
-- High default rates (8-15% industry average)
-- Manual and slow risk assessment
-- Disconnected infrastructure lacking real-time environmental data (weather, soil)
-- Reactive instead of proactive risk management
-
-### 💡 Our Solution
-AgriCredAI delivers an AI-driven platform that features:
-- **Autonomous Expert Advisors** for smart decision-making
-- **Advanced XGBoost ML models** delivering high prediction accuracy
-- **Real-time API Polling** monitoring live weather risks and market volatility
-- **Dynamic Loan Structuring** aligned with crop cycles and environmental reality
-- **Enterprise-Grade Fault Tolerance** handling API timeouts and SQLite transactions
+By integrating live data from **OpenWeatherMap** (for weather risk) and **Agmarknet** (for market pricing), the platform ensures that credit evaluations are responsive to current environmental and economic conditions.
 
 ---
 
-## 📈 Hyper-Realistic Agricultural Credit Risk Model
+## 🏗️ Technical Architecture
 
-The model assesses farmer creditworthiness across India with 85-92% accuracy by analyzing 50+ features grouped into these weighted risk categories:
+### 1. Hybrid Data Pipeline
+The system utilizes a custom pipeline (`AgroScoreInferencePipeline`) that handles:
+- **Synthetic Data Seeding**: Generates realistic farmer profiles for local testing.
+- **Live API Integration**: Polls real-time weather and market data to adjust risk factors.
+- **Fault Tolerance**: Implements retry logic and fallback data for external API dependencies.
 
-### 1. **Primary Risk Factors (40% weight)**
-- **Payment History**: Track record of loan repayments
-- **Debt Burden**: Debt-to-income ratio with exponential penalties above 50%
-- **Income Stability**: Yield consistency based on farming practices
-
-### 2. **Climate & Weather Risks (25% weight)**
-- Live integrations pulling from OpenWeatherMap to identify:
-- **Drought & Frost Risks**: Region-specific and crop-specific vulnerability alerts
-
-### 3. **Market & Economic Risks (20% weight)**
-- **Price Volatility**: Evaluated using realtime Gov.in Market Data API integrations
-- **Input Cost Pressure**: Fertilizer and seed cost fluctuations
-
-### 4. **Infrastructure & Practices (15% weight)**
-- **Irrigation Access**, **Insurance Coverage**, and **Soil Health Index**
-
-It enables business use cases such as risk-based pricing, financial inclusion, and portfolio management with real-time scoring powered by Streamlit.
+### 2. Expert Intelligence Advisory
+The platform features a multi-advisor framework coordinated by an **IntelOrchestrator**:
+- **Dynamic Financing Advisor**: Recommends loan structures and repayment schedules based on crop harvest cycles.
+- **Market Advisory Advisor**: Analyzes commodity price trends for trading intelligence.
+- **Carbon Credit Advisor**: Tracks sustainable farming practices and tokenizes credits with blockchain-simulated hashes.
 
 ---
-### Credit Score Formula
-![Credit Score Formula](credit_png.png)
 
-### Risk Score Formula
-![Risk Score Formula](risk_png.png)
+## 📐 The Formula Base
 
-### Loan Capacity Formula
-![Loan Capacity Formula](loan_png.png)
+The system's logic is defined by the following quantitative frameworks:
 
+### I. Risk Score Index ($R_s$)
+Aggregates normalized features across weather, market, and credit history:
+$$R_s = \sum_{i=1}^{n} (Feature_i \times Weight_i)$$
 
-## 🏗️ System Architecture & Orchestration
+### II. Credit Score Calibration ($C$)
+Normalizes the ML model's probability of default into an industry-standard range:
+$$Score = Base + \text{Factor} \times \ln\left(\frac{P(\text{Good})}{P(\text{Default})}\right)$$
 
-### Expert Intelligence Orchestration
-The **IntelOrchestrator** manages specialized advisory components concurrently. Each component evaluates live infrastructure variables operating on a continuous learning loop:
+### III. Loan Capacity ($L_c$)
+Calculates maximum loan eligibility based on projected income and risk mitigation:
+$$L_c = (\text{Income}_{\text{est}} \times \text{Multiplier}) \times (1 - R_s)$$
 
-```mermaid
-graph LR
-    A[Perception] --> B[Reasoning] --> C[Action] --> D[Feedback] --> A
+---
+
+## 🧠 Machine Learning & Explainability
+- **The Model:** XGBoost implementation processing 79 unique feature dimensions.
+- **Explainability:** Integrated **SHAP (SHapley Additive exPlanations)** to provide transparent reasoning for each credit card score, detailing exactly which factors influenced the decision.
+
+---
+
+## 📂 Project Structure
 ```
-
-### Overall System Architecture
-Built defensively with clean separation-of-concerns using `.env` configurations and SQLite abstraction layers.
-
-```mermaid
-graph TB
-    A[Farmer Data Input] --> B[Intelligence Orchestrator]
-    B --> C[Dynamic Financing Advisor]
-    B --> E[Market Advisory Advisor]
-    
-    F[Weather APIs] --> B
-    G[Market Data APIs] --> B
-    H[SQLite Database] --> B
-    
-    C --> J[Loan Structuring]
-    E --> L[Market Intelligence]
-    
-    J --> M[Financial Dashboard]
-    L --> M
-    
-    M --> N[Risk Management]
-    M --> O[Portfolio Analytics]
-    M --> P[Performance Monitoring]
+AgriCredAI/
+├── 📄 advanced_app.py                   # Main Streamlit dashboard
+├── 🧠 advanced_data_pipeline.py         # Hybrid data & inference pipeline
+├── 🎯 advanced_ml_model.py              # XGBoost ML model implementation
+├── 🤖 agri_intel_core.py                # Expert intelligence core framework
+├── 💰 dynamic_financing_advisor.py      # Financing and loan advisory
+├── 📊 market_advisory_advisor.py        # Market and pricing advisory
+├── 🌿 carbon_credit_advisor.py          # Sustainable practice tracking
+├── 🎯 explainable_ai_core.py            # SHAP-based model explainability
+├── 📋 requirements.txt                  # Dependency list
+└── 📖 README.md                         # Documentation
 ```
-
----
-
-## 🤖 Key Innovations & Differentiators
-
-- **Expert Intelligence System**: Autonomous reasoning loops powering the advisory mechanics, rather than static if-else logic.
-- **Fault-Tolerant External Polling**: Defensive `requests` implementation with graceful fallback data mechanisms when government APIs experience downtime.
-- **Hyper-Realistic Pipeline**: Generating and utilizing realistic crop distributions across 2,000 seeded farmers.
-- **Explainable AI with SHAP**: Providing transparent decision-making logs for loan officers, building enterprise trust.
-
----
-
-## 🔧 Technical Highlights
-
-- **Frontend & App Logic:** Built natively with Python 3.11 and Streamlit 1.28+
-- **Machine Learning Stack:** Ensemble ML utilizing XGBoost, LightGBM, and Random Forest
-- **Data Engineering:** Managed via Pandas DataFrames routing into a local `sqlite3` cache
-- **Visualizations:** Interactive dashboards powered by Plotly (`px` and `go`)
-- **Security & CI:** Decoupled secrets management via `dotenv` and custom `config.py`
-
----
-
-## 📊 Business Impact & Metrics
-
-| Metric                        | Before AgriCredAI      | After AgriCredAI       | Improvement           |
-|------------------------------|-----------------------|-----------------------|----------------------|
-| Default Rate                 | 6.1%                  | 4.2%                  | 31% reduction         |
-| Portfolio Growth (₹ Cr)      | ₹847.3                | +12.4% YoY growth     | Significant expansion |
-| Loan Decision Time           | 72 hours              | 2 minutes             | 99% faster decisions  |
-| Loan Approval Rate           | 68%                   | 84%                   | +24% more approvals   |
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Python 3.11+
-- Git
+1. **Installation:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Installation
+2. **Environment Setup:**
+   Configure your `WEATHER_API_KEY` in the `.env` file.
 
-1. Clone the repo  
-```bash
-git clone https://github.com/Aastik-Srivastava/AgriCredAI.git
-cd AgriCredAI
-```
-
-2. Create and activate virtual environment  
-```bash
-python -m venv venv
-source venv/bin/activate # Windows: venv\Scripts\activate
-```
-
-3. Install dependencies  
-```bash
-pip install -r requirements.txt
-```
-
-4. Configure your environment keys
-Create an `.env` file in the root directory and add your OpenWeatherMap key:
-```env
-WEATHER_API_KEY=your_openweathermap_api_key_here
-```
-
-5. Run the Streamlit app  
-```bash
-streamlit run advanced_app.py
-```
-
----
-
-## 📁 Project Structure
-```
-AgriCredAI/
-├── 📄 advanced_app.py                   # Main Streamlit application
-├── ⚙️ config.py                         # Decoupled environment variables architecture
-├── 🧠 advanced_data_pipeline.py         # Data processing & SQLite pipeline
-├── ⚠️ weather_dashboard.py              # Weather monitoring system & Risk Mapping
-├── 🎯 advanced_ml_model.py              # ML model implementation & Pickling
-├── 🤖 agri_intel_core.py                # Expert intelligence framework
-├── 💰 dynamic_financing_advisor.py      # Financing intelligence advisor
-├── 📊 market_advisory_advisor.py        # Market intelligence advisor
-├── 🌿 carbon_credit_advisor.py          # Sustainable practice tracking
-├── 🎯 explainable_ai_core.py            # SHAP & AI explainability framework
-├── 📋 requirements.txt                  # Python dependencies
-└── 📖 README.md                         # Project documentation
-```
-
----
-## 🔮 Roadmap / Future Enhancements
-- **Automated CI/CD**: Integrate GitHub Actions for automated unit testing upon pull requests.
-- **Advanced Graphing Databases**: Transition backend logic from SQLite to Neo4j to properly map complex farmer-cooperative relationships.
-- **Push Notification Microservice**: Upgrade the Streamlit UI alert structure into a background task queue (e.g. Celery) that dispatches email warnings on severe weather.
-
----
-
-## 📞 Contact
-- Email: srivastavaaastik@gmail.com  
-
----
-
-<div align="center">
-  <h3>🏆 AgriCredAI Platform</h3>
-  <p><i>Made with ❤️ by the AgriCredAI Team</i></p>
-</div>
+3. **Run Application:**
+   ```bash
+   streamlit run advanced_app.py
+   ```
