@@ -58,7 +58,7 @@ __main__.PolicyAdjustmentLayer = PolicyAdjustmentLayer
 __main__.UnifiedSHAPExplainer = UnifiedSHAPExplainer
 
 # Custom modules (assuming these are in your project directory)
-from agentic_ai_demo import agentic_ai_demo
+from agri_intel_demo import agri_intel_demo
 from advanced_data_pipeline import AgroScoreInferencePipeline
 from weather_alert_system import WeatherAlertSystem, setup_alerts_table
 from weather_dashboard import weather_risk_monitor          # real OWM data
@@ -360,7 +360,7 @@ def generate_credit_explanation(farmer_data: Dict[str, Any], prediction: float,
         recommendations.extend([
             "Focus on improving payment history",
             "Consider reducing debt burden",
-            "Explore government subsidy schemes"
+            "Explore smart agricultural intelligence"
         ])
     elif decision == "REVIEW":
         recommendations.extend([

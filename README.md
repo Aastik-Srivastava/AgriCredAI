@@ -1,7 +1,7 @@
 # AgriCredAI - Advanced Agricultural Credit Intelligence Platform
 
 <div align="center">
-  <h3>Revolutionizing Agricultural Lending with Agentic AI & Advanced Risk Intelligence</h3>
+  <h3>Revolutionizing Agricultural Lending with Expert Intelligence & Advanced Risk Intelligence</h3>
 
   <p>
     <a href="https://www.python.org/">
@@ -19,7 +19,7 @@
 ---
 
 ## 🚀 Project Overview
-**AgriCredAI** is an innovative FinTech platform that harnesses **Agentic AI**, **Machine Learning**, and **Real-time Data Polling** to revolutionize credit risk assessment for financial institutions. By ingesting dynamic variables such as live OpenWeatherMap data and Government Market APIs, the platform actively reduces default rates and enhances financial inclusion for small-scale farmers through fault-tolerant, data-driven loan structuring.
+**AgriCredAI** is an innovative FinTech platform that harnesses **Expert Intelligence**, **Machine Learning**, and **Real-time Data Polling** to revolutionize credit risk assessment for financial institutions. By ingesting dynamic variables such as live OpenWeatherMap data and Government Market APIs, the platform actively reduces default rates and enhances financial inclusion for small-scale farmers through fault-tolerant, data-driven loan structuring.
 
 - 🌐 Live Demo: https://AgriCredAI.streamlit.app
 
@@ -32,7 +32,7 @@ Agricultural lending traditionally faces challenges such as:
 
 ### 💡 Our Solution
 AgriCredAI delivers an AI-driven platform that features:
-- **Autonomous Agentic AI** for smart decision-making
+- **Autonomous Expert Advisors** for smart decision-making
 - **Advanced XGBoost ML models** delivering high prediction accuracy
 - **Real-time API Polling** monitoring live weather risks and market volatility
 - **Dynamic Loan Structuring** aligned with crop cycles and environmental reality
@@ -75,8 +75,8 @@ It enables business use cases such as risk-based pricing, financial inclusion, a
 
 ## 🏗️ System Architecture & Orchestration
 
-### Agentic AI Orchestration
-The **AgenticOrchestrator** manages autonomous AI agents concurrently. Each agent evaluates live infrastructure variables operating on a continuous learning loop:
+### Expert Intelligence Orchestration
+The **IntelOrchestrator** manages specialized advisory components concurrently. Each component evaluates live infrastructure variables operating on a continuous learning loop:
 
 ```mermaid
 graph LR
@@ -88,9 +88,9 @@ Built defensively with clean separation-of-concerns using `.env` configurations 
 
 ```mermaid
 graph TB
-    A[Farmer Data Input] --> B[Agentic AI Orchestrator]
-    B --> C[Dynamic Financing Agent]
-    B --> E[Market Advisory Agent]
+    A[Farmer Data Input] --> B[Intelligence Orchestrator]
+    B --> C[Dynamic Financing Advisor]
+    B --> E[Market Advisory Advisor]
     
     F[Weather APIs] --> B
     G[Market Data APIs] --> B
@@ -111,7 +111,7 @@ graph TB
 
 ## 🤖 Key Innovations & Differentiators
 
-- **Agentic AI System**: Autonomous reasoning loops powering the advisory mechanics, rather than static if-else logic.
+- **Expert Intelligence System**: Autonomous reasoning loops powering the advisory mechanics, rather than static if-else logic.
 - **Fault-Tolerant External Polling**: Defensive `requests` implementation with graceful fallback data mechanisms when government APIs experience downtime.
 - **Hyper-Realistic Pipeline**: Generating and utilizing realistic crop distributions across 2,000 seeded farmers.
 - **Explainable AI with SHAP**: Providing transparent decision-making logs for loan officers, building enterprise trust.
@@ -185,9 +185,10 @@ AgriCredAI/
 ├── 🧠 advanced_data_pipeline.py         # Data processing & SQLite pipeline
 ├── ⚠️ weather_dashboard.py              # Weather monitoring system & Risk Mapping
 ├── 🎯 advanced_ml_model.py              # ML model implementation & Pickling
-├── 🤖 agentic_core.py                   # Agentic AI framework
-├── 💰 dynamic_financing_agent.py        # Financing intelligence agent
-├── 📊 market_advisory_agent.py          # Market intelligence agent
+├── 🤖 agri_intel_core.py                # Expert intelligence framework
+├── 💰 dynamic_financing_advisor.py      # Financing intelligence advisor
+├── 📊 market_advisory_advisor.py        # Market intelligence advisor
+├── 🌿 carbon_credit_advisor.py          # Sustainable practice tracking
 ├── 🎯 explainable_ai_core.py            # SHAP & AI explainability framework
 ├── 📋 requirements.txt                  # Python dependencies
 └── 📖 README.md                         # Project documentation

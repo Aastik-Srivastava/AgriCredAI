@@ -7,11 +7,11 @@ from typing import Dict, List, Any, Optional
 import random
 import numpy as np
 
-from agentic_core import BaseAgent, AgentAction, PerceptionData, simulate_api_call, calculate_confidence_score
+from agri_intel_core import BaseAdvisor, IntelAction, PerceptionData, simulate_api_call, calculate_confidence_score
 
-class DynamicFinancingAgent(BaseAgent):
+class DynamicFinancingAdvisor(BaseAdvisor):
     """
-    AI Agent that provides intelligent financing recommendations
+    Expert Advisor that provides intelligent financing recommendations
     - Analyzes farmer risk profiles
     - Suggests optimal loan structures  
     - Adapts repayment schedules based on crop cycles and weather
@@ -20,7 +20,7 @@ class DynamicFinancingAgent(BaseAgent):
     
     def __init__(self):
         super().__init__(
-            name="DynamicFinancingAgent",
+            name="DynamicFinancingAdvisor",
             description="Intelligent loan structuring and risk-adaptive financing"
         )
         self.loan_products = {
@@ -195,7 +195,7 @@ class DynamicFinancingAgent(BaseAgent):
         
         return reasoning
         
-    async def act(self, reasoning: Dict[str, Any]) -> AgentAction:
+    async def act(self, reasoning: Dict[str, Any]) -> IntelAction:
         """Generate financing recommendation action"""
         reasoning_trace = reasoning['reasoning_trace'] + ["", "⚡ ACTION: Generating financing package..."]
         
@@ -232,7 +232,7 @@ class DynamicFinancingAgent(BaseAgent):
         reasoning_trace.append(f"📊 Confidence score: {confidence_score:.2f}")
         reasoning_trace.append(f"🎯 Approval probability: {financing_package['approval_probability']:.1%}")
         
-        action = AgentAction(
+        action = IntelAction(
             agent_name=self.name,
             action_type="FINANCING_RECOMMENDATION",
             inputs={

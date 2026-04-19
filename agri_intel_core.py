@@ -1,5 +1,5 @@
-# AGENTIC AI CORE ENGINE
-# This module implements the core agentic AI framework with perception-reasoning-action-feedback cycles
+# AGRI INTELLIGENCE CORE ENGINE
+# This module implements the core expert intelligence framework with perception-reasoning-action-feedback cycles
 
 import asyncio
 import json
@@ -13,8 +13,8 @@ from abc import ABC, abstractmethod
 import hashlib
 
 @dataclass
-class AgentAction:
-    """Represents an action taken by an AI agent"""
+class IntelAction:
+    """Represents an action taken by an intelligence component"""
     agent_name: str
     action_type: str
     inputs: Dict[str, Any]
@@ -75,13 +75,13 @@ class PerceptionData:
         if self.access_permissions is None:
             self.access_permissions = ["system"]
 
-class BaseAgent(ABC):
-    """Abstract base class for all agentic AI components"""
+class BaseAdvisor(ABC):
+    """Abstract base class for all expert intelligence components"""
     
     def __init__(self, name: str, description: str):
         self.name = name
         self.description = description
-        self.action_history: List[AgentAction] = []
+        self.action_history: List[IntelAction] = []
         self.learning_memory: Dict[str, Any] = {}
         
     @abstractmethod
@@ -95,7 +95,7 @@ class BaseAgent(ABC):
         pass
         
     @abstractmethod
-    async def act(self, reasoning: Dict[str, Any]) -> AgentAction:
+    async def act(self, reasoning: Dict[str, Any]) -> IntelAction:
         """Take action based on reasoning"""
         pass
         
@@ -115,45 +115,45 @@ class BaseAgent(ABC):
             return self.action_history[-1].reasoning_trace
         return []
 
-class AgenticOrchestrator:
-    """Main orchestrator that coordinates multiple agents"""
+class IntelOrchestrator:
+    """Main orchestrator that coordinates multiple expert advisors"""
     
     def __init__(self):
-        self.agents: Dict[str, BaseAgent] = {}
+        self.advisors: Dict[str, BaseAdvisor] = {}
         self.global_context: Dict[str, Any] = {}
         self.execution_log: List[Dict[str, Any]] = []
         
-    def register_agent(self, agent: BaseAgent):
-        """Register a new agent with the orchestrator"""
-        self.agents[agent.name] = agent
+    def register_advisor(self, advisor: BaseAdvisor):
+        """Register a new advisor with the orchestrator"""
+        self.advisors[advisor.name] = advisor
         
-    async def run_agent_cycle(self, agent_name: str, context: Dict[str, Any]) -> AgentAction:
-        """Run a complete perception-reasoning-action cycle for an agent"""
+    async def run_advisor_cycle(self, advisor_name: str, context: Dict[str, Any]) -> IntelAction:
+        """Run a complete perception-reasoning-action cycle for an advisor"""
         start_time = datetime.now()
         
-        if agent_name not in self.agents:
-            raise ValueError(f"Agent {agent_name} not found")
+        if advisor_name not in self.advisors:
+            raise ValueError(f"Advisor {advisor_name} not found")
             
-        agent = self.agents[agent_name]
+        advisor = self.advisors[advisor_name]
         
         try:
             # Perception phase
-            perceptions = await agent.perceive(context)
+            perceptions = await advisor.perceive(context)
             
             # Reasoning phase  
-            reasoning = await agent.reason(perceptions)
+            reasoning = await advisor.reason(perceptions)
             
             # Action phase
-            action = await agent.act(reasoning)
+            action = await advisor.act(reasoning)
             
             # Log execution
             execution_time = (datetime.now() - start_time).total_seconds() * 1000
             action.execution_time_ms = int(execution_time)
             
-            agent.action_history.append(action)
+            advisor.action_history.append(action)
             
             self.execution_log.append({
-                'agent': agent_name,
+                'advisor': advisor_name,
                 'action': action,
                 'timestamp': datetime.now(),
                 'success': True
@@ -162,8 +162,8 @@ class AgenticOrchestrator:
             return action
             
         except Exception as e:
-            error_action = AgentAction(
-                agent_name=agent_name,
+            error_action = IntelAction(
+                agent_name=advisor_name,
                 action_type="ERROR",
                 inputs=context,
                 outputs={'error': str(e)},
@@ -183,33 +183,33 @@ class AgenticOrchestrator:
             
             return error_action
     
-    async def run_multi_agent_workflow(self, workflow_context: Dict[str, Any]) -> Dict[str, AgentAction]:
-        """Run multiple agents in coordination"""
+    async def run_multi_advisor_workflow(self, workflow_context: Dict[str, Any]) -> Dict[str, IntelAction]:
+        """Run multiple advisors in coordination"""
         results = {}
         
-        # Run agents in parallel for efficiency
-        agent_tasks = []
-        for agent_name in self.agents.keys():
-            task = self.run_agent_cycle(agent_name, workflow_context)
-            agent_tasks.append((agent_name, task))
+        # Run advisors in parallel for efficiency
+        advisor_tasks = []
+        for advisor_name in self.advisors.keys():
+            task = self.run_advisor_cycle(advisor_name, workflow_context)
+            advisor_tasks.append((advisor_name, task))
         
-        # Wait for all agents to complete
-        for agent_name, task in agent_tasks:
+        # Wait for all advisors to complete
+        for advisor_name, task in advisor_tasks:
             try:
-                results[agent_name] = await task
+                results[advisor_name] = await task
             except Exception as e:
-                print(f"Error in agent {agent_name}: {e}")
-                results[agent_name] = None
+                print(f"Error in advisor {advisor_name}: {e}")
+                results[advisor_name] = None
                 
         return results
     
     def get_orchestrator_summary(self) -> Dict[str, Any]:
-        """Get summary of all agent activities"""
+        """Get summary of all advisor activities"""
         summary = {
-            'total_agents': len(self.agents),
+            'total_advisors': len(self.advisors),
             'total_actions': len(self.execution_log),
             'success_rate': 0,
-            'agents_status': {},
+            'advisors_status': {},
             'recent_actions': self.execution_log[-10:] if self.execution_log else []
         }
         
@@ -217,11 +217,11 @@ class AgenticOrchestrator:
             successful_actions = sum(1 for log in self.execution_log if log['success'])
             summary['success_rate'] = successful_actions / len(self.execution_log)
         
-        for agent_name, agent in self.agents.items():
-            summary['agents_status'][agent_name] = {
-                'total_actions': len(agent.action_history),
-                'last_action_time': agent.action_history[-1].timestamp if agent.action_history else None,
-                'learning_entries': len(agent.learning_memory)
+        for advisor_name, advisor in self.advisors.items():
+            summary['advisors_status'][advisor_name] = {
+                'total_actions': len(advisor.action_history),
+                'last_action_time': advisor.action_history[-1].timestamp if advisor.action_history else None,
+                'learning_entries': len(advisor.learning_memory)
             }
             
         return summary
@@ -314,7 +314,7 @@ def track_data_provenance(data_source: str, operation: str, metadata: Dict[str, 
     return provenance_record
 
 # Export the main classes for use in specific agents
-__all__ = ['BaseAgent', 'AgenticOrchestrator', 'AgentAction', 'PerceptionData', 
+__all__ = ['BaseAdvisor', 'IntelOrchestrator', 'IntelAction', 'PerceptionData', 
            'generate_blockchain_hash', 'calculate_confidence_score', 'simulate_api_call',
            'track_data_provenance', 'generate_confidence_explanation']
 

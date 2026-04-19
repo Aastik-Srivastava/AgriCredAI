@@ -7,11 +7,11 @@ from typing import Dict, List, Any, Optional
 import random
 import numpy as np
 
-from agentic_core import BaseAgent, AgentAction, PerceptionData, simulate_api_call, calculate_confidence_score
+from agri_intel_core import BaseAdvisor, IntelAction, PerceptionData, simulate_api_call, calculate_confidence_score
 
-class MarketAdvisoryAgent(BaseAgent):
+class MarketAdvisoryAdvisor(BaseAdvisor):
     """
-    AI Agent that provides intelligent market advisory services
+    Expert Advisor that provides intelligent market advisory services
     - Analyzes market trends and price patterns
     - Provides sell/hold/buy recommendations  
     - Predicts optimal timing for commodity trading
@@ -20,7 +20,7 @@ class MarketAdvisoryAgent(BaseAgent):
     
     def __init__(self):
         super().__init__(
-            name="MarketAdvisoryAgent", 
+            name="MarketAdvisoryAdvisor", 
             description="Real-time market analysis and trading recommendations"
         )
         
@@ -227,7 +227,7 @@ class MarketAdvisoryAgent(BaseAgent):
         
         return reasoning
         
-    async def act(self, reasoning: Dict[str, Any]) -> AgentAction:
+    async def act(self, reasoning: Dict[str, Any]) -> IntelAction:
         """Generate actionable market advisory"""
         reasoning_trace = reasoning['reasoning_trace'] + ["", "💼 ACTION: Generating market advisory..."]
         
@@ -271,7 +271,7 @@ class MarketAdvisoryAgent(BaseAgent):
         reasoning_trace.append(f"📊 Confidence: {confidence_score:.1%}")
         reasoning_trace.append(f"💰 Profit potential: {market_advisory['profit_projections']['expected_return']:+.1%}")
         
-        action = AgentAction(
+        action = IntelAction(
             agent_name=self.name,
             action_type="MARKET_ADVISORY",
             inputs={

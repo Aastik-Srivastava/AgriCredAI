@@ -8,11 +8,11 @@ import random
 import numpy as np
 import hashlib
 
-from agentic_core import BaseAgent, AgentAction, PerceptionData, simulate_api_call, calculate_confidence_score, generate_blockchain_hash
+from agri_intel_core import BaseAdvisor, IntelAction, PerceptionData, simulate_api_call, calculate_confidence_score, generate_blockchain_hash
 
-class CarbonCreditAgent(BaseAgent):
+class CarbonCreditAdvisor(BaseAdvisor):
     """
-    AI Agent that manages carbon credit lifecycle
+    Expert Advisor that manages carbon credit lifecycle
     - Tracks sustainable farming practices
     - Calculates carbon sequestration potential
     - Issues tokenized carbon credits with blockchain hashes
@@ -21,7 +21,7 @@ class CarbonCreditAgent(BaseAgent):
     
     def __init__(self):
         super().__init__(
-            name="CarbonCreditAgent",
+            name="CarbonCreditAdvisor",
             description="Carbon sequestration tracking and credit tokenization"
         )
         self.carbon_practices = {
@@ -188,7 +188,7 @@ class CarbonCreditAgent(BaseAgent):
         
         return reasoning
         
-    async def act(self, reasoning: Dict[str, Any]) -> AgentAction:
+    async def act(self, reasoning: Dict[str, Any]) -> IntelAction:
         """Issue carbon credits and create blockchain tokens"""
         reasoning_trace = reasoning['reasoning_trace'] + ["", "🪙 ACTION: Tokenizing carbon credits..."]
         
@@ -244,7 +244,7 @@ class CarbonCreditAgent(BaseAgent):
         reasoning_trace.append(f"🎯 Recommended buyers: {len(buyer_matches)}")
         reasoning_trace.append(f"📈 Confidence: {confidence_score:.2%}")
         
-        action = AgentAction(
+        action = IntelAction(
             agent_name=self.name,
             action_type="CARBON_CREDIT_ISSUANCE",
             inputs={

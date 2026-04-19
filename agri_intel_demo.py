@@ -1,5 +1,5 @@
-# MULTI-AGENT ADVISORY SYSTEM INTERFACE
-# Streamlit interface to showcase the multi-agent advisory system in action
+# MULTI-ADVISORY SYSTEM INTERFACE
+# Streamlit interface to showcase the multi-expert intelligence system in action
 
 import streamlit as st
 import asyncio
@@ -7,39 +7,39 @@ import pandas as pd
 from datetime import datetime
 import json
 
-# Import the agentic components
-from agentic_core import AgenticOrchestrator, BaseAgent
-from dynamic_financing_agent import DynamicFinancingAgent
-from carbon_credit_agent import CarbonCreditAgent  
-from market_advisory_agent import MarketAdvisoryAgent
+# Import the expert components
+from agri_intel_core import IntelOrchestrator, BaseAdvisor
+from dynamic_financing_advisor import DynamicFinancingAdvisor
+from carbon_credit_advisor import CarbonCreditAdvisor
+from market_advisory_advisor import MarketAdvisoryAdvisor
 
 def initialize_advisory_system():
-    """Initialize the complete multi-agent advisory system"""
+    """Initialize the complete multi-expert advisory system"""
     if 'orchestrator' not in st.session_state:
-        orchestrator = AgenticOrchestrator()
+        orchestrator = IntelOrchestrator()
         
-        # Register all agents
-        orchestrator.register_agent(DynamicFinancingAgent())
-        orchestrator.register_agent(CarbonCreditAgent())
-        orchestrator.register_agent(MarketAdvisoryAgent())
+        # Register all advisors
+        orchestrator.register_advisor(DynamicFinancingAdvisor())
+        orchestrator.register_advisor(CarbonCreditAdvisor())
+        orchestrator.register_advisor(MarketAdvisoryAdvisor())
         
         st.session_state.orchestrator = orchestrator
         st.session_state.agent_results = {}
 
-async def run_agentic_workflow(farmer_context):
-    """Run the complete agentic workflow"""
+async def run_intel_workflow(farmer_context):
+    """Run the complete intelligence workflow"""
     orchestrator = st.session_state.orchestrator
     
     # Create a progress bar
     progress_bar = st.progress(0)
     status_text = st.empty()
     
-    # Run all agents in parallel
-    status_text.text("🔍 Agents analyzing farmer profile...")
+    # Run all advisors in parallel
+    status_text.text("🔍 Intelligence advisors analyzing farmer profile...")
     progress_bar.progress(25)
     
-    # Execute multi-agent workflow
-    results = await orchestrator.run_multi_agent_workflow(farmer_context)
+    # Execute multi-advisor workflow
+    results = await orchestrator.run_multi_advisor_workflow(farmer_context)
     progress_bar.progress(100)
     status_text.text("✅ Analysis complete!")
     
@@ -200,10 +200,10 @@ def display_market_advisory_results(action):
         for step in market_advisory['action_plan']:
             st.write(f"**Step {step.get('step', '?')}:** {step.get('action', 'Unknown')} - *{step.get('timeline', 'Unknown')}*")
 
-def agentic_ai_demo():
-    """Main interface for the Multi-Agent Advisory System"""
-    st.title("🤖 Multi-Agent Advisory System")
-    st.markdown("**An automated pipeline of specialized AI agents that work together to provide comprehensive agricultural and financial analysis.**")
+def agri_intel_demo():
+    """Main interface for the Multi-Advisor Intelligence System"""
+    st.title("🤖 Advisory Intelligence System")
+    st.markdown("**An automated pipeline of specialized expert advisors that work together to provide comprehensive agricultural and financial analysis.**")
     
     # Initialize system
     initialize_advisory_system()
@@ -284,15 +284,15 @@ def agentic_ai_demo():
         st.markdown("---")
         st.subheader("🔄 Multi-Agent Analysis in Progress...")
         
-        # Run the agentic workflow
+        # Run the intelligence workflow
         try:
-            results = asyncio.run(run_agentic_workflow(farmer_context))
+            results = asyncio.run(run_intel_workflow(farmer_context))
             st.session_state.agent_results = results
             
-            st.success("🎉 **Analysis Complete!** All agents have finished their analysis.")
+            st.success("🎉 **Analysis Complete!** All advisors have finished their analysis.")
             
         except Exception as e:
-            st.error(f"Error running agents: {str(e)}")
+            st.error(f"Error running advisors: {str(e)}")
             return
     
     # Display results if available
@@ -302,46 +302,46 @@ def agentic_ai_demo():
         
         results = st.session_state.agent_results
         
-        # Create tabs for each agent
+        # Create tabs for each advisor
         tab1, tab2, tab3, tab4 = st.tabs([
             "💰 Dynamic Financing", 
             "🌱 Carbon Credits", 
             "📊 Market Advisory",
-            "🧠 Agent Reasoning"
+            "🧠 Advisor Reasoning"
         ])
         
         with tab1:
-            st.subheader("Dynamic Financing Agent Results")
-            financing_action = results.get('DynamicFinancingAgent')
+            st.subheader("Dynamic Financing Advisor Results")
+            financing_action = results.get('DynamicFinancingAdvisor')
             if financing_action:
                 display_financing_results(financing_action)
             else:
                 st.error("Financing agent results not available")
         
         with tab2:
-            st.subheader("Carbon Credit Agent Results")
-            carbon_action = results.get('CarbonCreditAgent')
+            st.subheader("Carbon Credit Advisor Results")
+            carbon_action = results.get('CarbonCreditAdvisor')
             if carbon_action:
                 display_carbon_credit_results(carbon_action)
             else:
                 st.error("Carbon credit agent results not available")
         
         with tab3:
-            st.subheader("Market Advisory Agent Results")
-            market_action = results.get('MarketAdvisoryAgent')
+            st.subheader("Market Advisory Advisor Results")
+            market_action = results.get('MarketAdvisoryAdvisor')
             if market_action:
                 display_market_advisory_results(market_action)
             else:
                 st.error("Market advisory agent results not available")
         
         with tab4:
-            st.subheader("Agent Reasoning Traces")
+            st.subheader("Advisor Reasoning Traces")
             
-            # Show reasoning for each agent
-            for agent_name, action in results.items():
+            # Show reasoning for each advisor
+            for advisor_name, action in results.items():
                 if action and hasattr(action, 'reasoning_trace'):
-                    with st.expander(f"🧠 {agent_name} Reasoning"):
-                        display_agent_reasoning(agent_name, action)
+                    with st.expander(f"🧠 {advisor_name} Reasoning"):
+                        display_agent_reasoning(advisor_name, action)
         
         # Overall summary
         st.markdown("---")
@@ -350,17 +350,17 @@ def agentic_ai_demo():
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.metric("🏦 Financing", "Approved" if results.get('DynamicFinancingAgent') else "Pending")
+            st.metric("🏦 Financing", "Approved" if results.get('DynamicFinancingAdvisor') else "Pending")
             
         with col2:  
-            carbon_action = results.get('CarbonCreditAgent')
+            carbon_action = results.get('CarbonCreditAdvisor')
             co2_amount = 0
             if carbon_action and hasattr(carbon_action, 'outputs'):
                 co2_amount = carbon_action.outputs.get('credit_certificate', {}).get('sequestration_amount', 0)
             st.metric("🌱 Carbon Credits", f"{co2_amount:.1f} tCO₂")
             
         with col3:
-            market_action = results.get('MarketAdvisoryAgent') 
+            market_action = results.get('MarketAdvisoryAdvisor') 
             market_signal = "Analyzing..."
             if market_action and hasattr(market_action, 'outputs'):
                 advisory = market_action.outputs.get('market_advisory', {})
@@ -376,4 +376,4 @@ if __name__ == "__main__":
         layout="wide"
     )
     
-    agentic_ai_demo()
+    agri_intel_demo()
