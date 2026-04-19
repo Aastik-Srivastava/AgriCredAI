@@ -1,0 +1,12 @@
+2026-04-17 19:45:56,986 | INFO | Added 6000 synthetic rows (blend=40%).
+2026-04-17 19:45:56,994 | INFO | Combined: 6000 rows, default_rate=7.30%, real_fraction=0%
+2026-04-17 19:45:56,997 | WARNING | FeatureValidator: dropping 2 extra column(s): ['default_flag', 'farmer_id']
+2026-04-17 19:47:56,121 | INFO | Added 6000 synthetic rows (blend=40%).
+2026-04-17 19:47:56,128 | INFO | Combined: 6000 rows, default_rate=7.30%, real_fraction=0%
+2026-04-17 19:47:56,131 | WARNING | FeatureValidator: dropping 2 extra column(s): ['default_flag', 'farmer_id']
+2026-04-19 16:03:42,309 | INFO | Mocking seed portfolio history for 90 days
+2026-04-19 16:04:27,499 | INFO | Mocking seed portfolio history for 90 days
+2026-04-19 16:15:31,247 | INFO | Mocking seed portfolio history for 90 days
+2026-04-19 16:16:03,995 | INFO | Mocking seed portfolio history for 90 days
+2026-04-19 16:27:54,654 | INFO | Mocking seed portfolio history for 90 days
+2026-04-19 16:46:54,148 | INFO | Mocking seed portfolio history for 90 days

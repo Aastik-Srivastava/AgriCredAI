@@ -78,6 +78,13 @@ class WeatherAlertSystem:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or WEATHER_API_KEY
+        
+        # Ensure database tables exist before trying to connect and query
+        try:
+            setup_alerts_table()
+        except:
+            pass
+
         # sqlite: allow multiple threads
         self.conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
         self.stop_event = threading.Event()

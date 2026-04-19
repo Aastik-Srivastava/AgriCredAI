@@ -1,0 +1,22 @@
+{
+  "version": "3.0.0",
+  "timestamp": "20260417_194834",
+  "input_dim": 79,
+  "feature_count": 79,
+  "test_metrics": {
+    "label": "AgroScore_Stack",
+    "auc": 0.7391677567037279,
+    "ks": 0.3655984303466318,
+    "gini": 0.47833551340745584,
+    "avg_precision": 0.1976425285476884,
+    "brier": 0.06435250173335588,
+    "default_rate": 0.07333333333333333
+  },
+  "files": {
+    "stack": "./agroscore_20260417_194834_stack.pkl",
+    "feature_names": "./agroscore_20260417_194834_features.pkl",
+    "score_transform": "./agroscore_20260417_194834_pdo.pkl",
+    "bg_sample": "./agroscore_20260417_194834_bg.pkl",
+    "feature_imp": "./agroscore_20260417_194834_importance.csv"
+  }
+}

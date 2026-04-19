@@ -1,0 +1,80 @@
+feature,importance,display_name
+disaster_preparedness,0.57776,disaster_preparedness
+climate_debt_compound_stress,0.16681758,Climate-Financial Compound Stress
+humidity_stress,0.12436023,humidity_stress
+seasonal_payment_consistency,0.1226732,seasonal_payment_consistency
+debt_to_income_ratio,0.09483226,Debt-to-Income Ratio
+rbi_repo_rate,0.08680766,RBI Repo Rate
+payment_history_score,0.084509075,Payment History
+drought_risk_7days,0.073818065,7-Day Drought Risk
+insurance_coverage,0.07300995,insurance_coverage
+climate_change_vulnerability,0.07075105,climate_change_vulnerability
+savings_to_income_ratio,0.06620309,savings_to_income_ratio
+education_level,0.064957745,education_level
+loan_to_land_ratio,0.0629643,Loan-to-Land Ratio
+rbi_wpi_inflation,0.060571488,WPI Inflation
+soil_health_index,0.05448568,soil_health_index
+credit_utilization,0.040937442,credit_utilization
+log_loan_to_land,0.035849478,log_loan_to_land
+ndvi_current,0.03429384,NDVI (Vegetation Health)
+organic_farming_adoption,0.03352816,organic_farming_adoption
+pest_disease_risk,0.033383332,pest_disease_risk
+social_capital_index,0.032812517,social_capital_index
+mobile_network_strength,0.031378314,mobile_network_strength
+fertilizer_usage_efficiency,0.030158887,fertilizer_usage_efficiency
+seed_quality_index,0.03007215,seed_quality_index
+bank_branch_distance,0.027661312,bank_branch_distance
+ndvi_anomaly,0.027360424,NDVI Anomaly
+log_debt_to_income,0.026856735,log_debt_to_income
+seasonal_rainfall_deviation,0.025723789,seasonal_rainfall_deviation
+current_humidity,0.024806684,current_humidity
+soil_moisture_index,0.024361724,Soil Moisture Index
+diversification_index,0.02255801,diversification_index
+alternative_income_sources,0.022535343,alternative_income_sources
+subsidy_utilization,0.022211086,subsidy_utilization
+informal_lending_dependency,0.02218827,informal_lending_dependency
+peer_learning_participation,0.022093737,peer_learning_participation
+excess_rain_risk,0.02172736,excess_rain_risk
+labor_availability,0.020903032,labor_availability
+nutrient_deficiency_risk,0.02029735,nutrient_deficiency_risk
+storage_price_premium,0.020113863,storage_price_premium
+export_potential,0.017670406,export_potential
+yield_consistency,0.016713597,yield_consistency
+kisan_credit_card,0.016683726,kisan_credit_card
+extension_service_access,0.016310332,extension_service_access
+eligible_schemes_count,0.016150478,eligible_schemes_count
+crop_type_encoded,0.01580462,crop_type_encoded
+current_temperature,0.015760351,current_temperature
+government_training_participation,0.015002954,government_training_participation
+mechanization_level,0.014990611,mechanization_level
+electricity_reliability,0.014310168,electricity_reliability
+supply_chain_integration,0.0136906775,supply_chain_integration
+land_size,0.012988158,land_size
+family_size,0.012944471,family_size
+farmer_age,0.012746258,farmer_age
+price_volatility,0.012728155,Crop Price Volatility
+number_of_credit_sources,0.011142937,number_of_credit_sources
+google_mandi_distance,0.0102228,google_mandi_distance
+technology_adoption,0.01019766,technology_adoption
+precision_agriculture_usage,0.010074773,precision_agriculture_usage
+current_price,0.00960703,current_price
+price_trend,0.009062279,price_trend
+road_quality_index,0.008978856,road_quality_index
+frost_risk_7days,0.00847038,frost_risk_7days
+msp_eligibility,0.008219213,msp_eligibility
+temperature_stress,0.007926654,temperature_stress
+log_mandi_distance,0.0075277193,log_mandi_distance
+input_cost_index,0.0065283207,input_cost_index
+transport_cost_burden,0.006521346,transport_cost_burden
+annual_income_proxy,0.0059809135,annual_income_proxy
+market_demand_index,0.0049991175,market_demand_index
+connectivity_index,0.0024034646,connectivity_index
+log_annual_income,0.0018279027,log_annual_income
+historical_drought_frequency,0.00023682447,historical_drought_frequency
+livestock_ownership,0.0,livestock_ownership
+irrigation_access,0.0,Irrigation Access
+repayment_velocity_proxy,0.0,repayment_velocity_proxy
+community_leadership_role,0.0,community_leadership_role
+storage_access,0.0,storage_access
+cooperative_membership,0.0,cooperative_membership
+nearest_mandi_distance,0.0,nearest_mandi_distance

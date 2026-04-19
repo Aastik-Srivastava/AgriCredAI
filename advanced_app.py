@@ -46,17 +46,28 @@ import random
 import io, wave, os
 from sklearn.ensemble import RandomForestRegressor
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+# Fix unpickling context mapping when loading model trained as __main__
+import __main__
+from advanced_ml_model import AgroScoreModel, PDOScoreTransform, PolicyAdjustmentLayer, UnifiedSHAPExplainer
+__main__.PDOScoreTransform = PDOScoreTransform
+__main__.PolicyAdjustmentLayer = PolicyAdjustmentLayer
+__main__.UnifiedSHAPExplainer = UnifiedSHAPExplainer
+
 # Custom modules (assuming these are in your project directory)
 from agentic_ai_demo import agentic_ai_demo
-from advanced_data_pipeline import AdvancedDataPipeline
-from advanced_ml_model import AdvancedCreditModel
+from advanced_data_pipeline import AgroScoreInferencePipeline
 from weather_alert_system import WeatherAlertSystem, setup_alerts_table
 from weather_dashboard import weather_risk_monitor          # real OWM data
 from config import (
-    MODEL_PATH, SCALER_PATH,
-    WEATHER_API_KEY, MARKET_API_KEY, DATABASE_PATH,
+    MODEL_PATH, SCALER_PATH, DATABASE_PATH,
     WEATHER_API_BASE_URL, WEATHER_UNITS, ALERT_CHECK_INTERVAL
 )
+WEATHER_API_KEY = os.getenv('WEATHER_API_KEY', '')
+MARKET_API_KEY = os.getenv('MARKET_API_KEY', '')
 
 # Multi-lingual support
 # import speech_recognition as sr
@@ -239,11 +250,11 @@ try:
 except NameError:
     TREE_EQUIV_TON = 0.021  # ~21 kg CO2 per tree/year (demo)
 
-from credit_db_maker import store_credit_transaction, DB_PATH, CREDIT_PRICE_USD, USD_TO_INR, CAR_EQUIV_TON, TREE_EQUIV_TON
+
 
 # Initialize session state
 if 'pipeline' not in st.session_state:
-    st.session_state.pipeline = AdvancedDataPipeline()
+    st.session_state.pipeline = AgroScoreInferencePipeline(weather_key=WEATHER_API_KEY, market_key=MARKET_API_KEY)
 
 # Explainable AI functions
 def calculate_confidence_score(data_quality: float, model_performance: float, 
@@ -595,12 +606,28 @@ def fetch_market_prices():
 
 @st.cache_resource
 def load_models():
-    """Load trained models"""
+    """Load latest AgroScore V3 Model"""
+    import glob
+    import os
+    from advanced_ml_model import AgroScoreModel
+    
     try:
-        model = joblib.load(MODEL_PATH)
-        scaler = joblib.load(SCALER_PATH)
-        return model, scaler
-    except:
+        manifests = glob.glob("agroscore_*_manifest.json")
+        if not manifests:
+            st.warning("⚠️ No model manifest found. Please run advanced_ml_model.py first.")
+            return None, None
+            
+        latest_manifest = max(manifests, key=os.path.getmtime)
+        model = AgroScoreModel.load_from_manifest(latest_manifest)
+        
+        # Inject model into the pipeline singleton
+        st.session_state.pipeline._model = model
+        
+        return model, None  # scaler is handled internally now
+    except Exception as e:
+        import traceback
+        st.error(f"Failed to load model: {e}")
+        st.error(traceback.format_exc())
         return None, None
 
 
@@ -609,7 +636,7 @@ def load_models():
 @st.cache_resource
 def initialize_data_pipeline():
     """Initialize data pipeline"""
-    return AdvancedDataPipeline()
+    return AgroScoreInferencePipeline(weather_key=WEATHER_API_KEY, market_key=MARKET_API_KEY)
 
 @st.cache_resource
 def get_alert_system():
@@ -720,7 +747,7 @@ def performance_analytics():
 
 # --- Load Data from DB ---
 def load_data():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DATABASE_PATH)
     df = pd.read_sql_query("SELECT * FROM credits", conn)
     conn.close()
     return df
@@ -957,16 +984,18 @@ def credit_risk_scoring_dashboard():
     
     pipeline = initialize_data_pipeline()
 
-    # Load model artifacts
-    try:
-        model = joblib.load('advanced_credit_model.pkl')
-        scaler = joblib.load('feature_scaler.pkl')
-        feature_columns = joblib.load('feature_columns.pkl')
-        model_type = "xgboost"  # Set based on your best model
-    except Exception as e:
-        st.error(f"⚠️ {translate_text('Error loading model', lang)}: {e}")
-        st.info(translate_text("Please ensure model files are present: advanced_credit_model.pkl, feature_scaler.pkl, feature_columns.pkl", lang))
+    # Fallback to reload model if somehow dropped from session
+    if pipeline._model is None:
+        model, _ = load_models()
+        if model is not None:
+            pipeline._model = model
+            
+    if pipeline._model is None:
+        st.error(f"⚠️ {translate_text('Error loading model', lang)}: Pipeline model not initialized.")
+        st.info(translate_text("Please ensure you have generated a model manifest via advanced_ml_model.py", lang))
         return
+    
+    model = pipeline._model
     
     # Complete feature defaults
     defaults = {
@@ -1066,6 +1095,12 @@ def credit_risk_scoring_dashboard():
     farmer_name = st.text_input(f"👤 {translate_text('Farmer Name', lang)}", "Rajesh Kumar")
     monthly_income = st.number_input(f"💰 {translate_text('Monthly Income (₹)', lang)}", min_value=5000, max_value=200000, value=25000)
     
+    col_crop, col_state = st.columns(2)
+    with col_crop:
+        ui_crop_type = st.text_input(translate_text("Main Crop (e.g., wheat, rice)", lang), "wheat")
+    with col_state:
+        ui_state = st.text_input(translate_text("State (e.g., Maharashtra, UP)", lang), "Maharashtra")
+    
     # Key risk factors
     user_inputs = {}
     
@@ -1112,14 +1147,17 @@ def credit_risk_scoring_dashboard():
         # Build prediction input
         features = defaults.copy()
         features.update(user_inputs)
-        input_list = [features[feat] for feat in feature_columns]
+        
+        feature_columns = model.feature_names
+        input_list = [features.get(feat, 0) for feat in feature_columns]
+        import pandas as pd
         input_df = pd.DataFrame([input_list], columns=feature_columns)
         
         try:
-            # Make prediction
-            input_scaled = scaler.transform(input_df)
-            pred_prob = model.predict_proba(input_scaled)[0][1]
-            credit_score = int((1 - pred_prob) * 750 + 250)
+            # Make prediction via new pipeline method
+            result = pipeline.score_from_dict(features)
+            pred_prob = result.get("pd_estimate", 0.10)
+            credit_score = result.get("agro_score", int((1 - pred_prob) * 750 + 250))
             
             # Professional Results Display with Explainable AI
             st.markdown("---")
@@ -1277,17 +1315,17 @@ def credit_risk_scoring_dashboard():
             st.subheader(f"📈 {translate_text('Model Feature Analysis', lang)}")
             
             try:
+                # Use AgroScoreModel's built in explainer correctly
                 import shap
-                explainer = shap.TreeExplainer(model)
-                shap_values = explainer.shap_values(input_scaled)
+                sv = model.shap_explainer.explain(input_df)[0]
                 
-                # Create SHAP summary
+                # Create SHAP summary using exact feature matches
                 feature_impact = []
-                for i, (feature, shap_val, feat_val) in enumerate(zip(feature_columns, shap_values[1][0], input_df.iloc[0].values)):
+                for feat, s_val, f_val in zip(feature_columns, sv, input_df.iloc[0].values):
                     feature_impact.append({
-                        'Feature': feature.replace('_', ' ').title(),
-                        'Impact': shap_val,
-                        'Value': feat_val
+                        'Feature': model.shap_explainer.DISPLAY_NAMES.get(feat, feat).replace('_', ' ').title(),
+                        'Impact': float(s_val),
+                        'Value': float(f_val)
                     })
                 
                 # Sort by absolute impact
@@ -1334,10 +1372,7 @@ def credit_risk_scoring_dashboard():
                 else:
                     st.info(translate_text("Feature analysis not available for this model type.", lang))
 
-            user_crop = st.text_input("Main Crop (e.g. wheat, cotton, rice)", "all")
-            user_state = st.text_input("State (e.g. Maharashtra, Bihar)", "all")
-            user_land_size = user_inputs.get('land_size', 2.0)  # Already in your user inputs block
-            policy_advisor_with_keyword_search(user_land_size, user_crop, user_state)
+            policy_advisor_with_keyword_search(features.get('land_size', 2.0), ui_crop_type, ui_state)
 
 
         except Exception as e:
@@ -1386,32 +1421,85 @@ def policy_advisor_with_keyword_search(land_size_hectares, crop_keyword='all', s
     for synonym in land_synonyms.get(land_category, []):
         search_terms.add(synonym)
 
-    filtered_schemes = []
+    scored_schemes = []
+    
+    # Foundational keywords to ensure broad relevance
+    agri_boost = ["farmer", "agriculture", "crop", "kisan", "farming", "land", "rural", "cultivator"]
+    national_boost = ["central", "national", "all india", "pradhan mantri", "government of india", "pm-", "kisan", "samman"]
+
     for scheme in schemes:
-        scheme_text = ' '.join([
-            scheme.get('title', ''),
-            scheme.get('description', ''),
-            scheme.get('benefits', ''),
-            scheme.get('eligibility', ''),
-        ]).lower()
+        title = scheme.get('title', '').lower()
+        desc = scheme.get('description', '').lower() 
+        bene = scheme.get('benefits', '').lower()
+        elig = scheme.get('eligibility', '').lower()
         
-        land_match = (land_category=='all') or any(term in scheme_text for term in search_terms)
-        crop_match = (crop_keyword=='all') or (crop_keyword in scheme_text)
-        state_match = (state_keyword=='all') or (state_keyword in scheme_text)
+        # Combine all text for searching
+        scheme_text = f"{title} {desc} {bene} {elig}"
+        
+        score = 0
+        
+        # 1. State / Regional Match (Significant Weight)
+        if state_keyword != 'all' and state_keyword in scheme_text:
+            score += 10
+        elif any(kw in scheme_text for kw in national_boost):
+            score += 3  # National schemes are excellent foundational matches
+            
+        # 2. Crop / Commodity Match (Significant Weight)
+        if crop_keyword != 'all' and crop_keyword in scheme_text:
+            score += 8
+        elif any(kw in scheme_text for kw in agri_boost):
+            score += 2 # General agricultural relevance
+            
+        # 3. Land Category Match
+        if land_category == 'all' or any(term in scheme_text for term in search_terms):
+            score += 5
+        elif any(term in scheme_text for term in ["all farmers", "landholding", "cultivable"]):
+            score += 3
 
-        if land_match and crop_match and state_match:
-            filtered_schemes.append(scheme)
+        # 4. Keyword specific boosts for high-value services
+        if any(term in scheme_text for term in ["subsidy", "insurance", "loan", "credit", "grant"]):
+            score += 2
+            
+        # Inclusive threshold: Score of 3+ (one national hit or a combo of small hits)
+        if score >= 3:
+            scored_schemes.append((score, scheme))
 
-    if filtered_schemes:
-        st.markdown(f"### {translate_text('Found', lang)} {len(filtered_schemes)} {translate_text('matching schemes', lang)}:")
-        for s in filtered_schemes:
-            st.markdown(
-                f"#### [{s.get('title', translate_text('Untitled Scheme', lang))}]({s.get('url', '#')})\n"
-                f"{s.get('description', '')}\n\n**{translate_text('Benefits', lang)}:** {s.get('benefits', '')}\n\n"
-                f"**{translate_text('Eligibility', lang)}:** {s.get('eligibility','')}\n\n---"
-            )
+    # Sort by score descending
+    scored_schemes.sort(key=lambda x: x[0], reverse=True)
+    
+    # Cap to top 8 most relevant schemes to provide variety
+    matches = [s[1] for s in scored_schemes[:8]]
+
+    if matches:
+        st.markdown(f"### ✅ {translate_text('Tailored Policy Recommendations', lang)}")
+        st.caption(translate_text("Based on your location, crop type, and land profile.", lang))
+        
+        for s in matches:
+            with st.expander(f"🏛️ {s.get('title', translate_text('Agricultural Scheme', lang))}"):
+                st.markdown(f"**🔗 [Official Portal]({s.get('url', '#')})**")
+                if s.get('description') and s.get('description') != "N/A":
+                    st.info(s.get('description'))
+                
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown(f"**💰 {translate_text('Key Benefits', lang)}**")
+                    st.write(s.get('benefits', translate_text('Refer to portal for details.', lang)))
+                with c2:
+                    st.markdown(f"**📋 {translate_text('Eligibility Criteria', lang)}**")
+                    st.write(s.get('eligibility', translate_text('Refer to portal for criteria.', lang)))
+                st.markdown("---")
     else:
-        st.info(translate_text("No matched schemes found. Try broadening your filter criteria.", lang))
+        st.warning(f"💡 {translate_text('No specific local schemes matched your exact filters.', lang)}")
+        st.info(f"🔍 {translate_text('Broadening search to general Pradhan Mantri agricultural support programs...', lang)}")
+        
+        # Static fallbacks if nothing is found (Safety net)
+        fallbacks = [s for s in schemes if any(kw in s.get('title', '').lower() for kw in ["pm-kisan", "credit card", "fasal bima"])]
+        if fallbacks:
+            for s in fallbacks[:3]:
+                with st.expander(f"🏛️ {s.get('title')}"):
+                    st.write(s.get('benefits'))
+                    st.markdown(f"[Learn More]({s.get('url')})")
+
 
 def generate_weather_alerts(weather_data, crop_type):
     """Generate weather-based alerts"""
@@ -1679,164 +1767,7 @@ def portfolio_dashboard(pipeline):
                      title='Loan Status Distribution')
         st.plotly_chart(fig4, use_container_width=True)
 
-    @st.cache_resource
-    def get_carbon_credit_model():
-        # Generate demo 'real' data for model
-        np.random.seed(42)
-        N = 300
-        data = {
-            "area": np.random.uniform(1, 80, N),
-            "ndvi": np.random.uniform(0.2, 0.9, N),
-            "soil_carbon": np.random.uniform(5, 40, N),
-            "rainfall": np.random.uniform(400, 1800, N),
-            "type_afforestation": np.random.binomial(1, 0.24, N),
-            "type_nitill": np.random.binomial(1, 0.26, N),
-            "type_covercropping": np.random.binomial(1, 0.25, N),
-            "type_rice": np.random.binomial(1, 0.25, N),
-            "verified": np.random.binomial(1, 0.93, N),
-        }
-        # FOR DEMO: the true carbon credit is a nonlinear mix of above, plus randomness:
-        y = (
-            data["area"] * data["ndvi"] * (data["type_afforestation"]*1.35 + data["type_nitill"]*1.09 +
-                data["type_covercropping"]*1.13 + data["type_rice"]*1.00)
-            * data["verified"] * 0.95
-            + 0.0015 * data["rainfall"]
-            - 0.21 * data["soil_carbon"]
-            + np.random.normal(0, 1.5, N)
-        )
-        X = pd.DataFrame(data)
-        X["type_afforestation"] = data["type_afforestation"]
-        X["type_nitill"] = data["type_nitill"]
-        X["type_covercropping"] = data["type_covercropping"]
-        X["type_rice"] = data["type_rice"]
-        y = np.maximum(y, 0) # can't have negative credits
 
-        model = RandomForestRegressor(n_estimators=80, random_state=42)
-        model.fit(X, y)
-        return model
-
-    ml_model = get_carbon_credit_model()
-
-    # --- Project Input Form (& ML prediction) ---
-    TYPE_MAP = {
-        "Afforestation": [1, 0, 0, 0],
-        "No-till": [0, 1, 0, 0],
-        "Cover Cropping": [0, 0, 1, 0],
-        "Rice": [0, 0, 0, 1]
-    }
-
-    st.markdown("#### 💡 Estimate/Certify New Carbon Credits (powered by ML)")
-    with st.form("carbon_ml"):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            in_area = st.number_input("Area (ha)", 0.1, 300.0, value=6.0)
-            in_type = st.selectbox("Project Type", list(TYPE_MAP))
-        with col2:
-            in_ndvi = st.slider("Avg NDVI (satellite)", 0.15, 0.95, 0.6)
-            in_soil = st.number_input("Baseline Soil Carbon (t/ha)", 1.0, 80.0, value=14.0)
-        with col3:
-            in_rain = st.number_input("Rainfall (mm/yr)", 300, 2200, value=900)
-            in_verified = st.checkbox("Practices Verified", value=True)
-
-        in_location = st.text_input("Farm Location", "Unknown")  # <-- moved here
-        ml_submit = st.form_submit_button("Estimate Credits")
-
-    # --- Perform ML prediction ---
-    pred_credit = None
-    if ml_submit:
-        in_feats = np.array([
-            in_area, in_ndvi, in_soil, in_rain,
-            *TYPE_MAP[in_type], int(in_verified)
-        ]).reshape(1, -1)
-        pred_credit = ml_model.predict(in_feats)[0]
-        pred_credit = max(0, round(float(pred_credit), 2))
-        st.success(f"ML-estimated Carbon Credits: **{pred_credit} tCO₂e** (for this project)")
-
-        # Save to portfolio
-        if "cc_portfolio" not in st.session_state:
-            st.session_state["cc_portfolio"] = []
-        add_row = {
-            "Project": f"User Project {len(st.session_state['cc_portfolio'])+1}",
-            "Type": in_type,
-            "Area (ha)": in_area,
-            "NDVI": in_ndvi,
-            "SoilC (t/ha)": in_soil,
-            "Rain (mm)": in_rain,
-            "Verified": in_verified,
-            "ML Credits (tCO₂e)": pred_credit
-        }
-        st.session_state["cc_portfolio"].append(add_row)
-
-        # --- NEW: Store in database ledger ---
-        farm_id = f"FARM{len(st.session_state['cc_portfolio'])}"
-        location = st.text_input("Enter Farm Location", "Unknown")
-        store_credit_transaction(farm_id, location, "Verified" if in_verified else "Unverified", pred_credit)
-
-
-    # --- Portfolio Display ---
-    st.markdown("#### Portfolio Carbon Credits (from session)")
-    if "cc_portfolio" in st.session_state and st.session_state["cc_portfolio"]:
-        cdf = pd.DataFrame(st.session_state["cc_portfolio"])
-        total_credits = cdf['ML Credits (tCO₂e)'].sum()
-        market_value_inr = total_credits * CREDIT_PRICE_USD * USD_TO_INR
-        roi = market_value_inr * 0.25  # example 25% margin
-        cars_equiv = total_credits / CAR_EQUIV_TON
-        trees_equiv = total_credits / TREE_EQUIV_TON
-
-        st.dataframe(cdf, use_container_width=True)
-        st.metric("Total ML-estimated Credits", f"{total_credits:.2f} tCO₂e")
-        st.metric("Estimated Market Value (₹)", f"{market_value_inr:,.0f}")
-        st.metric("Projected ROI (₹)", f"{roi:,.0f}")
-        st.metric("Cars Off Road (equivalent)", f"{cars_equiv:,.0f}")
-        st.metric("Trees Planted (equivalent)", f"{trees_equiv:,.0f}")
-        st.bar_chart(cdf.set_index("Project")["ML Credits (tCO₂e)"])
-        st.download_button("Download Portfolio (CSV)", cdf.to_csv(index=False), file_name="carbon_portfolio.csv")
-    else:
-        st.info("No carbon credits in portfolio yet. Use the form above to add projects!")
-
-    # --- Carbon Credit Ledger (from DB) ---
-    st.markdown("#### 📜 Blockchain Ledger (Verified Records)")
-
-    df = load_data()
-
-    if df.empty:
-        st.info("Ledger is empty. Add projects above or seed mock data.")
-    else:
-        # Show ledger table
-        st.dataframe(df, use_container_width=True)
-
-        # Show blockchain hashes
-# Tamper-Evidence
-
-# If anyone tries to alter even one record (say, inflating a farmer's credits), the hash changes.
-
-# Since the next block references the old hash, the chain breaks — making fraud or manipulation easily detectable.
-
-# Transparency & Trust
-
-# Farmers, buyers, and regulators can trust the carbon credit ledger because it's cryptographically verifiable, not just a normal database entry.
-
-# Auditability
-
-# Regulators or verifiers can check the hash chain integrity instead of relying only on raw SQL records.
-
-# This reduces the chance of disputes.
-
-# "Blockchain without Blockchain"
-
-# You're not running a heavy blockchain node or smart contracts.
-
-# You're creating a lightweight, blockchain-style audit trail inside SQLite — faster, cheaper, and perfect for a prototype.
-
-# Future-Ready
-
-# If AgriCred scales, you could migrate these records to a real blockchain (like Polygon or Hyperledger).
-
-# Since you already have hashes, migration will be straightforward.
-        with st.expander("🔗 Blockchain Hash Verification"):
-            for idx, row in df.iterrows():
-                st.markdown(f"**Block {row['id']}** | Farm: {row['farm_id']} | Status: {row['verification_status']}")
-                st.code(f"Hash: {row['hash']}\nPrev: {row['prev_hash']}", language="bash")
 
 
 def market_intelligence_dashboard():
@@ -2831,7 +2762,10 @@ def main():
         st.error("⚠️ Models not found. Please run advanced_ml_model.py first to train the models.")
         return
     # Initialize database with farmers on first run
-    farmer_count = pipeline.conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
+    import sqlite3
+    with sqlite3.connect(DATABASE_PATH) as conn:
+        farmer_count = conn.execute("SELECT COUNT(*) FROM farmers").fetchone()[0]
+        
     if farmer_count == 0:
         st.info("Initializing database with farmer data...")
         pipeline.seed_farmers(2000)

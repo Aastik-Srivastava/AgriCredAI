@@ -1,32 +1,37 @@
-# Core Streamlit App Dependencies
-streamlit==1.28.1
+# ── Core Streamlit App ────────────────────────────────────────────────────────
+streamlit>=1.32,<2.0
 streamlit-extras==0.3.5
 rich==13.9.4
 
-# Data Processing & ML
-pandas==2.2.3
-numpy==1.26.4
-scikit-learn==1.5.2
-scipy==1.10.0
-xgboost==2.0.3
-lightgbm==4.5.0
-shap==0.42.1
-joblib==1.4.2
+# ── Data Processing & ML ─────────────────────────────────────────────────────
+numpy>=1.24,<2.0
+pandas>=2.2.3
+scikit-learn>=1.5.2
+scipy>=1.11
+xgboost>=2.0.3
+lightgbm>=4.5.0
+shap>=0.44
+optuna>=3.4
+joblib>=1.4.2
 
-# Visualization
-plotly==5.15.0
+# ── Visualization ────────────────────────────────────────────────────────────
+plotly>=5.18
 matplotlib==3.7.2
 seaborn==0.12.2
 
-# HTTP & APIs
-requests==2.31.0
+# ── API & Environment ────────────────────────────────────────────────────────
+requests>=2.31.0
+python-dotenv>=1.0.0
 
-# Environment
-python-dotenv==1.0.0
-
-# Validation
+# ── Validation & Typing ──────────────────────────────────────────────────────
 pydantic==2.1.1
 typing-extensions==4.7.1
 
-# Utilities
+# ── Utilities ────────────────────────────────────────────────────────────────
 loguru==0.7.0
+
+# ── Notes ────────────────────────────────────────────────────────────────────
+# sqlite3 is included in Python standard library
+# Optional dev tools:
+pytest>=7.4
+black>=23.0
